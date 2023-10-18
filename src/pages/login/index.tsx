@@ -1,23 +1,36 @@
 import React from 'react'
 
-import { useSession, signIn, signOut } from "next-auth/react"
+import { getSession, signIn } from 'next-auth/react'
+import { GetServerSideProps } from 'next'
+import { redirect } from 'next/dist/server/api-utils'
+
+export const getServerSideProps: GetServerSideProps = async (context) => {
+  const session = await getSession(context)
+  if(session){
+    return{
+      redirect:{
+        destination:'/',
+        permanent:false
+      }
+    }
+  }
+  return{
+    props:{
+      session
+    }
+  }
+}
 
 const login = () => {
-  const { data: session } = useSession();
-  if (session) {
-    return (
-      <>
-        Signed in as {session?.user?.email} <br />
-        <button onClick={() => signOut()}>Sign Out</button>
-      </>
-    )
-  }
 
   return (
-    <div className='text-white bg-mainPurple'>
-      <h1>DevSpotlight</h1>
-      <p>Not Signed in</p>
-      <button type="button" onClick={() => signIn()}>Login</button>
+    <div className='text-white flex flex-col justify-center items-center h-full'>
+      <h1 className='text-4xl'>DevSpotlight</h1>
+      <form className='flex flex-col gap-3 '>
+        <input type="email" className='input-outline' />
+        <input type="password" className='input-outline ' />
+      </form>
+      <button type="button" onClick={() => signIn('github')}>Login</button>
     </div>
   )
 }

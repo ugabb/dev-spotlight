@@ -10,6 +10,7 @@ const config: Config = {
     extend: {
       colors: {
         'mainPurple': '#B95AFF',
+        'mainGray': '#979797',
       }
     },
   },
