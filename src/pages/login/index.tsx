@@ -1,6 +1,4 @@
 import React from 'react'
-
-
 const login = () => {
 
   return (
@@ -11,6 +9,7 @@ const login = () => {
         <input type="password" className='input-outline ' />
       </form>
       <button type="button">Login</button>
+
     </div>
   )
 }
