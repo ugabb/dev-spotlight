@@ -4,8 +4,8 @@
 
 :root {
   --background: #101010;
-  --mainGray:#979797;
-  --mainPurple:#B95AFF;
+  --mainGray: #979797;
+  --mainPurple: #B95AFF;
 }
 
 
@@ -15,13 +15,39 @@ body {
   color: white;
 }
 
-.input-outline{
+.input-outline {
   background-color: transparent;
   border: 1px solid var(--mainGray);
   border-radius: 5px;
   padding: .1rem .5rem;
   transition: .3s ease-in-out;
 }
-.input-outline:focus,.input-outline:hover{
+
+.input-outline:focus,
+.input-outline:hover {
   border: 1px solid var(--mainPurple);
+}
+
+.background {
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  width: 300px;
+  background: var(--mainPurple);
+}
+
+.icon-placeholder {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  flex: 40px 0;
+  margin-right: 20px;
+}
+
+.text-placeholder {
+  border-radius: 5px;
+  width: 200px;
+  height: 20px;
+  flex: 1;
 }
