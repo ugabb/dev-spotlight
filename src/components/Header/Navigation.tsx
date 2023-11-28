@@ -14,7 +14,7 @@ const variants = {
 };
 
 export const Navigation = ({ isOpen }) => (
-    <motion.ul variants={variants} className={`z-10 ml-10 ${isOpen ? "block" : "hidden"} flex flex-col gap-3 `}>
+    <motion.ul variants={variants} className={`z-50 ml-10 ${isOpen ? "block" : "hidden"} flex flex-col gap-3 pt-10 `}>
         {routes.map(route => (
             <MenuItem name={route.name} route={route.route} key={route.id} />
         ))}

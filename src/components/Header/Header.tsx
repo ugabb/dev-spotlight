@@ -6,6 +6,7 @@ import { AiOutlineMenu } from 'react-icons/ai'
 import { useDimensions } from './useDimensions';
 import { MenuToggle } from './MenuToggle';
 import { Navigation } from './Navigation';
+import Link from 'next/link';
 
 
 const sidebar = {
@@ -38,13 +39,25 @@ const Header = () => {
             animate={isOpen ? "open" : "closed"}
             custom={height}
             ref={containerRef}
-            className='flex justify-between'>
+            className='flex justify-between items-center md:w-full md:h-20 md:backdrop-blur-sm md:bg-black/20 md:fixed md:top-0 md:left-0 md:mx-auto md:px-20'>
 
             <Navigation isOpen={isOpen} />
-            <motion.div variants={sidebar} className={`background ${isOpen ? "block" : "hidden"} `} />
+            <motion.div variants={sidebar} className={`background ${isOpen ? "block" : "hidden"} z-20 opacity-80 rounded-sm`} />
 
-            <Image src={"/title.png"} alt='Logo DevSpotligth' width={123} height={24} />
+            <motion.div whileHover={{ scale: 1.1 }} className='cursor-pointer '>
+                <Link href={"/"}>
+                    <Image src={"/title.png"} className='pt-3' alt='Logo DevSpotligth' width={123} height={24} />
+                </Link>
+            </motion.div>
             <MenuToggle toggle={() => toggleOpen()} />
+
+            <motion.ul className="hidden md:flex gap-3 text-mainGray ">
+                <Link href={'/'} className='hover:text-white hover:underline hover:decoration-mainPurple transition-all cursor-pointer hover:scale-105'>Home</Link>
+                <Link href={'/projects'} className='hover:text-white hover:underline hover:decoration-mainPurple transition-all cursor-pointer hover:scale-105'>Projects</Link>
+                <Link href={'/docs'} className='hover:text-white hover:underline hover:decoration-mainPurple transition-all cursor-pointer hover:scale-105'>Docs</Link>
+                <Link href={'/sign-up'} className=' hover:text-mainPurple hover:underline hover:decoration-mainPurple transition-all font-semibold hover:glow-text cursor-pointer hover:scale-105'>Sign Up</Link>
+            </motion.ul>
+
         </motion.nav>
     )
 }
