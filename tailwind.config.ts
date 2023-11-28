@@ -10,7 +10,13 @@ const config: Config = {
     extend: {
       colors: {
         'mainPurple': '#B95AFF',
-        'mainGray': '#979797',
+        'mainGray': '#B9B9B9',
+      },
+      dropShadow: {
+        glow: [
+          "0 0px 20px rgba(255,255, 255, 0.35)",
+          "0 0px 65px rgba(255, 255,255, 0.2)"
+        ]
       }
     },
   },
