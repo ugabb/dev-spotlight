@@ -2,17 +2,32 @@
 @tailwind components;
 @tailwind utilities;
 
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+
+@font-face {
+  font-family: 'GeorgeTown-Thin';
+  src: url('../fonts/George-Town/GeorgeTown-Thin.ttf');
+}
+
+.font-georgeTown {
+  font-family: 'GeorgeTown-Thin', sans-serif;
+}
+
 :root {
   --background: #101010;
   --mainGray: #979797;
   --mainPurple: #B95AFF;
 }
 
+* {
+  font-family: 'Inter', sans-serif;
+}
 
 
 body {
   background: var(--background);
   color: white;
+
 }
 
 .input-outline {
@@ -50,4 +65,8 @@ body {
   width: 200px;
   height: 20px;
   flex: 1;
+}
+
+.glow-text {
+  text-shadow: rgba(255, 255, 255, 0.80) 0px 0px 30px;
 }
