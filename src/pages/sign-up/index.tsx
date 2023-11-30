@@ -4,6 +4,16 @@ import React from 'react'
 import { AiFillGithub } from 'react-icons/ai'
 
 const SignUp = () => {
+
+    const handleSignIn = async () => {
+        try {
+            const response = await fetch('http://localhost:8080/oauth2/authorization/github');
+            console.log(response)
+        } catch (error) {
+            console.log(error)
+        }
+    }
+
     return (
         <div className='flex flex-col justify-center'>
             <Header />
@@ -14,9 +24,12 @@ const SignUp = () => {
                 </div>
                 <p className='uppercase tracking-widest'>Connect with GitHub</p>
                 <div className="relative">
-                    <Link href={"/github"}>
+                    <Link href={"http://localhost:8080/oauth2/authorization/github"}>
                         <AiFillGithub className='text-6xl cursor-pointer z-10 transition-all ease-in-out hover:text-mainPurple hover:scale-105 shadow-md shadow-white/50 rounded-full' />
                     </Link>
+                    {/* <button onClick={handleSignIn}>
+                        <AiFillGithub className='text-6xl cursor-pointer z-10 transition-all ease-in-out hover:text-mainPurple hover:scale-105 shadow-md shadow-white/50 rounded-full' />
+                    </button> */}
 
                 </div>
             </div>
