@@ -4,6 +4,10 @@ import Header from '@/components/Header/Header'
 import { Typewriter } from 'react-simple-typewriter'
 import Logo from '@/components/Logo'
 import TextIcon from '@/components/TextIcon'
+import { MdKeyboardDoubleArrowUp } from "react-icons/md";
+import { BsLightning } from "react-icons/bs";
+import { CiGlobe } from "react-icons/ci";
+import { TbBulb } from "react-icons/tb";
 import { AiOutlineArrowRight, AiOutlineArrowUp } from 'react-icons/ai'
 import { motion } from 'framer-motion'
 import Link from 'next/link'
@@ -12,12 +16,16 @@ import ProjectCard from '@/components/ProjectCard'
 
 const inter = Inter({ subsets: ['latin'] })
 
-const words = ['Develop', 'Share', 'Shine']
+const Shine = ['Shine']
 
 export default function Home() {
 
+
   return (
-    <div className='flex flex-col gap-3 mx-auto'>
+    <div className='flex flex-col gap-3 mx-auto overflow-hidden'>
+      <video autoPlay loop muted className='fixed -z-10 h-full w-full top-0 left-0 object-cover opacity-30'>
+        <source src='/particles.mp4' />
+      </video>
       <Header />
 
       <motion.main
@@ -25,12 +33,23 @@ export default function Home() {
         animate={{ opacity: 1 }}
         transition={{ delay: 0.3 }}
         exit={{ opacity: 0 }}
-        className='flex flex-col justify-center items-center px-3 gap-3 md:px-20  md:my-24 lg:max-w-5xl xl:mx-auto'>
+        className='flex flex-col justify-center items-center px-3 gap-3 md:px-20  md:my-24 lg:max-w-6xl xl:mx-auto'>
 
-        <div className="flex flex-col gap-3 justify-center items-end ">
-          <h1 className='text-5xl font-georgeTown glow-text h-[50px]'><Typewriter words={words} loop={true} /></h1>
+        <div className='flex flex-col md:flex-row justify-center items-center w-full md:gap-20'>
+          <div className="flex flex-col justify-center m-10 font-bold">
+            <h1 className='text-7xl text-mainGray'>Devolop</h1>
+            <h1 className='text-7xl text-mainGray'>Share</h1>
+            <h1 className='text-7xl glow-text'>Shine</h1>
+          </div>
+
+          <div className="grid grid-cols-2 gap-5 h-[300px] w-[300px]">
+            <Image className="w-full h-[140px] object-cover rounded-lg" src='/man-computer.jpg' alt='Man in front of computer' width={1920} height={1280} />
+            <Image className="w-full h-[140px] object-cover rounded-lg" src='/user.jpg' alt='Man in front of computer' width={1920} height={1280} />
+            <Image className="w-full h-[140px] object-cover rounded-lg" src='/man-computer.jpg' alt='Man in front of computer' width={1920} height={1280} />
+            <Image className="w-full h-[140px] object-cover rounded-lg" src='/man-computer.jpg' alt='Man in front of computer' width={1920} height={1280} />
+          </div>
+
         </div>
-
 
         <div className="">
           <div className='text-[#B9B9B9] text-sm md:text-base mb-10'>
@@ -39,16 +58,16 @@ export default function Home() {
           </div>
         </div>
 
-        <div className='flex flex-col justify-center items-center gap-3 border-y border-mainPurple w-screen p-3 mb-10'>
+        <div className='flex flex-col justify-center items-center gap-3 border-y border-mainPurple w-screen p-3 mb-10 backdrop-blur-sm bg-white/3'>
           <h3 className='text-2xl font-bold font-george'>Why to use?</h3>
-          <div className="flex gap-3">
-            <div className="flex flex-col gap-3">
-              <TextIcon text='Career Growth' icon={<AiOutlineArrowUp className='text-mainPurple' />} />
-              <TextIcon text='Career Growth' icon={<AiOutlineArrowUp className='text-mainPurple' />} />
+          <div className="flex gap-3 md:gap-10">
+            <div className="flex flex-col md:flex-row md:text-lg gap-3 md:gap-10">
+              <TextIcon text='Career Growth' icon={<MdKeyboardDoubleArrowUp className='text-mainPurple' />} wrap='' />
+              <TextIcon text='Skill Enhancement' icon={<BsLightning className='text-mainPurple' />} wrap='' />
             </div>
-            <div className="flex flex-col gap-3">
-              <TextIcon text='Career Growth' icon={<AiOutlineArrowUp className='text-mainPurple' />} />
-              <TextIcon text='Career Growth' icon={<AiOutlineArrowUp className='text-mainPurple' />} />
+            <div className="flex flex-col md:flex-row md:text-lg gap-3 md:gap-10">
+              <TextIcon text='Networking' icon={<CiGlobe className='text-mainPurple' />} wrap='' />
+              <TextIcon text='Inspiration' icon={<TbBulb className='text-mainPurple' />} wrap='' />
             </div>
           </div>
         </div>
@@ -65,27 +84,30 @@ export default function Home() {
         </div>
 
         <div className='flex flex-col gap-5 justify-center items-center my-5'>
+          <h1 className='text-2xl lg:text-3xl text-white font-bold'>Projects</h1>
           <div className='flex flex-col md:grid md:grid-cols-2 xl:grid-cols-3 gap-5'>
             <ProjectCard />
             <ProjectCard />
             <ProjectCard />
             <ProjectCard />
+            <ProjectCard />
+            <ProjectCard />
           </div>
-          <Link className='flex gap-3 items-center  rounded-md px-2 py-1 hover:text-mainPurple   transition-colors' href="/details:id">
+          <Link className='flex gap-3 items-center  rounded-md px-2 py-1 hover:text-mainPurple   transition-colors' href="/projects">
             <TextIcon text='See All Projects' icon={<AiOutlineArrowRight />} wrap='' />
           </Link>
 
         </div>
 
 
-        <div className='flex flex-col justify-center items-center border-y border-mainPurple w-screen h-[160px]'>
+        <div className='flex flex-col justify-center items-center  w-screen lg:w-full h-[160px]'>
           <Link href="/projects" className='border z-10 border-white rounded-md px-5 py-2 text-lg absolute hover:bg-white hover:text-mainPurple transition-all ease-in-out'>Share your Projects</Link>
-          <Image className="w-full h-full object-cover brightness-50" src='/man-computer.jpg' alt='Man in front of computer' width={1920} height={1280} />
+          <Image className="w-full h-full object-cover brightness-50 rounded-lg" src='/man-computer.jpg' alt='Man in front of computer' width={1920} height={1280} />
         </div>
 
       </motion.main>
 
-      <footer className='h-[160px]  w-full bg-mainPurple px-3 py-5 '>
+      <footer className='h-[160px]  w-full bg-mainPurple/70 backdrop-blur-sm px-3 py-5 '>
         <p>Dev-SpotiLght</p>
         <p>Created by: Gabriel Barros</p>
         <p>Github Twitter</p>
