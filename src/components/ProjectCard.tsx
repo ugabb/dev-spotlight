@@ -10,10 +10,13 @@ import { FaReact, FaGithub } from "react-icons/fa";
 import Link from 'next/link'
 import Image from 'next/image'
 import { motion } from 'framer-motion'
+import { IProject } from '@/interfaces/IProject';
 
-type Props = {}
+type Props = {
+    project: IProject
+}
 
-const ProjectCard = (props: Props) => {
+const ProjectCard = ({ project }: Props) => {
     const [iconHeart, setIconHeart] = useState(false)
 
     const handleIconHeartShow = () => {
@@ -31,7 +34,7 @@ const ProjectCard = (props: Props) => {
                     <Image className='rounded-full object-cover' src={"/user.jpg"} width={40} height={40} alt='profile picture' />
                     <p className='text-mainGray text-sm flex items-center'>ugabb</p>
                 </div>
-                <h2 className='text-xl font-bold'>Twenty One Pilots</h2>
+                <h2 className='text-xl font-bold'>{project?.name}</h2>
                 <motion.div
                     onMouseEnter={handleIconHeartShow} onMouseLeave={handleIconHeartHide} className='transition-all ease-in-out cursor-pointer'>
                     {iconHeart ? <GoHeartFill size={25} className='text-mainPurple' /> : <GoHeart size={25} />}
@@ -46,18 +49,17 @@ const ProjectCard = (props: Props) => {
 
             <div className='p-3 text-mainGray'>
                 <h3 className='text-xl text-white font-bold'>About</h3>
-                <p className='text-sm leading-4'>An landing page of Twenty one Pilots that shows deeper one of the best bands in the 10s. An landing page of Twenty one Pilots that shows deeper one of the best bands in the 10s.An landing page of Twenty one Pilots that shows deeper one of the best bands in the 10s.</p>
+                <p className='text-sm leading-4'>{project?.description}</p>
             </div>
 
             <div className="flex gap-3 text-sm px-3">
-                <TextIcon text='React' icon={<FaReact className='text-blue-500' />} wrap='col' />
-                <TextIcon text='Bootsrap' icon={<FaReact />} wrap='col' />
-                <TextIcon text='Typescript' icon={<FaReact />} wrap='col' />
-                <TextIcon text='Tailwind' icon={<FaReact />} wrap='col' />
+                {project.technologies.map((tech) => (
+                    <TextIcon key={tech.name} text={tech.name} icon={<FaReact className='text-blue-500' />} wrap='col' />
+                ))}
             </div>
 
             <div className="flex justify-center gap-3 p-3  mx-auto text-mainGray ">
-                <Link className='flex gap-3 items-center  rounded-md px-2 py-1 hover:text-mainPurple hover:bg-white font-semibold bg-mainPurple text-white   transition-colors' href="/details:id">
+                <Link className='flex gap-3 items-center  rounded-md px-2 py-1 hover:text-mainPurple hover:bg-white font-semibold bg-mainPurple text-white   transition-colors' href={project.linkRepo} target='_blank'>
                     <p>GitHub</p>
                     <AiOutlineArrowRight />
                 </Link>
