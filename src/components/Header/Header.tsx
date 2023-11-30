@@ -39,7 +39,7 @@ const Header = () => {
             animate={isOpen ? "open" : "closed"}
             custom={height}
             ref={containerRef}
-            className='flex justify-between items-center md:w-full md:h-20 md:backdrop-blur-sm md:bg-black/20 md:fixed md:top-0 md:left-0 md:mx-auto md:px-20'>
+            className='flex justify-between items-center md:w-full md:h-20 md:backdrop-blur-sm md:bg-black/20 md:fixed md:top-0 md:left-0 md:mx-auto px-3 md:px-20 z-20'>
 
             <Navigation isOpen={isOpen} />
             <motion.div variants={sidebar} className={`background ${isOpen ? "block" : "hidden"} z-20 opacity-80 rounded-sm`} />
