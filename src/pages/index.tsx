@@ -12,6 +12,8 @@ import { AiOutlineArrowRight, AiOutlineArrowUp } from 'react-icons/ai'
 import { motion } from 'framer-motion'
 import Link from 'next/link'
 import ProjectCard from '@/components/ProjectCard'
+import { useEffect, useState } from 'react'
+import { IProject } from '@/interfaces/IProject'
 
 
 const inter = Inter({ subsets: ['latin'] })
@@ -20,6 +22,26 @@ const Shine = ['Shine']
 
 export default function Home() {
 
+
+  const [projects, setProjects] = useState<IProject[]>([]);
+
+  const handleFetchProjects = async () => {
+    try {
+      const response = await fetch('http://localhost:8080/projects', {
+        method: 'GET',
+        redirect: 'follow',
+        credentials: 'include'
+      })
+      const data = await response.json()
+      setProjects(data)
+    } catch (error) {
+
+    }
+  }
+
+  useEffect(() => {
+    handleFetchProjects()
+  }, [])
 
   return (
     <div className='flex flex-col gap-3 mx-auto overflow-hidden'>
@@ -86,12 +108,18 @@ export default function Home() {
         <div className='flex flex-col gap-5 justify-center items-center my-5'>
           <h1 className='text-2xl lg:text-3xl text-white font-bold'>Projects</h1>
           <div className='flex flex-col md:grid md:grid-cols-2 xl:grid-cols-3 gap-5'>
-            <ProjectCard />
-            <ProjectCard />
-            <ProjectCard />
-            <ProjectCard />
-            <ProjectCard />
-            <ProjectCard />
+            {projects.map(project => {
+              return (
+                <motion.div key={project.id}
+                // initial={{ opacity: 0, x: `${3 * project}px` }}
+                // animate={{ opacity: 1, x: '0px' }}
+                // exit={{ opacity: 0 }}
+                >
+                  <ProjectCard project={project} />
+                </motion.div>
+
+              )
+            })}
           </div>
           <Link className='flex gap-3 items-center  rounded-md px-2 py-1 hover:text-mainPurple   transition-colors' href="/projects">
             <TextIcon text='See All Projects' icon={<AiOutlineArrowRight />} wrap='' />
