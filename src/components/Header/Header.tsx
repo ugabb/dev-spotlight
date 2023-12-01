@@ -1,5 +1,5 @@
 import Image from 'next/image'
-import React, { useRef } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import { motion, sync, useCycle } from "framer-motion";
 
 import { AiOutlineMenu } from 'react-icons/ai'
@@ -33,6 +33,34 @@ const Header = () => {
     const [isOpen, toggleOpen] = useCycle(false, true);
     const containerRef = useRef(null);
     const { height } = useDimensions(containerRef);
+
+    const [screenWidth, setScreenWidth] = useState(0);
+
+    useEffect(() => {
+        const handleResize = () => {
+            setScreenWidth(window.innerWidth);
+        };
+
+        // Initial call to set the screenWidth
+        handleResize();
+
+        // Event listener for window resize
+        window.addEventListener('resize', handleResize);
+
+        // Cleanup the event listener on component unmount
+
+        return () => {
+            window.removeEventListener('resize', handleResize);
+        };
+
+    }, []);
+
+    useEffect(() => {
+        if (screenWidth >= 768 && isOpen) {
+            toggleOpen()
+        }
+    }, [screenWidth])
+
     return (
         <motion.nav
             initial={false}
@@ -41,8 +69,9 @@ const Header = () => {
             ref={containerRef}
             className='flex justify-between items-center md:w-full md:h-20 md:backdrop-blur-sm md:bg-black/20 md:fixed md:top-0 md:left-0 md:mx-auto px-3 md:px-20 z-20'>
 
-            <Navigation isOpen={isOpen} />
-            <motion.div variants={sidebar} className={`background ${isOpen ? "block" : "hidden"} z-20 opacity-80 rounded-sm`} />
+            <motion.div variants={sidebar} className={`background relative ${isOpen ? "block" : "hidden"} z-20 opacity-80 rounded-sm`}>
+                <Navigation isOpen={isOpen} />
+            </motion.div>
 
             <motion.div whileHover={{ scale: 1.1 }} className='cursor-pointer '>
                 <Link href={"/"}>

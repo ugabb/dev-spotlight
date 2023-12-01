@@ -2,6 +2,8 @@ import Header from '@/components/Header/Header'
 import ProjectCard from '@/components/ProjectCard'
 import { IProject } from '@/interfaces/IProject'
 import { motion } from 'framer-motion'
+import { GetServerSideProps } from 'next'
+import { useRouter } from 'next/router'
 import React, { useEffect, useState } from 'react'
 import { AiOutlineSearch } from 'react-icons/ai'
 
@@ -9,14 +11,19 @@ const Projects = () => {
   const animationX = [0, 10, 20, 30, 40, 50, 60, 70]
 
   const [projects, setProjects] = useState<IProject[]>([]);
+  const router = useRouter();
 
   const handleFetchProjects = async () => {
     try {
       const response = await fetch('http://localhost:8080/projects', {
         method: 'GET',
+        headers: {
+          Cookie: document.cookie || '', // Pass cookies from the request to the server
+        },
         redirect: 'follow',
         credentials: 'include'
       })
+
       const data = await response.json()
       setProjects(data)
     } catch (error) {
@@ -26,10 +33,10 @@ const Projects = () => {
 
   useEffect(() => {
     handleFetchProjects()
-  }, [])
-  useEffect(() => {
-    console.log(projects)
-  }, [projects])
+  }, [router.query])
+  // useEffect(() => {
+  //   console.log(projects)
+  // }, [projects])
 
   return (
     <div className='flex flex-col'>
@@ -48,9 +55,9 @@ const Projects = () => {
         {projects.map(project => {
           return (
             <motion.div key={project.id}
-              // initial={{ opacity: 0, x: `${3 * project}px` }}
-              // animate={{ opacity: 1, x: '0px' }}
-              // exit={{ opacity: 0 }}
+            // initial={{ opacity: 0, x: `${3 * project}px` }}
+            // animate={{ opacity: 1, x: '0px' }}
+            // exit={{ opacity: 0 }}
             >
               <ProjectCard project={project} />
             </motion.div>
