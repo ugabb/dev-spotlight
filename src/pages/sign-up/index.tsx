@@ -5,7 +5,7 @@ import { AiFillGithub } from 'react-icons/ai';
 import Image from 'next/image';
 import { Typewriter } from 'react-simple-typewriter';
 
-const SignUp = () => {
+const SignIn = () => {
     const handleSignIn = async () => {
         try {
             const response = await fetch('http://localhost:8080/oauth2/authorization/github');
@@ -43,4 +43,4 @@ const SignUp = () => {
     );
 };
 
-export default SignUp;
+export default SignIn;
