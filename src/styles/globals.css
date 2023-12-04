@@ -72,5 +72,35 @@ body {
 }
 
 .purple-gradient {
-  background: rgb(185,90,255);
+  background: rgb(185, 90, 255);
+}
+
+
+
+/* carousel */
+.swiper-button-next,
+.swiper-button-prev {
+  color: white !important;
+}
+
+.swiper {
+  padding: 1rem !important;
+}
+
+.swiper-button {
+  width: 50% !important;
+}
+
+.swiper-navigation-size {
+  width: 44px;
+}
+
+
+.swiper-slide {
+  display: flex !important;
+  justify-content: center !important;
+}
+
+.swiper-pagination-bullet {
+  background-color: var(--mainPurple) !important;
 }
