@@ -30,7 +30,7 @@ export default function Home() {
       const response = await fetch('http://localhost:8080/projects', {
         method: 'GET',
         redirect: 'follow',
-        credentials: 'include'
+        credentials: 'include',
       })
       const data = await response.json()
       setProjects(data)
@@ -84,12 +84,12 @@ export default function Home() {
           <h3 className='text-2xl font-bold font-george'>Why to use?</h3>
           <div className="flex gap-3 md:gap-10">
             <div className="flex flex-col md:flex-row md:text-lg gap-3 md:gap-10">
-              <TextIcon text='Career Growth' icon={<MdKeyboardDoubleArrowUp className='text-mainPurple' />} wrap='' />
-              <TextIcon text='Skill Enhancement' icon={<BsLightning className='text-mainPurple' />} wrap='' />
+              <TextIcon text='Career Growth' textColor='mainGray' icon={<MdKeyboardDoubleArrowUp className='text-mainPurple' />} wrap='' />
+              <TextIcon text='Skill Enhancement' textColor='mainGray' icon={<BsLightning className='text-mainPurple' />} wrap='' />
             </div>
             <div className="flex flex-col md:flex-row md:text-lg gap-3 md:gap-10">
-              <TextIcon text='Networking' icon={<CiGlobe className='text-mainPurple' />} wrap='' />
-              <TextIcon text='Inspiration' icon={<TbBulb className='text-mainPurple' />} wrap='' />
+              <TextIcon text='Networking' textColor='mainGray' icon={<CiGlobe className='text-mainPurple' />} wrap='' />
+              <TextIcon text='Inspiration' textColor='mainGray' icon={<TbBulb className='text-mainPurple' />} wrap='' />
             </div>
           </div>
         </div>
@@ -122,7 +122,7 @@ export default function Home() {
             })}
           </div>
           <Link className='flex gap-3 items-center  rounded-md px-2 py-1 hover:text-mainPurple   transition-colors' href="/projects">
-            <TextIcon text='See All Projects' icon={<AiOutlineArrowRight />} wrap='' />
+            <TextIcon text='See All Projects' textColor='mainGray' icon={<AiOutlineArrowRight />} wrap='' />
           </Link>
 
         </div>
