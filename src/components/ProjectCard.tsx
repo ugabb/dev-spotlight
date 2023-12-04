@@ -54,7 +54,7 @@ const ProjectCard = ({ project }: Props) => {
 
             <div className="flex gap-3 text-sm px-3">
                 {project?.technologies.map((tech) => (
-                    <TextIcon key={tech.name} text={tech.name} icon={<FaReact className='text-blue-500' />} wrap='col' />
+                    <TextIcon key={tech.name} text={tech.name} textColor='mainGray' icon={<FaReact className='text-blue-500' />} wrap='col' />
                 ))}
             </div>
 
