@@ -5,6 +5,8 @@ import { motion } from 'framer-motion'
 import { GetServerSideProps } from 'next'
 import { useRouter } from 'next/router'
 import React, { useEffect, useState } from 'react'
+
+import { IoFilterOutline } from "react-icons/io5";
 import { AiOutlineSearch } from 'react-icons/ai'
 
 const Projects = () => {
@@ -41,13 +43,21 @@ const Projects = () => {
   return (
     <div className='flex flex-col'>
       <Header />
-
-      <h1 className='text-3xl md:text-4xl text-center text-mainGray font-bold font-georgeTown tracking-widest uppercase mt-24'>Projects</h1>
-
-      <div className="flex items-center justify-between px-2 py-1 border rounded-md mx-auto">
-        <input type="text" className='bg-transparent placeholder:text-sm' placeholder='Search by Project name or user' />
-        <AiOutlineSearch className='text-xl' />
+      <div className="flex flex-col justify-center items-center p-3 gap-3">
+        <h1 className='text-3xl md:text-4xl text-center text-mainGray font-bold font-georgeTown tracking-widest uppercase mt-24'>Projects</h1>
+        <div className="flex gap-3">
+          <div className="flex items-center justify-between px-2 py-1 border rounded-md w-full md:w-[250px]">
+            <input type="text" className='bg-transparent placeholder:text-sm' placeholder='Search by Project name or user' />
+            <AiOutlineSearch className='text-xl' />
+          </div>
+          <div className="flex items-center justify-between px-2 py-1 border rounded-md w-full md:w-[100px]">
+            <input type="text" className='bg-transparent placeholder:text-sm w-full' placeholder='Filter' />
+            <IoFilterOutline className='text-xl' />
+          </div>
+        </div>
       </div>
+
+
 
       <motion.div
 

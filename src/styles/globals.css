@@ -104,3 +104,8 @@ body {
 .swiper-pagination-bullet {
   background-color: var(--mainPurple) !important;
 }
+
+.abstract-backrground {
+  background-image: url('/abstract-background.avif');
+  object-fit: cover;
+}

@@ -6,11 +6,14 @@ import { GoHeart, GoHeartFill } from 'react-icons/go'
 import Image from 'next/image';
 import { SwiperProps, SwiperSlide } from 'swiper/react';
 
+import { IoShareSocialOutline } from "react-icons/io5";
 import { RxExternalLink } from "react-icons/rx";
 import { FaReact } from 'react-icons/fa';
 import TextIcon from '@/components/TextIcon';
 import ButtonPurple from '@/components/ButtonPurple';
 import { useRouter } from 'next/router';
+import Link from 'next/link';
+import ButtonWide from '@/components/ButtonWide';
 
 const ProjectsDetails = () => {
   const { query } = useRouter()
@@ -26,10 +29,10 @@ const ProjectsDetails = () => {
   }
 
   return (
-    <div className='md:my-24'>
+    <div className='md:my-24 md:mx-20'>
       <Header />
-      <div className='mx-auto px-5 space-y-5'>
-        <div className='flex justify-around items-center'>
+      <div className='lg:w-2/3 mx-auto space-y-5 p-3'>
+        <div className='flex justify-between items-center '>
           <h1 className='text-2xl font-bold text-mainGray tracking-widest uppercase font-georgeTown'>{query.id}</h1>
           {iconHeart ? <GoHeartFill size={25} className='text-mainPurple' /> : <GoHeart className='text-mainGray' size={25} />}
         </div>
@@ -46,26 +49,53 @@ const ProjectsDetails = () => {
           </Carousel>
         </div>
 
-        <section className='space-y-3'>
+        <section className='space-y-3 md:mx-auto flex flex-col'>
           <h1 className='text-2xl text-mainGray font-bold tracking-widest uppercase font-georgeTown'>About</h1>
-          <p className='text-xs text-mainGray leading-4'>An landing page of Twenty one Pilots that shows deeper one of the best bands in the 10s.An landing page of Twenty one Pilots that shows deeper one of the best bands in the 10s.An landing page of Twenty one Pilots that shows deeper one of the best bands in the 10s.An landing page of Twenty one Pilots that shows deeper one of the best bands in the 10s.An landing page of Twenty one Pilots that shows deeper one of the best bands in the 10s.</p>
-          <p className='text-xs text-mainGray leading-4'>An landing page of Twenty one Pilots that shows deeper one of the best bands in the 10s.An landing page of Twenty one Pilots that shows deeper one of the best bands in the 10s.An landing page of Twenty one Pilots that shows deeper one of the best bands in the 10s.An landing page of Twenty one Pilots that shows deeper one of the best bands in the 10s.An landing page of Twenty one Pilots that shows deeper one of the best bands in the 10s.</p>
+          <p className='text-xs md:text-base lg:text-lg text-mainGray leading-4'>An landing page of Twenty one Pilots that shows deeper one of the best bands in the 10s.An landing page of Twenty one Pilots that shows deeper one of the best bands in the 10s.An landing page of Twenty one Pilots that shows deeper one of the best bands in the 10s.An landing page of Twenty one Pilots that shows deeper one of the best bands in the 10s.An landing page of Twenty one Pilots that shows deeper one of the best bands in the 10s.</p>
+          <p className='text-xs md:text-base lg:text-lg text-mainGray leading-4'>An landing page of Twenty one Pilots that shows deeper one of the best bands in the 10s.An landing page of Twenty one Pilots that shows deeper one of the best bands in the 10s.An landing page of Twenty one Pilots that shows deeper one of the best bands in the 10s.An landing page of Twenty one Pilots that shows deeper one of the best bands in the 10s.An landing page of Twenty one Pilots that shows deeper one of the best bands in the 10s.</p>
         </section>
 
-        <section>
-          <h1 className='text-2xl text-mainGray font-bold tracking-widest uppercase font-georgeTown'>Technologies</h1>
+        <section className=''>
+          <h1 className='text-2xl text-mainGray font-bold tracking-widest uppercase font-georgeTown '>Technologies</h1>
           <div className="flex gap-3">
-            <TextIcon text={'React'} textColor='mainGray' icon={<FaReact className='text-blue-500' />} wrap='' />
-            <TextIcon text={'React'} textColor='mainGray' icon={<FaReact className='text-blue-500' />} wrap='' />
-            <TextIcon text={'React'} textColor='mainGray' icon={<FaReact className='text-blue-500' />} wrap='' />
+            <TextIcon text={'React'} textColor='mainGray' icon={<FaReact className='text-blue-500' size={20} />} wrap='' />
+            <TextIcon text={'React'} textColor='mainGray' icon={<FaReact className='text-blue-500' size={20} />} wrap='' />
+            <TextIcon text={'React'} textColor='mainGray' icon={<FaReact className='text-blue-500' size={20} />} wrap='' />
           </div>
         </section>
 
-        <div className="grid grid-cols-2 md:flex gap-1">
-          <ButtonPurple icon={<RxExternalLink size={15} />} text='Live Demo' textColor='white' textSize='sm' />
-          <ButtonPurple icon={<RxExternalLink size={15} />} text='Repository' textColor='white' textSize='sm' />
-          <ButtonPurple icon={<RxExternalLink size={15} />} text='Clone Project' textColor='white' textSize='sm' />
+        <div className="grid grid-cols-2 md:hidden items-start md:flex gap-1">
+          <Link href={'/'}>
+            <ButtonPurple icon={<Image src={'/external-link.svg'} width={15} height={15} alt='icon' />} text='Live Demo' textColor='mainGray' textSize='sm' />
+          </Link>
+          <Link href={'/'}>
+            <ButtonPurple icon={<Image src={'/external-link.svg'} width={15} height={15} alt='icon' />} text='Repository' textColor='mainGray' textSize='sm' />
+          </Link>
+          <Link href={'/'}>
+            <ButtonPurple icon={<Image src={'/copy-icon.svg'} width={15} height={15} alt='icon' />} text='Clone Project' textColor='mainGray' textSize='sm' />
+          </Link>
+          <Link href={'/'}>
+            <ButtonPurple icon={<IoShareSocialOutline size={15} className='text-mainPurple' />} text='Share' textColor='mainGray' textSize='sm' />
+          </Link>
         </div>
+
+        <div className="hidden md:flex justify-center items-center">
+          <div className="grid grid-cols-2 gap-3">
+            <Link href={'/'}>
+              <ButtonWide icon={<Image src={'/external-link.svg'} width={15} height={15} alt='icon' />} text='Live Demo' />
+            </Link>
+            <Link href={'/'}>
+              <ButtonWide icon={<Image src={'/external-link.svg'} width={15} height={15} alt='icon' />} text='Repository' />
+            </Link>
+            <Link href={'/'}>
+              <ButtonWide icon={<Image src={'/copy-icon.svg'} width={15} height={15} alt='icon' />} text='Clone Project' />
+            </Link>
+            <Link href={'/'}>
+              <ButtonWide icon={<IoShareSocialOutline size={15} className='text-mainPurple' />} text='Share' />
+            </Link>
+          </div>
+        </div>
+
 
 
         <section>
@@ -80,6 +110,10 @@ const ProjectsDetails = () => {
             </div>
           </div>
         </section>
+
+        <h2 className='text-xl text-mainGray text-center'>Others Projects</h2>
+
+        
 
       </div>
     </div>
