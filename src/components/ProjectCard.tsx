@@ -28,7 +28,7 @@ const ProjectCard = ({ project }: Props) => {
     return (
         <motion.div
 
-            className='flex flex-col  bg-white/5 backdrop-blur-sm  border border-gray-500  rounded-[27px] w-[300px]  p-2 relative'>
+            className='flex flex-col  bg-white/5 backdrop-blur-sm  border border-gray-500  rounded-[27px]  p-2 relative'>
             <div className='flex gap-3 justify-between items-center '>
                 <div className='flex flex-col w-10 h-10'>
                     <Image className='rounded-full object-cover' src={"/user.jpg"} width={40} height={40} alt='profile picture' />

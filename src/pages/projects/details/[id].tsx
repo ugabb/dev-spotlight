@@ -145,7 +145,7 @@ const ProjectsDetails = () => {
 
         <motion.div
 
-          className="flex flex-col md:grid md:grid-cols-2 xl:grid-cols-3 gap-3 mt-10 mx-auto">
+          className="flex flex-col justify-center items-center gap-5 md:grid md:grid-cols-2 xl:grid-cols-3 mt-10 ">
           {projects.slice(0,3).map(project => {
             return (
               <motion.div key={project.id}
