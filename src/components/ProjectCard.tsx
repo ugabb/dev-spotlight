@@ -28,13 +28,13 @@ const ProjectCard = ({ project }: Props) => {
     return (
         <motion.div
 
-            className='flex flex-col  bg-white/5 backdrop-blur-sm  border border-gray-500  rounded-[27px] w-[300px] lg:max-w-[350px] md:w-full p-2 relative'>
-            <div className='flex gap-3 justify-between items-center'>
+            className='flex flex-col overflow-hidden bg-white/5 backdrop-blur-sm  border border-gray-500  rounded-[27px] w-[300px] lg:max-w-[350px] md:w-full p-2 relative'>
+            <div className='flex gap-3 justify-between items-center '>
                 <div className='flex flex-col w-10 h-10'>
                     <Image className='rounded-full object-cover' src={"/user.jpg"} width={40} height={40} alt='profile picture' />
-                    <p className='text-mainGray text-sm flex items-center'>ugabb</p>
+                    <p className='text-mainGray text-xs flex items-center'>ugabb</p>
                 </div>
-                <h2 className='text-xl font-bold'>{project?.name}</h2>
+                <h2 className='text-xl font-bold break-words'>{project?.name}</h2>
                 <motion.div
                     onMouseEnter={handleIconHeartShow} onMouseLeave={handleIconHeartHide} className='transition-all ease-in-out cursor-pointer'>
                     {iconHeart ? <GoHeartFill size={25} className='text-mainPurple' /> : <GoHeart size={25} />}
@@ -47,9 +47,9 @@ const ProjectCard = ({ project }: Props) => {
                 </div>
             </div>
 
-            <div className='p-3 text-mainGray'>
+            <div className='p-3 text-mainGray w-full'>
                 <h3 className='text-xl text-white font-bold'>About</h3>
-                <p className='text-sm leading-4'>{project?.description}</p>
+                <p className='text-sm leading-4 break-words'>{project?.description}</p>
             </div>
 
             <div className="flex gap-3 text-sm px-3">
@@ -63,7 +63,7 @@ const ProjectCard = ({ project }: Props) => {
                     <p>GitHub</p>
                     <AiOutlineArrowRight />
                 </Link>
-                <Link className='flex gap-3 items-center  rounded-md px-2 py-1 hover:text-mainPurple hover:bg-white font-semibold bg-mainPurple text-white  transition-colors' href="/details:id">
+                <Link className='flex gap-3 items-center  rounded-md px-2 py-1 hover:text-mainPurple hover:bg-white font-semibold bg-mainPurple text-white  transition-colors' href={`/projects/details/${project.name}`}>
                     <p>More</p>
                     <AiOutlineArrowRight />
 
