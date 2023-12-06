@@ -62,8 +62,8 @@ const ProjectsDetails = () => {
     <div className='md:my-24 md:mx-20'>
       <Header />
       <div className='lg:w-2/3 mx-auto space-y-5 p-3'>
-        <div className='flex justify-between items-center '>
-          <h1 className='text-2xl font-bold text-mainGray tracking-widest uppercase font-georgeTown'>{query.id}</h1>
+        <div className='flex justify-between gap-3'>
+          <h1 className='text-2xl font-bold text-mainGray tracking-widest uppercase font-georgeTown break-all'>{query.id}</h1>
           {iconHeart ? <GoHeartFill size={25} className='text-mainPurple' /> : <GoHeart className='text-mainGray' size={25} />}
         </div>
 

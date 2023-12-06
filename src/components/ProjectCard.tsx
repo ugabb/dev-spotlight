@@ -28,13 +28,13 @@ const ProjectCard = ({ project }: Props) => {
     return (
         <motion.div
 
-            className='flex flex-col overflow-hidden bg-white/5 backdrop-blur-sm  border border-gray-500  rounded-[27px] w-[300px] lg:max-w-[350px] md:w-full p-2 relative'>
+            className='flex flex-col  bg-white/5 backdrop-blur-sm  border border-gray-500  rounded-[27px] w-[300px]  p-2 relative'>
             <div className='flex gap-3 justify-between items-center '>
                 <div className='flex flex-col w-10 h-10'>
                     <Image className='rounded-full object-cover' src={"/user.jpg"} width={40} height={40} alt='profile picture' />
                     <p className='text-mainGray text-xs flex items-center'>ugabb</p>
                 </div>
-                <h2 className='text-xl font-bold break-words'>{project?.name}</h2>
+                <h2 className='text-xl font-bold break-all'>{project?.name}</h2>
                 <motion.div
                     onMouseEnter={handleIconHeartShow} onMouseLeave={handleIconHeartHide} className='transition-all ease-in-out cursor-pointer'>
                     {iconHeart ? <GoHeartFill size={25} className='text-mainPurple' /> : <GoHeart size={25} />}
