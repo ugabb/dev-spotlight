@@ -1,6 +1,6 @@
 import Carousel from '@/components/Carousel/Carousel'
 import Header from '@/components/Header/Header'
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { GoHeart, GoHeartFill } from 'react-icons/go'
 
 import Image from 'next/image';
@@ -14,6 +14,9 @@ import ButtonPurple from '@/components/ButtonPurple';
 import { useRouter } from 'next/router';
 import Link from 'next/link';
 import ButtonWide from '@/components/ButtonWide';
+import { IProject } from '@/interfaces/IProject';
+import { motion } from 'framer-motion';
+import ProjectCard from '@/components/ProjectCard';
 
 const ProjectsDetails = () => {
   const { query } = useRouter()
@@ -27,6 +30,33 @@ const ProjectsDetails = () => {
       clickable: true
     }
   }
+
+
+  const [projects, setProjects] = useState<IProject[]>([]);
+  const router = useRouter();
+
+  const handleFetchProjects = async () => {
+    try {
+      const response = await fetch('http://localhost:8080/projects', {
+        method: 'GET',
+        redirect: 'follow',
+        credentials: 'include',
+
+      })
+
+      const data = await response.json()
+      console.log(data)
+      setProjects(data)
+
+    } catch (error) {
+
+    }
+  }
+
+  useEffect(() => {
+    handleFetchProjects()
+  }, [router.query])
+
 
   return (
     <div className='md:my-24 md:mx-20'>
@@ -113,7 +143,22 @@ const ProjectsDetails = () => {
 
         <h2 className='text-xl text-mainGray text-center'>Others Projects</h2>
 
-        
+        <motion.div
+
+          className="flex flex-col md:grid md:grid-cols-2 xl:grid-cols-3 gap-3 mt-10 mx-auto">
+          {projects.slice(0,3).map(project => {
+            return (
+              <motion.div key={project.id}
+              // initial={{ opacity: 0, x: `${3 * project}px` }}
+              // animate={{ opacity: 1, x: '0px' }}
+              // exit={{ opacity: 0 }}
+              >
+                <ProjectCard project={project} />
+              </motion.div>
+
+            )
+          })}
+        </motion.div>
 
       </div>
     </div>
