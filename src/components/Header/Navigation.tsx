@@ -23,6 +23,7 @@ export const Navigation = ({ isOpen }) => (
 
 const routes = [
     { id: 0, name: "Home", route: "/" },
-    { id: 1, name: "Login", route: "/login" },
-    { id: 3, name: "Sign Up", route: "/sign-up" }
+    { id: 1, name: "Projects", route: "/projects" },
+    { id: 2, name: "Create Project", route: "/projects/create" },
+    { id: 3, name: "Sign In", route: "/sign-up" }
 ]

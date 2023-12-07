@@ -19,15 +19,15 @@ const Projects = () => {
     try {
       const response = await fetch('http://localhost:8080/projects', {
         method: 'GET',
-        headers: {
-          Cookie: document.cookie || '', // Pass cookies from the request to the server
-        },
         redirect: 'follow',
-        credentials: 'include'
+        credentials: 'include',
+
       })
 
       const data = await response.json()
+      console.log(data)
       setProjects(data)
+
     } catch (error) {
 
     }

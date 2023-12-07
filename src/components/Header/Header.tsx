@@ -67,7 +67,7 @@ const Header = () => {
             animate={isOpen ? "open" : "closed"}
             custom={height}
             ref={containerRef}
-            className='flex justify-between items-center md:w-full md:h-20 md:backdrop-blur-sm md:bg-black/20 md:fixed md:top-0 md:left-0 md:mx-auto px-3 md:px-20 z-20'>
+            className='flex justify-between items-center md:w-full md:h-20 md:backdrop-blur-sm md:bg-black/20 md:fixed md:top-0 md:left-0 md:mx-auto px-3 md:px-40 z-20'>
 
             <motion.div variants={sidebar} className={`background relative ${isOpen ? "block" : "hidden"} z-20 opacity-80 rounded-sm`}>
                 <Navigation isOpen={isOpen} />
@@ -80,10 +80,10 @@ const Header = () => {
             </motion.div>
             <MenuToggle toggle={() => toggleOpen()} />
 
-            <motion.ul className="hidden md:flex gap-3 text-mainGray ">
+            <motion.ul className="hidden md:flex gap-5 text-mainGray ">
                 <Link href={'/'} className='hover:text-white hover:underline hover:decoration-mainPurple transition-all cursor-pointer hover:scale-105'>Home</Link>
                 <Link href={'/projects'} className='hover:text-white hover:underline hover:decoration-mainPurple transition-all cursor-pointer hover:scale-105'>Projects</Link>
-                <Link href={'/docs'} className='hover:text-white hover:underline hover:decoration-mainPurple transition-all cursor-pointer hover:scale-105'>Docs</Link>
+                <Link href={'/projects/create'} className='hover:text-white hover:underline hover:decoration-mainPurple transition-all cursor-pointer hover:scale-105'>Create Project</Link>
                 <Link href={'/sign-up'} className=' hover:text-mainPurple hover:underline hover:decoration-mainPurple transition-all font-semibold hover:glow-text cursor-pointer hover:scale-105'>Sign Up</Link>
             </motion.ul>
 
