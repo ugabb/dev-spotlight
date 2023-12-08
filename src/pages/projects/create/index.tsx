@@ -6,6 +6,7 @@ import { Controller, SubmitHandler, useForm } from 'react-hook-form'
 
 import Autocomplete from '@mui/material/Autocomplete';
 import TextField from '@mui/material/TextField'
+import GlowButton from '@/components/GlowButton'
 
 
 interface IProject {
@@ -71,32 +72,62 @@ const index = (props: Props) => {
             <div className='mx-auto space-y-5 w-full p-3  md:px-40'>
                 <h1 className='text-2xl font-bold text-mainGray text-center tracking-widest uppercase font-georgeTown break-all'>Create Project</h1>
 
-                <form onSubmit={handleSubmit(onSubmit)}>
-                    <div className='flex flex-col gap-5'>
-                        <InputDefault register={register} label='Name' registerName='name' />
-                    </div>
-                    <div>
-                        <Controller
-                            name='technologies' // This should match the name in your form data
-                            control={control}
-                            defaultValue='' // Set the default value, if any
-                            render={({ field }) => (
-                                <Autocomplete
-                                    {...field}
-                                    className='w-full bg-white rounded-md'
-                                    disablePortal
-                                    id='combo-box-demo'
-                                    options={icons?.map((icon) => icon.name)}
-                                    sx={{ width: 300 }}
-                                    onChange={(event, value) => field.onChange(value)}
-                                    renderInput={(params) => <TextField {...params} fullWidth label='Icons' />}
+                <form className='xl:max-w-3xl mx-auto flex flex-col gap-5' onSubmit={handleSubmit(onSubmit)}>
+                    <div className="flex flex-col lg:flex-row gap-5">
+                        <div className='flex flex-col gap-5 lg:w-1/2 '>
+                            <InputDefault register={register} label='Name' registerName='name' />
+                            <InputDefault register={register} label='Repository Link' registerName='repoLink' />
+                        </div>
+
+                        <div className='lg:w-1/2 '>
+                            <label className='flex flex-col text-mainGray italic '>
+                                Technologies
+                                <Controller
+                                    name='technologies' // This should match the name in your form data
+                                    control={control}
+                                    defaultValue='' // Set the default value, if any
+                                    render={({ field }) => (
+                                        <Autocomplete
+                                            {...field}
+                                            className='w-full bg-black rounded-md text-white focus:outline-none'
+                                            style={{ color: "#fff" }}
+                                            disablePortal
+
+                                            id='combo-box-demo'
+                                            options={icons?.map((icon) => icon.name)}
+                                            sx={{
+                                                width: 300,
+                                                '& .MuiAutocomplete-input': {
+                                                    color: "#B9B9B9",
+                                                    "&:focus":{
+                                                        outline:'none'
+                                                    }
+                                                },
+                                            }}
+                                
+                                            onChange={(event, value) => field.onChange(value)}
+                                            renderInput={(params) => <TextField {...params} fullWidth className='text-white  focus:outline-0' sx={{
+                                                '& .MuiTextField': {
+                                                    outline: 'none'
+                                                }
+                                            }} />}
+                                        />
+                                    )}
                                 />
-                            )}
-                        />
 
+                            </label>
 
+                        </div>
                     </div>
-                    <button type="submit">Enviar</button>
+
+                    <div className="flex flex-col gap-3">
+                        <InputDefault register={register} label='Description' registerName='description' />
+                    </div>
+                    <div className="flex flex-col gap-3">
+                        <input type="file" />
+                    </div>
+
+                    <GlowButton text='Create' type='submit' />
                 </form>
                 {
                     selectTechnologies && (
