@@ -7,6 +7,8 @@ import { Controller, SubmitHandler, useForm } from 'react-hook-form'
 import Autocomplete from '@mui/material/Autocomplete';
 import TextField from '@mui/material/TextField'
 import GlowButton from '@/components/GlowButton'
+import useSelectImage from '@/hooks/useSelectImage'
+import Image from 'next/image'
 
 
 interface IProject {
@@ -28,6 +30,7 @@ const index = (props: Props) => {
     const [selectTechnologies, setSelectedTechnologies] = useState<any[]>([]);
     const [filter, setFilter] = useState('');
     const [suggestedIcons, setSuggestedIcons] = useState([]);
+
 
     const { register, handleSubmit, control } = useForm();
 
@@ -53,18 +56,30 @@ const index = (props: Props) => {
     useEffect(() => {
         fetchIcons()
     }, [])
-    useEffect(() => {
-        // console.log(project)
-        console.log(selectTechnologies)
-        console.log(icons)
-    }, [project, selectTechnologies])
-
 
 
     const onSubmit: SubmitHandler<IProject> = (data) => {
 
         setSelectedTechnologies((prev) => [...prev, data.technologies])
     }
+
+    // image input
+    const [imagesSelected, setImagesSelected] = useState<File[]>([]);
+    const { uploader, result } = useSelectImage()
+
+    useEffect(() => {
+        uploader(imagesSelected);
+    }, [imagesSelected])
+
+    useEffect(() => {
+        // console.log(project)
+        // console.log(selectTechnologies)
+        // console.log(icons)
+        // console.log(imagesSelected)
+        console.log(result)
+    }, [project, selectTechnologies, imagesSelected,result])
+
+
 
     return (
         <div className='md:my-24'>
@@ -99,12 +114,12 @@ const index = (props: Props) => {
                                                 width: 300,
                                                 '& .MuiAutocomplete-input': {
                                                     color: "#B9B9B9",
-                                                    "&:focus":{
-                                                        outline:'none'
+                                                    "&:focus": {
+                                                        outline: 'none'
                                                     }
                                                 },
                                             }}
-                                
+
                                             onChange={(event, value) => field.onChange(value)}
                                             renderInput={(params) => <TextField {...params} fullWidth className='text-white  focus:outline-0' sx={{
                                                 '& .MuiTextField': {
@@ -123,8 +138,41 @@ const index = (props: Props) => {
                     <div className="flex flex-col gap-3">
                         <InputDefault register={register} label='Description' registerName='description' />
                     </div>
-                    <div className="flex flex-col gap-3">
-                        <input type="file" />
+                    <div className="flex flex-col md:flex-row flex-wrap  items-center gap-3">
+                        {result.length < 5
+                            ?
+                            <input
+                                type="file"
+                                multiple
+                                onChange={(e) => {
+                                    const selectedFiles = Array.from(e.target.files);
+                                    setImagesSelected((prev) => [...prev, ...selectedFiles]);
+
+                                }}
+                                className='md:w-1/3 h-full'
+                            />
+                            :
+                            <div className="flex flex-col gap-2 ">
+                                <p className='text-xs text-red-500'>Max of 5 images</p>
+                                <input
+                                    type="file"
+                                    onChange={(e) => {
+                                        const selectedFiles = Array.from(e.target.files);
+                                        setImagesSelected((prev) => [...prev, ...selectedFiles]);
+
+                                    }}
+                                    disabled
+                                    max={5}
+                                    className='md:w-1/3 h-full'
+                                />
+                            </div>
+                        }
+
+                        {result && result.map((img, index) => (
+                            <div key={index} className='flex flex-col md:flex-grid md:grid-cols-3 flex-wrap items-center gap-3'>
+                                <Image className='w-[150px] h-[100px] object-cover' src={img} alt={`Image ${index + 1}`} width={1920} height={1080} />
+                            </div>
+                        ))}
                     </div>
 
                     <GlowButton text='Create' type='submit' />
