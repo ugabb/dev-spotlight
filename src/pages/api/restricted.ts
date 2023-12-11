@@ -4,6 +4,8 @@ import { authOptions } from "./auth/[...nextauth]"
 export default async (req, res) => {
     const session = await getServerSession(req, res, authOptions)
 
+    console.log(authOptions)
+
     if (session) {
         res.send({
             content:

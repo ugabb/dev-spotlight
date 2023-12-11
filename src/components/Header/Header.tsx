@@ -7,6 +7,7 @@ import { useDimensions } from './useDimensions';
 import { MenuToggle } from './MenuToggle';
 import { Navigation } from './Navigation';
 import Link from 'next/link';
+import { signOut, useSession } from 'next-auth/react';
 
 
 const sidebar = {
@@ -30,6 +31,10 @@ const sidebar = {
 };
 
 const Header = () => {
+    const { data: session, status } = useSession();
+
+    // console.log(session?.user)
+
     const [isOpen, toggleOpen] = useCycle(false, true);
     const containerRef = useRef(null);
     const { height } = useDimensions(containerRef);
@@ -84,7 +89,15 @@ const Header = () => {
                 <Link href={'/'} className='hover:text-white hover:underline hover:decoration-mainPurple transition-all cursor-pointer hover:scale-105'>Home</Link>
                 <Link href={'/projects'} className='hover:text-white hover:underline hover:decoration-mainPurple transition-all cursor-pointer hover:scale-105'>Projects</Link>
                 <Link href={'/projects/create'} className='hover:text-white hover:underline hover:decoration-mainPurple transition-all cursor-pointer hover:scale-105'>Create Project</Link>
-                <Link href={'/sign-up'} className=' hover:text-mainPurple hover:underline hover:decoration-mainPurple transition-all font-semibold hover:glow-text cursor-pointer hover:scale-105'>Sign Up</Link>
+
+                {status === "authenticated"
+                    ? <div className='flex gap-3 items-center'>
+                        <Image onClick={() => signOut()} className='rounded-full hover:scale-105 cursor-pointer' src={session.user.image} height={30} width={30} alt='user profile photo' />
+                        <p className='text-sm'>{session.user.name}</p>
+                    </div>
+                    : <Link href={'/sign-up'} className=' hover:text-mainPurple hover:underline hover:decoration-mainPurple transition-all font-semibold hover:glow-text cursor-pointer hover:scale-105'>Sign Up</Link>
+                }
+
             </motion.ul>
 
         </motion.nav>
