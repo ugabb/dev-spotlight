@@ -1,4 +1,5 @@
 import { Html, Head, Main, NextScript } from 'next/document'
+import { ProfileProvider } from '@/components/ProfileProvider'
 
 export default function Document() {
   return (
@@ -8,8 +9,9 @@ export default function Document() {
         <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/devicon.min.css" />
       </Head>
       <body>
-
-        <Main />
+        <ProfileProvider>
+          <Main />
+        </ProfileProvider>
         <NextScript />
       </body>
     </Html>
