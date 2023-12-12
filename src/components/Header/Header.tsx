@@ -31,7 +31,7 @@ const sidebar = {
     }
 };
 
-const Header =  () => {
+const Header = () => {
     const { data: session, status } = useSession();
     // const sessao = await getSession()
     // const providers = await getProviders()
@@ -73,7 +73,11 @@ const Header =  () => {
 
     return (
         <motion.nav
-            initial={false}
+            initial={{ opacity: 0, x: -50 }}
+            whileInView={{ opacity: 1, x: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.1, type: "spring", stiffness: 110, delay: 0.7 }}
+            // initial={false}
             animate={isOpen ? "open" : "closed"}
             custom={height}
             ref={containerRef}
@@ -95,13 +99,13 @@ const Header =  () => {
                 <Link href={'/projects'} className='hover:text-white hover:underline hover:decoration-mainPurple transition-all cursor-pointer hover:scale-105'>Projects</Link>
                 <Link href={'/projects/create'} className='hover:text-white hover:underline hover:decoration-mainPurple transition-all cursor-pointer hover:scale-105'>Create Project</Link>
 
-                {/* {status === "authenticated"
+                {status === "authenticated"
                     ? <div className='flex gap-3 items-center'>
                         <Image onClick={() => signOut()} className='rounded-full hover:scale-105 cursor-pointer' src={session.user.image} height={30} width={30} alt='user profile photo' />
                         <p className='text-sm'>{session.user.name}</p>
                     </div>
                     : <Link href={'/sign-up'} className=' hover:text-mainPurple hover:underline hover:decoration-mainPurple transition-all font-semibold hover:glow-text cursor-pointer hover:scale-105'>Sign Up</Link>
-                } */}
+                }
 
             </motion.ul>
 
