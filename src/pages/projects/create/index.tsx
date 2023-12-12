@@ -10,6 +10,9 @@ import GlowButton from '@/components/GlowButton'
 import useSelectImage from '@/hooks/useSelectImage'
 import Image from 'next/image'
 
+// firebase
+import { getStorage, ref } from "firebase/storage";
+import { storage } from '@/firebase'
 
 interface IProject {
     name: string;
@@ -77,8 +80,13 @@ const index = (props: Props) => {
         // console.log(icons)
         // console.log(imagesSelected)
         console.log(result)
-    }, [project, selectTechnologies, imagesSelected,result])
+    }, [project, selectTechnologies, imagesSelected, result])
 
+
+
+    // Create a storage reference from our storage service
+    const projectImagesRef = ref(storage, 'project-images');
+    // console.log(projectImagesRef.fullPath, projectImagesRef.bucket, projectImagesRef.name)
 
 
     return (
