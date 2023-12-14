@@ -10,7 +10,6 @@ import Link from 'next/link';
 import { getProviders, getSession, signOut, useSession } from 'next-auth/react';
 import { ProfileContext } from '@/context/ProfileContext';
 
-
 const sidebar = {
     open: (width = 1000) => ({
         clipPath: `circle(${width * 2 + 200}px at calc(100% - 40px) 40px)`, // Update clip path to open right to left
@@ -30,15 +29,14 @@ const sidebar = {
         }
     }
 };
-
 const Header = () => {
     const { data: session, status } = useSession();
     // const sessao = await getSession()
     // const providers = await getProviders()
-    const { profile } = useContext(ProfileContext)
-    if (profile) {
-        console.log(profile);
+    if (session) {
+        console.log("USERDATA:", session.user); // This will log the username
     }
+
 
     const [isOpen, toggleOpen] = useCycle(false, true);
     const containerRef = useRef(null);
