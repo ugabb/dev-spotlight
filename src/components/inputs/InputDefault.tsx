@@ -11,7 +11,7 @@ const InputDefault = ({ label, registerName, register, ...props }: Props) => {
     return (
         <label className='flex flex-col text-mainGray italic '>
             {label}:
-            <input type="text" {...register(registerName)} {...props} className='w-full bg-black rounded-md px-3 py-2 border border-zinc-700 hover:border-mainPurple' />
+            <input type="text" {...register(registerName)} {...props} className='w-full bg-black rounded-md px-3 py-2 border border-zinc-700 hover:border-mainPurple focus:outline-none focus:border-mainPurple' />
         </label>
     )
 }
