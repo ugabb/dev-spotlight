@@ -10,7 +10,7 @@ import { IoShareSocialOutline } from "react-icons/io5";
 import { RxExternalLink } from "react-icons/rx";
 import { FaReact } from 'react-icons/fa';
 import TextIcon from '@/components/TextIcon';
-import ButtonPurple from '@/components/ButtonPurple';
+import ButtonIcon from '@/components/ButtonIcon';
 import { useRouter } from 'next/router';
 import Link from 'next/link';
 import ButtonWide from '@/components/ButtonWide';
@@ -96,16 +96,16 @@ const ProjectsDetails = () => {
 
         <div className="grid grid-cols-2 md:hidden items-start md:flex gap-1">
           <Link href={'/'}>
-            <ButtonPurple icon={<Image src={'/external-link.svg'} width={15} height={15} alt='icon' />} text='Live Demo' textColor='mainGray' textSize='sm' />
+            <ButtonIcon icon={<Image src={'/external-link.svg'} width={15} height={15} alt='icon' />} text='Live Demo' textColor='mainGray' textSize='sm' />
           </Link>
           <Link href={'/'}>
-            <ButtonPurple icon={<Image src={'/external-link.svg'} width={15} height={15} alt='icon' />} text='Repository' textColor='mainGray' textSize='sm' />
+            <ButtonIcon icon={<Image src={'/external-link.svg'} width={15} height={15} alt='icon' />} text='Repository' textColor='mainGray' textSize='sm' />
           </Link>
           <Link href={'/'}>
-            <ButtonPurple icon={<Image src={'/copy-icon.svg'} width={15} height={15} alt='icon' />} text='Clone Project' textColor='mainGray' textSize='sm' />
+            <ButtonIcon icon={<Image src={'/copy-icon.svg'} width={15} height={15} alt='icon' />} text='Clone Project' textColor='mainGray' textSize='sm' />
           </Link>
           <Link href={'/'}>
-            <ButtonPurple icon={<IoShareSocialOutline size={15} className='text-mainPurple' />} text='Share' textColor='mainGray' textSize='sm' />
+            <ButtonIcon icon={<IoShareSocialOutline size={15} className='text-mainPurple' />} text='Share' textColor='mainGray' textSize='sm' />
           </Link>
         </div>
 
