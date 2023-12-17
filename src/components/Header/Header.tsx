@@ -31,11 +31,11 @@ const sidebar = {
 };
 const Header = () => {
     const { data: session, status } = useSession();
-    // const sessao = await getSession()
-    // const providers = await getProviders()
-    if (session) {
-        console.log("USERDATA:", session.user); // This will log the username
-    }
+    // // const sessao = await getSession()
+    // // const providers = await getProviders()
+    // if (session) {
+    //     console.log("USERDATA:", session.user); // This will log the username
+    // }
 
 
     const [isOpen, toggleOpen] = useCycle(false, true);
