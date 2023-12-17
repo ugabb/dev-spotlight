@@ -13,6 +13,11 @@ import Image from 'next/image'
 // firebase
 import { getStorage, ref } from "firebase/storage";
 import { storage } from '@/firebase'
+import ButtonIcon from '@/components/ButtonIcon'
+import { GoLinkExternal } from 'react-icons/go'
+import { useSession } from 'next-auth/react'
+import Link from 'next/link'
+import { IoShareSocialOutline } from 'react-icons/io5'
 
 interface IProject {
     name: string;
@@ -36,6 +41,41 @@ const index = (props: Props) => {
 
 
     const { register, handleSubmit, control } = useForm();
+
+    // fetch repositories
+    const [repositories, setRepositories] = useState([]); // [
+    const [selectedRepository, setSelectedRepository] = useState(); // [
+    const { data: session } = useSession()
+    const user = session?.user?.username
+
+    const handleFetchRepositories = async (page = 1) => {
+        try {
+            const response = await fetch(`https://api.github.com/users/${user}/repos?page=${page}&per_page=100`);
+            if (response.ok) {
+                const data = await response.json();
+                if (data.length > 0) {
+                    setRepositories((prevRepos) => [...prevRepos, ...data]);
+                    handleFetchRepositories(page + 1); // Fetch next page
+                }
+            } else {
+                console.error('Failed to fetch repositories:', response.status);
+            }
+        } catch (error) {
+            console.error('Error fetching repositories:', error);
+        }
+    };
+
+    const handleSelectedRepository = (e) => {
+        const selectedRepoName = e.target.value;
+        const selectedRepo = repositories.find((repo) => repo.name == selectedRepoName);
+        setSelectedRepository(selectedRepo)
+    }
+
+    useEffect(() => {
+        console.log(repositories)
+        console.log(selectedRepository)
+    }, [repositories, selectedRepository])
+
 
     const fetchIcons = async () => {
         try {
@@ -95,14 +135,30 @@ const index = (props: Props) => {
             <div className='mx-auto space-y-5 w-full p-3  md:px-40'>
                 <h1 className='text-2xl font-bold text-mainGray text-center tracking-widest uppercase font-georgeTown break-all'>Create Project</h1>
 
+                <div className="flex flex-col">
+                    <button onClick={(e) => handleFetchRepositories(e)} type="button" className='px-3 py-1 text-mainGray hover:text-mainPurple flex items-center'>
+                        Seach in your Repositories
+                        <GoLinkExternal className='text-mainPurple' />
+                    </button>
+                    {repositories.length > 0 && (
+                        <select onChange={handleSelectedRepository} className='w-full bg-black rounded-md px-3 py-2 border border-zinc-700 hover:border-mainPurple focus:outline-none focus:border-mainPurple'>
+                            {/* <option>TESTE</option> */}
+                            {repositories && repositories.map((repo,i) => (
+                                <option value={repo.name} key={repo.id}>{i} - {repo.name}</option>
+                            ))}
+                        </select>
+                    )}
+
+                </div>
+
                 <form className='xl:max-w-3xl mx-auto flex flex-col gap-5' onSubmit={handleSubmit(onSubmit)}>
                     <div className="flex flex-col lg:flex-row gap-5">
                         <div className='flex flex-col gap-5 lg:w-1/2 '>
-                            <InputDefault register={register} label='Name' registerName='name' />
-                            <InputDefault register={register} label='Repository Link' registerName='repoLink' />
+                            <InputDefault register={register} label='Name' registerName='name' value={selectedRepository?.name} />
+                            <InputDefault register={register} label='Repository Link' registerName='repoLink' value={selectedRepository?.html_url} />
                         </div>
 
-                        <div className='lg:w-1/2 '>
+                        {/* <div className='lg:w-1/2 '>
                             <label className='flex flex-col text-mainGray italic '>
                                 Technologies
                                 <Controller
@@ -140,13 +196,13 @@ const index = (props: Props) => {
 
                             </label>
 
-                        </div>
+                        </div> */}
                     </div>
 
                     <div className="flex flex-col gap-3">
-                        <InputDefault register={register} label='Description' registerName='description' />
+                        <InputDefault register={register} label='Description' registerName='description' value={selectedRepository?.description} />
                     </div>
-                    <div className="flex flex-col md:flex-row flex-wrap  items-center gap-3">
+                    {/* <div className="flex flex-col md:flex-row flex-wrap  items-center gap-3">
                         {result.length < 5
                             ?
                             <input
@@ -181,10 +237,26 @@ const index = (props: Props) => {
                                 <Image className='w-[150px] h-[100px] object-cover' src={img} alt={`Image ${index + 1}`} width={1920} height={1080} />
                             </div>
                         ))}
+                    </div> */}
+                    <div className="grid grid-cols-2 md:hidden items-start md:flex gap-1">
+                        <Link href={''}>
+                            <ButtonIcon icon={<Image src={'/external-link.svg'} width={15} height={15} alt='icon' />} text='Live Demo' textColor='mainGray' textSize='sm' />
+                        </Link>
+                        <Link href={'/'}>
+                            <ButtonIcon icon={<Image src={'/external-link.svg'} width={15} height={15} alt='icon' />} text='Repository' textColor='mainGray' textSize='sm' />
+                        </Link>
+                        <Link href={'/'}>
+                            <ButtonIcon icon={<Image src={'/copy-icon.svg'} width={15} height={15} alt='icon' />} text='Clone Project' textColor='mainGray' textSize='sm' />
+                        </Link>
+                        <Link href={'/'}>
+                            <ButtonIcon icon={<IoShareSocialOutline size={15} className='text-mainPurple' />} text='Share' textColor='mainGray' textSize='sm' />
+                        </Link>
                     </div>
 
                     <GlowButton text='Create' type='submit' />
                 </form>
+
+
                 {
                     selectTechnologies && (
                         <div>
