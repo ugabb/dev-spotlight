@@ -3,7 +3,7 @@ import { useState } from "react";
 export default function useSelectImage() {
     const [result, setResult] = useState<string[]>([]);
 
-    function uploader(images: File[]) {
+    function selectImageLocally(images: File[]) {
         const newResults: string[] = [];
 
         for (let i = 0; i < images.length; i++) {
@@ -18,5 +18,5 @@ export default function useSelectImage() {
         }
     }
 
-    return { result, uploader };
+    return { result, selectImageLocally };
 }
