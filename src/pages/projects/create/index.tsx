@@ -4,20 +4,22 @@ import Select from '@/components/inputs/Select'
 import React, { useEffect, useState } from 'react'
 import { Controller, SubmitHandler, useForm } from 'react-hook-form'
 
-import Autocomplete from '@mui/material/Autocomplete';
-import TextField from '@mui/material/TextField'
+//uuid
+import { v4 } from 'uuid'
+
 import GlowButton from '@/components/GlowButton'
 import useSelectImage from '@/hooks/useSelectImage'
 import Image from 'next/image'
 
 // firebase
-import { getStorage, ref } from "firebase/storage";
+import { getStorage, ref, uploadBytes } from "firebase/storage";
 import { storage } from '@/firebase'
 import ButtonIcon from '@/components/ButtonIcon'
 import { GoLinkExternal } from 'react-icons/go'
 import { useSession } from 'next-auth/react'
 import Link from 'next/link'
 import { IoShareSocialOutline } from 'react-icons/io5'
+import useUploadImages from '@/hooks/useUploadImage'
 
 interface IProject {
     name: string;
@@ -71,10 +73,10 @@ const index = (props: Props) => {
         setSelectedRepository(selectedRepo)
     }
 
-    useEffect(() => {
-        console.log(repositories)
-        console.log(selectedRepository)
-    }, [repositories, selectedRepository])
+    // useEffect(() => {
+    //     console.log(repositories)
+    //     console.log(selectedRepository)
+    // }, [repositories, selectedRepository])
 
 
     const fetchIcons = async () => {
@@ -100,33 +102,44 @@ const index = (props: Props) => {
         fetchIcons()
     }, [])
 
+    const { uploadImagesToFirebase } = useUploadImages();
 
-    const onSubmit: SubmitHandler<IProject> = (data) => {
-
-        setSelectedTechnologies((prev) => [...prev, data.technologies])
+    const onSubmit: SubmitHandler<IProject> = async (data) => {
+        // setSelectedTechnologies((prev) => [...prev, data.technologies])
+       const imagesToUpload = await uploadImagesToFirebase(imagesSelected);
+       console.log({imagesToUpload})
+    //    saveImages(imagesToUpload);
     }
 
     // image input
     const [imagesSelected, setImagesSelected] = useState<File[]>([]);
-    const { uploader, result } = useSelectImage()
+    const { selectImageLocally, result } = useSelectImage()
 
     useEffect(() => {
-        uploader(imagesSelected);
+        selectImageLocally(imagesSelected);
     }, [imagesSelected])
 
     useEffect(() => {
         // console.log(project)
         // console.log(selectTechnologies)
         // console.log(icons)
-        // console.log(imagesSelected)
-        console.log(result)
+        console.log({ imagesSelected })
+        console.log({ result })
     }, [project, selectTechnologies, imagesSelected, result])
 
 
 
-    // Create a storage reference from our storage service
-    const projectImagesRef = ref(storage, 'project-images');
+
+    // const uploadImagesToFirebase = async () => {
+    //     if(imagesSelected.length <= 0) return;
+
+    //     // Create a storage reference from our storage service
+    //     const projectImagesRef = ref(storage, `project-images/${imagesSelected[0] + v4()}`);
+    //     await uploadBytes(projectImagesRef, imagesSelected[0] )
+    // }
     // console.log(projectImagesRef.fullPath, projectImagesRef.bucket, projectImagesRef.name)
+
+
 
 
     return (
@@ -143,7 +156,7 @@ const index = (props: Props) => {
                     {repositories.length > 0 && (
                         <select onChange={handleSelectedRepository} className='w-full bg-black rounded-md px-3 py-2 border border-zinc-700 hover:border-mainPurple focus:outline-none focus:border-mainPurple'>
                             {/* <option>TESTE</option> */}
-                            {repositories && repositories.map((repo,i) => (
+                            {repositories && repositories.map((repo, i) => (
                                 <option value={repo.name} key={repo.id}>{i} - {repo.name}</option>
                             ))}
                         </select>
@@ -202,7 +215,7 @@ const index = (props: Props) => {
                     <div className="flex flex-col gap-3">
                         <InputDefault register={register} label='Description' registerName='description' value={selectedRepository?.description} />
                     </div>
-                    {/* <div className="flex flex-col md:flex-row flex-wrap  items-center gap-3">
+                    <div className="flex flex-col md:flex-row flex-wrap  items-center gap-3">
                         {result.length < 5
                             ?
                             <input
@@ -237,7 +250,7 @@ const index = (props: Props) => {
                                 <Image className='w-[150px] h-[100px] object-cover' src={img} alt={`Image ${index + 1}`} width={1920} height={1080} />
                             </div>
                         ))}
-                    </div> */}
+                    </div>
                     <div className="grid grid-cols-2 md:hidden items-start md:flex gap-1">
                         <Link href={''}>
                             <ButtonIcon icon={<Image src={'/external-link.svg'} width={15} height={15} alt='icon' />} text='Live Demo' textColor='mainGray' textSize='sm' />
