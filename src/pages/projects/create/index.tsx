@@ -1,7 +1,7 @@
 import Header from '@/components/Header/Header'
 import InputDefault from '@/components/inputs/InputDefault'
 import Select from '@/components/inputs/Select'
-import React, { useEffect, useState } from 'react'
+import React, { ReactElement, useEffect, useState } from 'react'
 import { Controller, SubmitHandler, useForm } from 'react-hook-form'
 
 //uuid
@@ -30,6 +30,7 @@ interface IProject {
 
 interface ITechnologies {
     name: string;
+    color:string;
 }
 
 type Props = {}
@@ -37,7 +38,7 @@ type Props = {}
 const index = (props: Props) => {
     const [project, setProject] = useState<IProject>();
     const [icons, setIcons] = useState([]);
-    const [selectTechnologies, setSelectedTechnologies] = useState<any[]>([]);
+    const [selectTechnologies, setSelectedTechnologies] = useState<ITechnologies[]>([]);
     const [filter, setFilter] = useState('');
     const [suggestedIcons, setSuggestedIcons] = useState([]);
 
@@ -73,6 +74,16 @@ const index = (props: Props) => {
         setSelectedRepository(selectedRepo)
     }
 
+    const handleAddTech = (e: ReactElement) => {
+        const tech = e.target.value
+        const selectedTech = icons.find((icon) => icon.name === tech);
+        setSelectedTechnologies(prev => [...prev, {
+            name: selectedTech?.name,
+            color:selectedTech?.color
+        }])
+        e.target.value = ""
+    }
+
     // useEffect(() => {
     //     console.log(repositories)
     //     console.log(selectedRepository)
@@ -106,9 +117,9 @@ const index = (props: Props) => {
 
     const onSubmit: SubmitHandler<IProject> = async (data) => {
         // setSelectedTechnologies((prev) => [...prev, data.technologies])
-       const imagesToUpload = await uploadImagesToFirebase(imagesSelected);
-       console.log({imagesToUpload})
-    //    saveImages(imagesToUpload);
+        const imagesToUpload = await uploadImagesToFirebase(imagesSelected);
+        console.log({ imagesToUpload })
+        //    saveImages(imagesToUpload);
     }
 
     // image input
@@ -121,24 +132,11 @@ const index = (props: Props) => {
 
     useEffect(() => {
         // console.log(project)
-        // console.log(selectTechnologies)
+        console.log(selectTechnologies)
         // console.log(icons)
-        console.log({ imagesSelected })
-        console.log({ result })
-    }, [project, selectTechnologies, imagesSelected, result])
-
-
-
-
-    // const uploadImagesToFirebase = async () => {
-    //     if(imagesSelected.length <= 0) return;
-
-    //     // Create a storage reference from our storage service
-    //     const projectImagesRef = ref(storage, `project-images/${imagesSelected[0] + v4()}`);
-    //     await uploadBytes(projectImagesRef, imagesSelected[0] )
-    // }
-    // console.log(projectImagesRef.fullPath, projectImagesRef.bucket, projectImagesRef.name)
-
+        // console.log({ imagesSelected })
+        // console.log({ result })
+    }, [project, selectTechnologies, imagesSelected, result, icons])
 
 
 
@@ -170,6 +168,35 @@ const index = (props: Props) => {
                             <InputDefault register={register} label='Name' registerName='name' value={selectedRepository?.name} />
                             <InputDefault register={register} label='Repository Link' registerName='repoLink' value={selectedRepository?.html_url} />
                         </div>
+
+                        <div className='flex flex-col gap-5 lg:w-1/2 '>
+                            <InputDefault register={register} label='Technologies' registerName='technologies' placeholder="Press Space to add" onKeyDown={(e) => handleAddTech(e)} />
+                            <select onChange={handleAddTech} className='w-full bg-black rounded-md px-3 py-3 text-mainGray border border-zinc-700 hover:border-mainPurple focus:outline-none focus:border-mainPurple'>
+                                <option value="test">Test</option>
+                                {
+                                    icons.map(icon => (
+                                        <option key={icon?.name} value={icon?.name}>{icon?.name}</option>
+                                    ))
+                                }
+                            </select>
+
+                            {
+                                selectTechnologies && (
+                                    <div className='flex gap-2 flex-wrap'>
+                                        {selectTechnologies.map((tech, i) => {
+                                            return (
+                                                (
+                                                    <div key={i} className='flex'>
+                                                        <p className={`text-white px-3 py-1 rounded-md `} style={{backgroundColor:tech.color}}>{tech.name}</p>
+                                                    </div>
+                                                )
+                                            )
+                                        })}
+                                    </div>
+                                )
+                            }
+                        </div>
+
 
                         {/* <div className='lg:w-1/2 '>
                             <label className='flex flex-col text-mainGray italic '>
@@ -268,30 +295,6 @@ const index = (props: Props) => {
 
                     <GlowButton text='Create' type='submit' />
                 </form>
-
-
-                {
-                    selectTechnologies && (
-                        <div>
-                            {selectTechnologies.map((tech) => {
-                                console.log({ tech })
-                                return (
-                                    (
-                                        <div>
-                                            <div className='flex gap-3 items-center text-mainGray'>
-                                                <i className={`devicon-${tech}-original colored`}></i>a
-                                                <p>{tech}</p>
-                                            </div>
-                                            <div className='flex gap-3 items-center text-mainGray'>
-                                                <i className={`devicon-${tech}-plain colored`}></i>b
-                                            </div>
-                                        </div>
-                                    )
-                                )
-                            })}
-                        </div>
-                    )
-                }
 
             </div >
         </div >
