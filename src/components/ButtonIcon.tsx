@@ -9,9 +9,9 @@ type Props = {
   textSize: string;
   icon?: React.ReactNode;
 }
-const ButtonIcon = ({ icon, text, textColor, textSize }: Props) => {
+const ButtonIcon = ({ icon, text, textColor, textSize, ...props }: Props) => {
   return (
-    <button type='button' className='flex gap-1 items-center px-3 py-1 rounded-md w-auto'>
+    <button {...props} type='button' className='flex gap-1 items-center px-3 py-1 rounded-md w-auto'>
       <p className={`text-${textColor} hover:text-white transition-colors text-${textSize}`}>{text}</p>
       {icon}
     </button>
