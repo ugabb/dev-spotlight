@@ -17,7 +17,6 @@ export const authOptions = {
   callbacks: {
     async jwt({ token, account, profile }) {
       // Persist the OAuth access_token and or the user id to the token right after signin
-      console.log(profile)
       if (account) {
         token.accessToken = account.access_token
         token.id = profile.id
@@ -60,7 +59,7 @@ export const authOptions = {
           throw new Error('User not found');
         }
       } catch (error) {
-        console.log(error)
+        console.log("User already exist!",error)
         try {
           // Create a new user in the database
           const createUserResponse = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/users`, {
