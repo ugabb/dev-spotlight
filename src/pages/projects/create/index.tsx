@@ -30,7 +30,7 @@ interface IProject {
 
 interface ITechnologies {
     name: string;
-    color:string;
+    color: string;
 }
 
 type Props = {}
@@ -79,7 +79,7 @@ const index = (props: Props) => {
         const selectedTech = icons.find((icon) => icon.name === tech);
         setSelectedTechnologies(prev => [...prev, {
             name: selectedTech?.name,
-            color:selectedTech?.color
+            color: selectedTech?.color
         }])
         e.target.value = ""
     }
@@ -132,8 +132,8 @@ const index = (props: Props) => {
 
     useEffect(() => {
         // console.log(project)
-        console.log(selectTechnologies)
-        // console.log(icons)
+        // console.log(selectTechnologies)
+        console.log(icons)
         // console.log({ imagesSelected })
         // console.log({ result })
     }, [project, selectTechnologies, imagesSelected, result, icons])
@@ -187,7 +187,7 @@ const index = (props: Props) => {
                                             return (
                                                 (
                                                     <div key={i} className='flex'>
-                                                        <p className={`text-white px-3 py-1 rounded-md `} style={{backgroundColor:tech.color}}>{tech.name}</p>
+                                                        <p className={`text-white px-3 py-1 rounded-md `} style={{ backgroundColor: tech.color }}>{tech.name}</p>
                                                     </div>
                                                 )
                                             )
@@ -253,8 +253,11 @@ const index = (props: Props) => {
                                     setImagesSelected((prev) => [...prev, ...selectedFiles]);
 
                                 }}
-                                className='md:w-1/3 h-full'
-                            />
+                                className="text-sm text-mainGray
+                                file:mr-5 file:py-2 file:px-5 file:border file:border-mainPurple file:outline-none file:rounded-md
+                                file:text-sm file:bg-transparent file:text-mainPurple
+                                hover:file:cursor-pointer hover:file:bg-mainPurple
+                                hover:file:text-white file:transition-all file:ease-in-out"                            />
                             :
                             <div className="flex flex-col gap-2 ">
                                 <p className='text-xs text-red-500'>Max of 5 images</p>
