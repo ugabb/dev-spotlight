@@ -1,3 +1,4 @@
+
 import Header from '@/components/Header/Header'
 import InputDefault from '@/components/inputs/InputDefault'
 import Select from '@/components/inputs/Select'
@@ -23,6 +24,7 @@ import { GoPlusCircle } from "react-icons/go";
 import { IoShareSocialOutline } from 'react-icons/io5'
 import useUploadImages from '@/hooks/useUploadImage'
 import { IUser } from '@/interfaces/IUser'
+import { useRouter } from 'next/router'
 
 interface IProject {
     name: string;
@@ -31,7 +33,8 @@ interface IProject {
     deployedLink: string;
     technologies: ITechnologies[];
     projectImages?: IProjectImages[];
-    userId:number;
+    likes: number;
+    userId: number;
 }
 
 interface ITechnologies {
@@ -57,9 +60,17 @@ const index = (props: Props) => {
     // fetch repositories
     const [repositories, setRepositories] = useState([]); // [
     const [selectedRepository, setSelectedRepository] = useState(); // [
-    const { data: session } = useSession()
+    const { data: session, status } = useSession()
     // console.log(session.user)
     const username = session?.user?.username
+
+    // if user is not authenticated push to home
+    const router = useRouter()
+
+    useEffect(() => {
+        if (status !== "authenticated") router.push('/')
+    }, [status])
+
 
     const handleFetchRepositories = async (page = 1) => {
         try {
@@ -68,7 +79,7 @@ const index = (props: Props) => {
                 const data = await response.json();
                 if (data.length > 0) {
                     setRepositories((prevRepos) => [...prevRepos, ...data]);
-                    if(page < 3){
+                    if (page < 3) {
                         handleFetchRepositories(page + 1); // Fetch next page
                     }
                 }
@@ -121,8 +132,6 @@ const index = (props: Props) => {
     const { uploadImagesToFirebase } = useUploadImages();
 
     const createProject = async (project: IProject) => {
-        const userId = await getUserByUsername(username);
-        project.userId = userId;
         console.log(JSON.stringify(project))
         try {
             const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/projects`, {
@@ -151,26 +160,32 @@ const index = (props: Props) => {
             valueSubmit.projectImages = imagesToUpload;
         }
 
-        console.log(valueSubmit)
-        setProject(valueSubmit)
-        const isCreated = await createProject(valueSubmit);
+        valueSubmit.likes = 0;
+        const userId = await getUserByUsername(username);
+        // when userId be received, run createProject function
+        if (userId) {
+            console.log("User Id exist:", userId)
+            valueSubmit.userId = userId;
+            console.log(valueSubmit)
+            setProject(valueSubmit)
+            const isCreated = await createProject(valueSubmit);
 
-        if (isCreated) {
-            console.log('created')
-        } else {
-            console.log('error')
+            if (isCreated) {
+                console.log('created')
+            } else {
+                console.log('error')
+            }
         }
-
     }
 
     useEffect(() => {
         const subscription = watch((data) => {
             console.log(data)
-        
+
         })
 
         return () => subscription.unsubscribe();
-    },[watch])
+    }, [watch])
 
     const getUserByUsername = async (username: string) => {
         try {
@@ -222,8 +237,6 @@ const index = (props: Props) => {
                     )}
 
                 </div>
-
-                <input type="text" {...register("text",   )} />
 
                 <form className='xl:max-w-3xl mx-auto flex flex-col gap-5' onSubmit={handleSubmit(onSubmit)}>
                     <div className="flex flex-col lg:flex-row gap-5">
