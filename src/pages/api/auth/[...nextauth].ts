@@ -54,33 +54,39 @@ export const authOptions = {
       }
 
       try {
-        const userResponse = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/users/username/${session.user.username}`)
+        const userResponse = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/users/username/${session.user.username}`);
+        
         if (!userResponse.ok) {
           throw new Error('User not found');
         }
-      } catch (error) {
-        console.log("User already exist!",error)
+      
+        // User exists, proceed with your logic here
+      } catch (userFetchError) {
+        console.error("Error fetching user:", userFetchError);
+      
         try {
           // Create a new user in the database
+          console.log(user)
           const createUserResponse = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/users`, {
             method: 'POST',
             headers: {
-              'Content-Type': 'application/json'
+              'Content-Type': 'application/json',
             },
             body: JSON.stringify(user)
           });
-    
+      
           if (!createUserResponse.ok) {
+            console.log( createUserResponse.status)
             throw new Error('Failed to create user');
           }
-    
-          console.log("New user created successfully");
-        } catch (error) {
-          console.error("Failed to create user:", error.message);
+      
+          console.log("New user created successfully", createUserResponse.status);
+          // Log the status or handle success as needed
+        } catch (createUserError) {
+          console.error("Error creating user:", createUserError);
         }
-
-        
       }
+      
 
       return session
     }
