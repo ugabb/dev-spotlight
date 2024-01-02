@@ -17,9 +17,14 @@ import ButtonWide from '@/components/ButtonWide';
 import { IProject } from '@/interfaces/IProject';
 import { motion } from 'framer-motion';
 import ProjectCard from '@/components/ProjectCard';
+import { useSession } from 'next-auth/react';
+import { IUser } from '@/interfaces/IUser';
 
 const ProjectsDetails = () => {
   const { query } = useRouter()
+  const { data: session } = useSession()
+  const username = session.user.username
+
   const [iconHeart, setIconHeart] = useState(false)
 
   const settings: SwiperProps = {
@@ -32,8 +37,32 @@ const ProjectsDetails = () => {
   }
 
 
+  const [userId, setUserId] = useState<number>(undefined);
   const [projects, setProjects] = useState<IProject[]>([]);
+  const [currentProject, setCurrentProject] = useState<IProject>();
   const router = useRouter();
+
+  const getUserByUsername = async (username: string) => {
+    try {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/users/username/${username}`)
+      const data: IUser = await response.json();
+      console.log(data)
+      return data?.id;
+    } catch (error) {
+      console.log(error)
+    }
+  }
+
+  const handleFetchProjectByName = async (userId: number, projectName: string) => {
+    try {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API}/projects/${userId}/${projectName}`)
+      const data = await response.json()
+
+      setCurrentProject(data)
+    } catch (error) {
+      console.log(error)
+    }
+  }
 
   const handleFetchProjects = async () => {
     try {
@@ -54,8 +83,13 @@ const ProjectsDetails = () => {
   }
 
   useEffect(() => {
+    handleFetchProjectByName(userId, query?.id)
     handleFetchProjects()
-  }, [router.query])
+    console.log(query)
+  }, [query])
+  useEffect(() => {
+    console.log(currentProject)
+  }, [currentProject])
 
 
   return (
@@ -82,15 +116,17 @@ const ProjectsDetails = () => {
         <section className='space-y-3 md:mx-auto flex flex-col'>
           <h1 className='text-2xl text-mainGray font-bold tracking-widest uppercase font-georgeTown'>About</h1>
           <p className='text-xs md:text-base lg:text-lg text-mainGray leading-4'>An landing page of Twenty one Pilots that shows deeper one of the best bands in the 10s.An landing page of Twenty one Pilots that shows deeper one of the best bands in the 10s.An landing page of Twenty one Pilots that shows deeper one of the best bands in the 10s.An landing page of Twenty one Pilots that shows deeper one of the best bands in the 10s.An landing page of Twenty one Pilots that shows deeper one of the best bands in the 10s.</p>
-          <p className='text-xs md:text-base lg:text-lg text-mainGray leading-4'>An landing page of Twenty one Pilots that shows deeper one of the best bands in the 10s.An landing page of Twenty one Pilots that shows deeper one of the best bands in the 10s.An landing page of Twenty one Pilots that shows deeper one of the best bands in the 10s.An landing page of Twenty one Pilots that shows deeper one of the best bands in the 10s.An landing page of Twenty one Pilots that shows deeper one of the best bands in the 10s.</p>
         </section>
 
-        <section className=''>
-          <h1 className='text-2xl text-mainGray font-bold tracking-widest uppercase font-georgeTown '>Technologies</h1>
-          <div className="flex gap-3">
-            <TextIcon text={'React'} textColor='mainGray' icon={<FaReact className='text-blue-500' size={20} />} wrap='' />
-            <TextIcon text={'React'} textColor='mainGray' icon={<FaReact className='text-blue-500' size={20} />} wrap='' />
-            <TextIcon text={'React'} textColor='mainGray' icon={<FaReact className='text-blue-500' size={20} />} wrap='' />
+        <h1 className='text-2xl text-mainGray font-bold tracking-widest uppercase font-georgeTown'>Technologies</h1>
+        <section className='flex flex-col lg:justify-center lg:items-center lg:mx-auto lg:w-full'>
+          <div className="flex gap-3 lg:grid lg:grid-cols-3">
+            <p className={`text-white px-3 py-1 rounded-md bg-mainPurple`}>React</p>
+            <p className={`text-white px-3 py-1 rounded-md bg-mainPurple`}>React</p>
+            <p className={`text-white px-3 py-1 rounded-md bg-mainPurple`}>React</p>
+            <p className={`text-white px-3 py-1 rounded-md bg-mainPurple`}>React</p>
+            <p className={`text-white px-3 py-1 rounded-md bg-mainPurple`}>React</p>
+            <p className={`text-white px-3 py-1 rounded-md bg-mainPurple`}>React</p>
           </div>
         </section>
 
@@ -146,7 +182,7 @@ const ProjectsDetails = () => {
         <motion.div
 
           className="flex flex-col justify-center items-center gap-5 md:grid md:grid-cols-2 xl:grid-cols-3 mt-10 ">
-          {projects.slice(0,3).map(project => {
+          {projects.slice(0, 3).map(project => {
             return (
               <motion.div key={project.id}
               // initial={{ opacity: 0, x: `${3 * project}px` }}
