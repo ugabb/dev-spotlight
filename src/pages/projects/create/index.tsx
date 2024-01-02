@@ -18,19 +18,28 @@ import ButtonIcon from '@/components/ButtonIcon'
 import { GoLinkExternal } from 'react-icons/go'
 import { useSession } from 'next-auth/react'
 import Link from 'next/link'
+
+import { GoPlusCircle } from "react-icons/go";
 import { IoShareSocialOutline } from 'react-icons/io5'
 import useUploadImages from '@/hooks/useUploadImage'
+import { IUser } from '@/interfaces/IUser'
 
 interface IProject {
     name: string;
-    repoLink: string;
+    linkRepo: string;
     description: string;
+    deployedLink: string;
     technologies: ITechnologies[];
+    projectImages?: IProjectImages[];
+    userId:number;
 }
 
 interface ITechnologies {
     name: string;
-    color: string;
+    // color: string;
+}
+interface IProjectImages {
+    url: string;
 }
 
 type Props = {}
@@ -38,27 +47,30 @@ type Props = {}
 const index = (props: Props) => {
     const [project, setProject] = useState<IProject>();
     const [icons, setIcons] = useState([]);
-    const [selectTechnologies, setSelectedTechnologies] = useState<ITechnologies[]>([]);
+    const [selectedTechnologies, setSelectedTechnologies] = useState<ITechnologies[]>([]);
     const [filter, setFilter] = useState('');
     const [suggestedIcons, setSuggestedIcons] = useState([]);
 
 
-    const { register, handleSubmit, control } = useForm();
+    const { register, handleSubmit, control, getValues, setValue, watch } = useForm();
 
     // fetch repositories
     const [repositories, setRepositories] = useState([]); // [
     const [selectedRepository, setSelectedRepository] = useState(); // [
     const { data: session } = useSession()
-    const user = session?.user?.username
+    // console.log(session.user)
+    const username = session?.user?.username
 
     const handleFetchRepositories = async (page = 1) => {
         try {
-            const response = await fetch(`https://api.github.com/users/${user}/repos?page=${page}&per_page=100`);
+            const response = await fetch(`https://api.github.com/users/${username}/repos?page=${page}&per_page=100`);
             if (response.ok) {
                 const data = await response.json();
                 if (data.length > 0) {
                     setRepositories((prevRepos) => [...prevRepos, ...data]);
-                    handleFetchRepositories(page + 1); // Fetch next page
+                    if(page < 3){
+                        handleFetchRepositories(page + 1); // Fetch next page
+                    }
                 }
             } else {
                 console.error('Failed to fetch repositories:', response.status);
@@ -74,20 +86,13 @@ const index = (props: Props) => {
         setSelectedRepository(selectedRepo)
     }
 
-    const handleAddTech = (e: ReactElement) => {
-        const tech = e.target.value
-        const selectedTech = icons.find((icon) => icon.name === tech);
-        setSelectedTechnologies(prev => [...prev, {
-            name: selectedTech?.name,
-            color: selectedTech?.color
-        }])
-        e.target.value = ""
+    const handleAddTech = () => {
+        const techInput = getValues('technologies');
+        if (techInput) {
+            setSelectedTechnologies(prev => [...prev, { name: techInput }])
+            setValue('technologies', '')
+        }
     }
-
-    // useEffect(() => {
-    //     console.log(repositories)
-    //     console.log(selectedRepository)
-    // }, [repositories, selectedRepository])
 
 
     const fetchIcons = async () => {
@@ -109,17 +114,73 @@ const index = (props: Props) => {
         ));
     };
 
-    useEffect(() => {
-        fetchIcons()
-    }, [])
+    // useEffect(() => {
+    //     fetchIcons()
+    // }, [])
 
     const { uploadImagesToFirebase } = useUploadImages();
 
+    const createProject = async (project: IProject) => {
+        const userId = await getUserByUsername(username);
+        project.userId = userId;
+        console.log(JSON.stringify(project))
+        try {
+            const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/projects`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(project)
+            })
+            const data = await response.json();
+            console.log(data)
+            return true;
+        } catch (error) {
+            console.log(error)
+            return false;
+        }
+    }
+
+
     const onSubmit: SubmitHandler<IProject> = async (data) => {
-        // setSelectedTechnologies((prev) => [...prev, data.technologies])
         const imagesToUpload = await uploadImagesToFirebase(imagesSelected);
-        console.log({ imagesToUpload })
-        //    saveImages(imagesToUpload);
+        const valueSubmit = data;
+
+        valueSubmit.technologies = selectedTechnologies;
+        if (imagesToUpload) {
+            valueSubmit.projectImages = imagesToUpload;
+        }
+
+        console.log(valueSubmit)
+        setProject(valueSubmit)
+        const isCreated = await createProject(valueSubmit);
+
+        if (isCreated) {
+            console.log('created')
+        } else {
+            console.log('error')
+        }
+
+    }
+
+    useEffect(() => {
+        const subscription = watch((data) => {
+            console.log(data)
+        
+        })
+
+        return () => subscription.unsubscribe();
+    },[watch])
+
+    const getUserByUsername = async (username: string) => {
+        try {
+            const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/users/username/${username}`)
+            const data: IUser = await response.json();
+            console.log(data)
+            return data?.id;
+        } catch (error) {
+            console.log(error)
+        }
     }
 
     // image input
@@ -133,10 +194,10 @@ const index = (props: Props) => {
     useEffect(() => {
         // console.log(project)
         // console.log(selectTechnologies)
-        console.log(icons)
+        // console.log(icons)
         // console.log({ imagesSelected })
         // console.log({ result })
-    }, [project, selectTechnologies, imagesSelected, result, icons])
+    }, [project, selectedTechnologies, imagesSelected, result, icons])
 
 
 
@@ -162,33 +223,27 @@ const index = (props: Props) => {
 
                 </div>
 
+                <input type="text" {...register("text",   )} />
+
                 <form className='xl:max-w-3xl mx-auto flex flex-col gap-5' onSubmit={handleSubmit(onSubmit)}>
                     <div className="flex flex-col lg:flex-row gap-5">
                         <div className='flex flex-col gap-5 lg:w-1/2 '>
                             <InputDefault register={register} label='Name' registerName='name' value={selectedRepository?.name} />
                             <InputDefault register={register} label='Repository Link' registerName='repoLink' value={selectedRepository?.html_url} />
+                            <InputDefault register={register} label='Deploy Link' registerName='deployLink' value={selectedRepository?.deploy} />
                         </div>
 
                         <div className='flex flex-col gap-5 lg:w-1/2 '>
-                            <InputDefault register={register} label='Technologies' registerName='technologies' placeholder="Press Space to add" onKeyDown={(e) => handleAddTech(e)} />
-                            <select onChange={handleAddTech} className='w-full bg-black rounded-md px-3 py-3 text-mainGray border border-zinc-700 hover:border-mainPurple focus:outline-none focus:border-mainPurple'>
-                                <option value="test">Test</option>
-                                {
-                                    icons.map(icon => (
-                                        <option key={icon?.name} value={icon?.name}>{icon?.name}</option>
-                                    ))
-                                }
-                            </select>
+                            <InputDefault register={register} label='Technologies' registerName='technologies' placeholder="Press Space to add" />
+                            <ButtonIcon onClick={handleAddTech} icon={<GoPlusCircle size={15} className='text-mainPurple' />} text='Add' textColor='mainGray' textSize='sm' />
 
                             {
-                                selectTechnologies && (
+                                selectedTechnologies && (
                                     <div className='flex gap-2 flex-wrap'>
-                                        {selectTechnologies.map((tech, i) => {
+                                        {selectedTechnologies.map((tech, i) => {
                                             return (
                                                 (
-                                                    <div key={i} className='flex'>
-                                                        <p className={`text-white px-3 py-1 rounded-md `} style={{ backgroundColor: tech.color }}>{tech.name}</p>
-                                                    </div>
+                                                    <p key={i} className={`text-white px-3 py-1 rounded-md bg-mainPurple`}>{tech.name}</p>
                                                 )
                                             )
                                         })}
