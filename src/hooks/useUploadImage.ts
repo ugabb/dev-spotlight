@@ -4,7 +4,6 @@ import { storage } from '@/firebase'
 import { getDownloadURL, ref, uploadBytes } from 'firebase/storage';
 
 interface IImages {
-    name: string,
     url: string
 }
 
@@ -14,7 +13,7 @@ export default function useUploadImages() {
             return alert("No images selected!")
         };
 
-        const imagesUrl:IImages[] = [];
+        const imagesUrl: IImages[] = [];
 
         for (let img of images) {
             // Create a storage reference from our storage service
@@ -24,7 +23,7 @@ export default function useUploadImages() {
             await uploadBytes(projectImagesRef, img)
 
             const imageUrl = await getDownloadURL(projectImagesRef);
-            imagesUrl.push({ name: imageName, url: imageUrl });
+            imagesUrl.push({ url: imageUrl });
         }
         return imagesUrl;
     }
