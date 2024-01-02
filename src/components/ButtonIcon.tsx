@@ -8,6 +8,7 @@ type Props = {
   textColor: string;
   textSize: string;
   icon?: React.ReactNode;
+  onClick?: () => void; 
 }
 const ButtonIcon = ({ icon, text, textColor, textSize, ...props }: Props) => {
   return (
