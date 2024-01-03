@@ -37,7 +37,6 @@ const Header = () => {
     //     console.log("USERDATA:", session.user); // This will log the username
     // }
 
-
     const [isOpen, toggleOpen] = useCycle(false, true);
     const containerRef = useRef(null);
     const { height } = useDimensions(containerRef);
@@ -95,7 +94,9 @@ const Header = () => {
             <motion.ul className="hidden md:flex gap-5 text-mainGray ">
                 <Link href={'/'} className='hover:text-white hover:underline hover:decoration-mainPurple transition-all cursor-pointer hover:scale-105'>Home</Link>
                 <Link href={'/projects'} className='hover:text-white hover:underline hover:decoration-mainPurple transition-all cursor-pointer hover:scale-105'>Projects</Link>
-                <Link href={'/projects/create'} className='hover:text-white hover:underline hover:decoration-mainPurple transition-all cursor-pointer hover:scale-105'>Create Project</Link>
+                {status === "authenticated" &&
+                    <Link href={'/projects/create'} className='hover:text-white hover:underline hover:decoration-mainPurple transition-all cursor-pointer hover:scale-105'>Create Project</Link>
+                }
 
                 {status === "authenticated"
                     ? <div className='flex gap-3 items-center'>

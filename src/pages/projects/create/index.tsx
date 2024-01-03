@@ -1,3 +1,4 @@
+
 import Header from '@/components/Header/Header'
 import InputDefault from '@/components/inputs/InputDefault'
 import Select from '@/components/inputs/Select'
@@ -23,11 +24,10 @@ import { GoPlusCircle } from "react-icons/go";
 import { IoShareSocialOutline } from 'react-icons/io5'
 import useUploadImages from '@/hooks/useUploadImage'
 import { IUser } from '@/interfaces/IUser'
+import { useRouter } from 'next/router'
 
 import { IProject, ITechnologies } from '@/interfaces/IProject'
 import DialogComponent from '@/components/Dialog'
-
-
 
 
 type Props = {}
@@ -52,9 +52,17 @@ const index = (props: Props) => {
     // fetch repositories
     const [repositories, setRepositories] = useState([]); // [
     const [selectedRepository, setSelectedRepository] = useState(); // [
-    const { data: session } = useSession()
+    const { data: session, status } = useSession()
     // console.log(session.user)
     const username = session?.user?.username
+
+    // if user is not authenticated push to home
+    const router = useRouter()
+
+    useEffect(() => {
+        if (status !== "authenticated") router.push('/')
+    }, [status])
+
 
     const handleFetchRepositories = async (page = 1) => {
         try {
@@ -164,7 +172,6 @@ const index = (props: Props) => {
         } else {
             setProjectCreated("error")
         }
-
     }
 
     const getUserByUsername = async (username: string) => {
