@@ -59,7 +59,7 @@ const ProjectCard = ({ project }: Props) => {
             </div>
 
             <div className="flex justify-center gap-3 p-3  mx-auto text-mainGray ">
-                <Link className='flex gap-3 items-center  rounded-md px-2 py-1 hover:text-mainPurple hover:bg-white font-semibold bg-mainPurple text-white   transition-colors' href={project?.linkRepo} target='_blank'>
+                <Link className='flex gap-3 items-center  rounded-md px-2 py-1 hover:text-mainPurple hover:bg-white font-semibold bg-mainPurple text-white   transition-colors' href={project ? project.linkRepo : '/'} target='_blank'>
                     <p>GitHub</p>
                     <AiOutlineArrowRight />
                 </Link>
