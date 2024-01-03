@@ -10,7 +10,7 @@ interface IImages {
 export default function useUploadImages() {
     async function uploadImagesToFirebase(images: File[]) {
         if (images.length <= 0) {
-            return alert("No images selected!")
+            return;
         };
 
         const imagesUrl: IImages[] = [];
