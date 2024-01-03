@@ -25,6 +25,10 @@ import useUploadImages from '@/hooks/useUploadImage'
 import { IUser } from '@/interfaces/IUser'
 
 import { IProject, ITechnologies } from '@/interfaces/IProject'
+import DialogComponent from '@/components/Dialog'
+
+
+
 
 type Props = {}
 
@@ -36,6 +40,14 @@ const index = (props: Props) => {
     const [suggestedIcons, setSuggestedIcons] = useState([]);
 
     const { register, handleSubmit, formState: { errors }, setError, setValue, getValues } = useForm<IProject>();
+
+    // dialog
+    const [openDialog, setOpenDialog] = useState<boolean>(false);
+    const [projectCreated, setProjectCreated] = useState<"created" | "error" | "loading">("loading");
+    const [loadingDialog, setLoadingDialog] = useState<boolean>(false);
+    const handleOpenDialog = () => setOpenDialog(dialog => !dialog);
+    const handleLoadingDialog = () => setLoadingDialog(loading => !loading);
+
 
     // fetch repositories
     const [repositories, setRepositories] = useState([]); // [
@@ -107,7 +119,7 @@ const index = (props: Props) => {
         const userId = await getUserByUsername(username);
         project.userId = userId;
         project.likes = 0;
-        console.log("este é o json enviado", project)
+        // console.log("este é o json enviado", project)
         try {
             const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/projects`, {
                 method: 'POST',
@@ -116,7 +128,11 @@ const index = (props: Props) => {
                 },
                 body: JSON.stringify(project)
             })
-            const data = await response.json();
+            if (response.status === 500) {
+                console.log("erro 500")
+                return false;
+            }
+            console.log("sucesso")
             return true;
         } catch (error) {
             console.log(error)
@@ -126,6 +142,11 @@ const index = (props: Props) => {
 
 
     const onSubmit: SubmitHandler<IProject> = async (data) => {
+        //reset
+        if(projectCreated !== "loading") setProjectCreated("loading")
+        // open true 
+        handleOpenDialog()
+
         const imagesToUpload = await uploadImagesToFirebase(imagesSelected);
         const valueSubmit = data;
 
@@ -133,13 +154,15 @@ const index = (props: Props) => {
         if (imagesToUpload) {
             valueSubmit.projectImages = imagesToUpload;
         }
-        setProject(valueSubmit)
+        // setProject(valueSubmit)
         const isCreated = await createProject(valueSubmit);
 
+        console.log({isCreated})
+
         if (isCreated) {
-            console.log('created')
+            setProjectCreated("created")
         } else {
-            console.log('error')
+            setProjectCreated("error")
         }
 
     }
@@ -174,7 +197,7 @@ const index = (props: Props) => {
 
 
     return (
-        <div className='md:my-24'>
+        <div className='md:py-24' >
             <Header />
             <div className='mx-auto space-y-5 w-full p-3  md:px-40'>
                 <h1 className='text-2xl font-bold text-mainGray text-center tracking-widest uppercase font-georgeTown break-all'>Create Project</h1>
@@ -341,7 +364,8 @@ const index = (props: Props) => {
                             <ButtonIcon icon={<IoShareSocialOutline size={15} className='text-mainPurple' />} text='Share' textColor='mainGray' textSize='sm' />
                         </Link>
                     </div>
-
+                    <DialogComponent open={openDialog} setOpen={handleOpenDialog} isCreated={projectCreated} />
+                    {/* <Button onClick={handleOpenDialog}>Open Modal</Button> */}
                     <GlowButton text='Create' type='submit' />
                 </form>
 
