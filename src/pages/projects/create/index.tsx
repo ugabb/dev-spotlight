@@ -24,23 +24,7 @@ import { IoShareSocialOutline } from 'react-icons/io5'
 import useUploadImages from '@/hooks/useUploadImage'
 import { IUser } from '@/interfaces/IUser'
 
-interface IProject {
-    name: string;
-    linkRepo: string;
-    description: string;
-    deployedLink: string;
-    technologies: ITechnologies[];
-    projectImages?: IProjectImages[];
-    userId:number;
-}
-
-interface ITechnologies {
-    name: string;
-    // color: string;
-}
-interface IProjectImages {
-    url: string;
-}
+import { IProject, ITechnologies } from '@/interfaces/IProject'
 
 type Props = {}
 
@@ -51,8 +35,7 @@ const index = (props: Props) => {
     const [filter, setFilter] = useState('');
     const [suggestedIcons, setSuggestedIcons] = useState([]);
 
-
-    const { register, handleSubmit, control, getValues, setValue, watch } = useForm();
+    const { register, handleSubmit, formState: { errors }, setError, setValue, getValues } = useForm<IProject>();
 
     // fetch repositories
     const [repositories, setRepositories] = useState([]); // [
@@ -68,7 +51,7 @@ const index = (props: Props) => {
                 const data = await response.json();
                 if (data.length > 0) {
                     setRepositories((prevRepos) => [...prevRepos, ...data]);
-                    if(page < 3){
+                    if (page < 3) {
                         handleFetchRepositories(page + 1); // Fetch next page
                     }
                 }
@@ -123,7 +106,8 @@ const index = (props: Props) => {
     const createProject = async (project: IProject) => {
         const userId = await getUserByUsername(username);
         project.userId = userId;
-        console.log(JSON.stringify(project))
+        project.likes = 0;
+        console.log("este é o json enviado", project)
         try {
             const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/projects`, {
                 method: 'POST',
@@ -133,7 +117,6 @@ const index = (props: Props) => {
                 body: JSON.stringify(project)
             })
             const data = await response.json();
-            console.log(data)
             return true;
         } catch (error) {
             console.log(error)
@@ -150,8 +133,6 @@ const index = (props: Props) => {
         if (imagesToUpload) {
             valueSubmit.projectImages = imagesToUpload;
         }
-
-        console.log(valueSubmit)
         setProject(valueSubmit)
         const isCreated = await createProject(valueSubmit);
 
@@ -162,15 +143,6 @@ const index = (props: Props) => {
         }
 
     }
-
-    useEffect(() => {
-        const subscription = watch((data) => {
-            console.log(data)
-        
-        })
-
-        return () => subscription.unsubscribe();
-    },[watch])
 
     const getUserByUsername = async (username: string) => {
         try {
@@ -223,18 +195,34 @@ const index = (props: Props) => {
 
                 </div>
 
-                <input type="text" {...register("text",   )} />
-
                 <form className='xl:max-w-3xl mx-auto flex flex-col gap-5' onSubmit={handleSubmit(onSubmit)}>
                     <div className="flex flex-col lg:flex-row gap-5">
                         <div className='flex flex-col gap-5 lg:w-1/2 '>
-                            <InputDefault register={register} label='Name' registerName='name' value={selectedRepository?.name} />
-                            <InputDefault register={register} label='Repository Link' registerName='repoLink' value={selectedRepository?.html_url} />
-                            <InputDefault register={register} label='Deploy Link' registerName='deployLink' value={selectedRepository?.deploy} />
+                            <InputDefault register={register} label='Name' registerName='name' validationRules={{
+                                required: 'Name is required',
+                                minLength: {
+                                    value: 3,
+                                    message: 'Minimum of 3 characters',
+                                },
+
+                            }} errors={errors} value={selectedRepository?.name} />
+
+
+
+                            <InputDefault register={register} label='Repository Link' registerName='linkRepo' validationRules={{ required: 'Repository Link is required' }} errors={errors} value={selectedRepository?.html_url} />
+                            <InputDefault register={register} label='Deploy Link' registerName='deployedLink' value={selectedRepository?.deploy} />
                         </div>
 
                         <div className='flex flex-col gap-5 lg:w-1/2 '>
-                            <InputDefault register={register} label='Technologies' registerName='technologies' placeholder="Press Space to add" />
+                            <InputDefault
+                                register={register}
+                                label='Technologies'
+                                registerName='technologies'
+                                validationRules={{ required: selectedTechnologies.length <= 0 && 'Technologies is required' }}
+                                errors={errors}
+                                placeholder="Press Space to add"
+                            />
+
                             <ButtonIcon onClick={handleAddTech} icon={<GoPlusCircle size={15} className='text-mainPurple' />} text='Add' textColor='mainGray' textSize='sm' />
 
                             {
@@ -242,9 +230,7 @@ const index = (props: Props) => {
                                     <div className='flex gap-2 flex-wrap'>
                                         {selectedTechnologies.map((tech, i) => {
                                             return (
-                                                (
-                                                    <p key={i} className={`text-white px-3 py-1 rounded-md bg-mainPurple`}>{tech.name}</p>
-                                                )
+                                                <p key={i} className={`text-white px-3 py-1 rounded-md bg-mainPurple`}>{tech.name}</p>
                                             )
                                         })}
                                     </div>
@@ -295,7 +281,12 @@ const index = (props: Props) => {
                     </div>
 
                     <div className="flex flex-col gap-3">
-                        <InputDefault register={register} label='Description' registerName='description' value={selectedRepository?.description} />
+                        <InputDefault register={register} label='Description' registerName='description' validationRules={{
+                            required: 'Description is required', minLength: {
+                                value: 50,
+                                message: 'Minimum of 50 characters',
+                            },
+                        }} errors={errors} value={selectedRepository?.description} />
                     </div>
                     <div className="flex flex-col md:flex-row flex-wrap  items-center gap-3">
                         {result.length < 5
