@@ -1,4 +1,5 @@
 export interface IProject {
+    id?:number;
     name: string;
     linkRepo: string;
     description: string;
