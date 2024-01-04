@@ -21,6 +21,7 @@ const config = {
       colors: {
         'mainPurple': '#B95AFF',
         'mainGray': '#B9B9B9',
+        'mainBackground': '#101010'
       },
       dropShadow: {
         glow: [
