@@ -27,12 +27,18 @@ import { LinkedinShareButton } from 'react-share'
 import { Toast } from '@/components/Toast';
 
 const ProjectsDetails = () => {
+
   const { query, asPath } = useRouter()
-  console.log(asPath)
   const { data: session } = useSession()
   const username = session?.user?.username
 
   const [iconHeart, setIconHeart] = useState(false)
+  const [isMounted, setMounted] = useState<boolean>(false)
+
+  useEffect(() => {
+    setMounted(true)
+  }, [])
+
 
   const settings: SwiperProps = {
     spaceBetween: 50,
@@ -113,7 +119,7 @@ const ProjectsDetails = () => {
 
         {/* CArousel */}
         <div className="md:mx-auto flex flex-col items-center ">
-          <CarouselShad />
+          <CarouselShad images={currentProject?.projectImages} />
         </div>
 
         <section className='space-y-3 md:mx-auto flex flex-col'>
@@ -157,11 +163,13 @@ const ProjectsDetails = () => {
             <Toast cloneLink={currentProject?.linkRepo} />
 
 
+            {isMounted &&
+              <LinkedinShareButton url={`http://dev-spotlight.vercel.app${asPath}`} >
+                <ButtonWide icon={<IoShareSocialOutline size={15} className='text-mainPurple' />} text='Share' />
+              </LinkedinShareButton>
+            }
 
 
-            <LinkedinShareButton url={`http://dev-spotlight.vercel.app${asPath}`} >
-              <ButtonWide icon={<IoShareSocialOutline size={15} className='text-mainPurple' />} text='Share' />
-            </LinkedinShareButton>
           </div>
         </div>
 
@@ -184,7 +192,7 @@ const ProjectsDetails = () => {
 
         <motion.div
 
-          className="flex flex-col justify-center items-center  gap-5 md:grid md:grid-cols-2 xl:grid-cols-3 mt-10 ">
+          className="flex flex-col justify-center items-center  gap-5 md:grid md:grid-cols-2 xl:grid-cols-3 mt-10 max-w-6xl lg:mx-auto">
           {projects.slice(0, 3).map(project => {
             return (
               <motion.div key={project.id}
