@@ -8,6 +8,7 @@ import {
     CarouselPrevious,
 } from "@/components/ui/carousel"
 import Image from "next/image"
+import { IProjectImages } from "@/interfaces/IProject"
 
 const imgs = [
     "/pc.png",
@@ -15,14 +16,18 @@ const imgs = [
     '/man-computer.jpg'
 ]
 
-export default function CarouselShad() {
+type Props = {
+    images: IProjectImages[];
+}
+
+export default function CarouselShad({images}: Props) {
     return (
         <Carousel className="w-full max-w-2xl">
-            <CarouselContent className="relative">
-                {imgs.map((img, index) => (
+            <CarouselContent className="relative ">
+                {images?.map((img, index) => (
                     <CarouselItem key={index}>
                         <div className="p-1">
-                            <Image className="h-[300px] object-cover" src={img} width={1920} height={1080} alt="" />
+                            <Image className="h-[300px]  object-cover  rounded-md" src={img?.url} width={1920} height={1080} alt="" />
                         </div>
                     </CarouselItem>
                 ))}
