@@ -24,6 +24,7 @@ import { useParams, useSearchParams } from 'next/navigation';
 
 // share
 import { LinkedinShareButton } from 'react-share'
+import { Toast } from '@/components/Toast';
 
 const ProjectsDetails = () => {
   const { query, asPath } = useRouter()
@@ -61,7 +62,8 @@ const ProjectsDetails = () => {
 
   const handleFetchProjectByName = async (userId: number, projectName: string) => {
     try {
-      const response = await fetch(`${process.env.NEXT_PUBLIC_API}/projects/${userId}/${projectName}`)
+      // const response = await fetch(`${process.env.NEXT_PUBLIC_API}/projects/${userId}/${projectName}`)
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API}/projects/1/${projectName}`)
       const data = await response.json()
 
       setCurrentProject(data)
@@ -152,7 +154,10 @@ const ProjectsDetails = () => {
               <ButtonWide icon={<Image src={'/external-link.svg'} width={15} height={15} alt='icon' />} text='Repository' />
             </Link>
 
-            <ButtonWide icon={<Image src={'/copy-icon.svg'} width={15} height={15} alt='icon' />} text='Clone Project' onClick={() => navigator.clipboard.writeText(currentProject.linkRepo + ".git")} />
+            <Toast cloneLink={currentProject?.linkRepo} />
+
+
+
 
             <LinkedinShareButton url={`http://dev-spotlight.vercel.app${asPath}`} >
               <ButtonWide icon={<IoShareSocialOutline size={15} className='text-mainPurple' />} text='Share' />
