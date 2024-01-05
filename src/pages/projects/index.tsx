@@ -72,6 +72,9 @@ const Projects = () => {
 
   return (
     <div className='lg:flex lg:flex-col '>
+      <video autoPlay loop muted className='fixed z-0 h-full w-full top-0 left-0 object-cover opacity-30'>
+        <source src='/particles.mp4' />
+      </video>
       <Header />
       <div className="flex flex-col justify-center items-center p-3 gap-3">
         <h1 className='text-3xl md:text-4xl text-center text-mainGray font-bold font-georgeTown tracking-widest uppercase mt-24'>Projects</h1>
@@ -91,7 +94,7 @@ const Projects = () => {
 
 
       <motion.div
-        className="flex flex-col md:grid md:grid-cols-2 xl:grid-cols-3 gap-3 my-10 p-2 mx-auto">
+        className="flex flex-col md:grid md:grid-cols-2 xl:grid-cols-3 gap-3 my-10 py-2 px-40 mx-auto">
         {projectFiltered.length > 0 &&
           projectFiltered.slice().reverse().map(project => {
             return (
