@@ -1,16 +1,16 @@
-import React from 'react'
+import React, { ButtonHTMLAttributes } from 'react'
 
-type Props = {
+interface Props extends ButtonHTMLAttributes<HTMLButtonElement> {
     text: string;
     icon: React.ReactNode;
 }
 
-const ButtonWide = ({ text, icon }: Props) => {
+const ButtonWide = ({ text, icon, ...props }: Props) => {
     return (
-        <div className='flex justify-center items-center gap-3 rounded-xl bg-[#1e1d1f] hover:border-2 hover:border-mainPurple h-[140px] md:w-[250px] xl:w-[350px]'>
+        <button className='flex justify-center items-center gap-3 rounded-xl bg-[#1e1d1f] hover:border-2 hover:border-mainPurple h-[140px] md:w-[250px] xl:w-[350px] ' {...props}>
             <p className='text-lg text-mainGray hover:text-white '>{text}</p>
             {icon}
-        </div>
+        </button>
     )
 }
 
