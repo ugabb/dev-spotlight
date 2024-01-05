@@ -72,7 +72,7 @@ const Projects = () => {
 
   return (
     <div className='lg:flex lg:flex-col '>
-      <video autoPlay loop muted className='fixed z-0 h-full w-full top-0 left-0 object-cover opacity-30'>
+      <video autoPlay loop muted className='fixed -z-10 h-full w-full top-0 left-0 object-cover opacity-30'>
         <source src='/particles.mp4' />
       </video>
       <Header />
@@ -94,7 +94,7 @@ const Projects = () => {
 
 
       <motion.div
-        className="flex flex-col md:grid md:grid-cols-2 xl:grid-cols-3 gap-3 my-10 py-2 px-40 mx-auto">
+        className="flex flex-col md:grid md:grid-cols-2 xl:grid-cols-3 gap-3 my-10 p-2 lg:px-40 mx-auto">
         {projectFiltered.length > 0 &&
           projectFiltered.slice().reverse().map(project => {
             return (
@@ -129,7 +129,7 @@ const Projects = () => {
           transition={{ duration: 0.5 }}
           className='fixed bottom-5 md:right-5 z-50 p-5'>
           <Alert className='border border-red-500 backdrop-blur-sm   relative '>
-            <AlertTitle className='text-red-500 flex justify-between'>
+            <AlertTitle className='text-red-500 flex justify-between font-bold text-lg'>
               Not Found!
               <AiOutlineClose className=' text-red-500 cursor-pointer' onClick={() => setProjectsFilteredToast(false)} />
             </AlertTitle>
