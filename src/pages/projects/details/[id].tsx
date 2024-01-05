@@ -19,9 +19,15 @@ import { motion } from 'framer-motion';
 import ProjectCard from '@/components/ProjectCard';
 import { useSession } from 'next-auth/react';
 import { IUser } from '@/interfaces/IUser';
+import CarouselShad from '@/components/Carousel/CarouselShad';
+import { useParams, useSearchParams } from 'next/navigation';
+
+// share
+import { LinkedinShareButton } from 'react-share'
 
 const ProjectsDetails = () => {
-  const { query } = useRouter()
+  const { query, asPath } = useRouter()
+  console.log(asPath)
   const { data: session } = useSession()
   const username = session?.user?.username
 
@@ -64,6 +70,8 @@ const ProjectsDetails = () => {
     }
   }
 
+
+
   const handleFetchProjects = async () => {
     try {
       const response = await fetch('http://localhost:8080/projects', {
@@ -95,51 +103,41 @@ const ProjectsDetails = () => {
   return (
     <div className='md:my-24 md:mx-20'>
       <Header />
-      <div className='px-20 mx-auto space-y-5 p-3'>
+      <div className='lg:px-20 mx-auto space-y-5 p-3'>
         <div className='flex justify-between gap-3'>
           <h1 className='text-2xl font-bold text-mainGray tracking-widest uppercase font-georgeTown break-all'>{query.id}</h1>
           {iconHeart ? <GoHeartFill size={25} className='text-mainPurple' /> : <GoHeart className='text-mainGray' size={25} />}
         </div>
 
         {/* CArousel */}
-        <div className="md:mx-auto ">
-          <Carousel settings={settings}>
-            <SwiperSlide >
-              <Image className='object-cover' src={'/man-computer.jpg'} width={640} height={640} alt='' />
-            </SwiperSlide>
-            <SwiperSlide >
-              <Image className='object-cover' src={'/user.jpg'} width={640} height={640} alt='' />
-            </SwiperSlide>
-          </Carousel>
+        <div className="md:mx-auto flex flex-col items-center ">
+          <CarouselShad />
         </div>
 
         <section className='space-y-3 md:mx-auto flex flex-col'>
           <h1 className='text-2xl text-mainGray font-bold tracking-widest uppercase font-georgeTown'>About</h1>
-          <p className='text-xs md:text-base lg:text-lg text-mainGray leading-4'>An landing page of Twenty one Pilots that shows deeper one of the best bands in the 10s.An landing page of Twenty one Pilots that shows deeper one of the best bands in the 10s.An landing page of Twenty one Pilots that shows deeper one of the best bands in the 10s.An landing page of Twenty one Pilots that shows deeper one of the best bands in the 10s.An landing page of Twenty one Pilots that shows deeper one of the best bands in the 10s.</p>
+          <p className='text-xs md:text-base lg:text-lg text-mainGray leading-4'>{currentProject?.description}</p>
         </section>
 
         <h1 className='text-2xl text-mainGray font-bold tracking-widest uppercase font-georgeTown'>Technologies</h1>
         <section className='flex flex-col lg:justify-center lg:items-center lg:mx-auto lg:w-full'>
-          <div className="flex gap-3 lg:grid lg:grid-cols-3">
-            <p className={`text-white px-3 py-1 rounded-md bg-mainPurple`}>React</p>
-            <p className={`text-white px-3 py-1 rounded-md bg-mainPurple`}>React</p>
-            <p className={`text-white px-3 py-1 rounded-md bg-mainPurple`}>React</p>
-            <p className={`text-white px-3 py-1 rounded-md bg-mainPurple`}>React</p>
-            <p className={`text-white px-3 py-1 rounded-md bg-mainPurple`}>React</p>
-            <p className={`text-white px-3 py-1 rounded-md bg-mainPurple`}>React</p>
+          <div className="grid grid-cols-2 gap-3 mx-auto lg:content-start lg:mx-0 lg:grid-cols-3">
+            {currentProject?.technologies.map((tech) => (
+              <p key={tech.name} className={`text-center max-w-max  text-white px-3 py-1 rounded-md bg-mainPurple`}>{tech.name}</p>
+            ))}
           </div>
         </section>
 
-        <div className="grid grid-cols-2 md:hidden items-start md:flex gap-1">
-          <Link href={'/'}>
+        <div className="grid grid-cols-2 md:hidden items-start  gap-1">
+          <Link href={currentProject?.deployedLink || ''}>
             <ButtonIcon icon={<Image src={'/external-link.svg'} width={15} height={15} alt='icon' />} text='Live Demo' textColor='mainGray' textSize='sm' />
           </Link>
-          <Link href={'/'}>
+          <Link href={currentProject?.linkRepo || ''}>
             <ButtonIcon icon={<Image src={'/external-link.svg'} width={15} height={15} alt='icon' />} text='Repository' textColor='mainGray' textSize='sm' />
           </Link>
-          <Link href={'/'}>
-            <ButtonIcon icon={<Image src={'/copy-icon.svg'} width={15} height={15} alt='icon' />} text='Clone Project' textColor='mainGray' textSize='sm' />
-          </Link>
+
+          <ButtonIcon icon={<Image src={'/copy-icon.svg'} width={15} height={15} alt='icon' />} text='Clone Project' textColor='mainGray' textSize='sm' onClick={() => navigator.clipboard.writeText(currentProject.linkRepo + ".git")} />
+
           <Link href={'/'}>
             <ButtonIcon icon={<IoShareSocialOutline size={15} className='text-mainPurple' />} text='Share' textColor='mainGray' textSize='sm' />
           </Link>
@@ -147,18 +145,18 @@ const ProjectsDetails = () => {
 
         <div className="hidden md:flex justify-center items-center">
           <div className="grid grid-cols-2 gap-3">
-            <Link href={'/'}>
+            <Link href={currentProject?.deployedLink || ''}>
               <ButtonWide icon={<Image src={'/external-link.svg'} width={15} height={15} alt='icon' />} text='Live Demo' />
             </Link>
-            <Link href={'/'}>
+            <Link href={currentProject?.linkRepo || ''}>
               <ButtonWide icon={<Image src={'/external-link.svg'} width={15} height={15} alt='icon' />} text='Repository' />
             </Link>
-            <Link href={'/'}>
-              <ButtonWide icon={<Image src={'/copy-icon.svg'} width={15} height={15} alt='icon' />} text='Clone Project' />
-            </Link>
-            <Link href={'/'}>
+
+            <ButtonWide icon={<Image src={'/copy-icon.svg'} width={15} height={15} alt='icon' />} text='Clone Project' onClick={() => navigator.clipboard.writeText(currentProject.linkRepo + ".git")} />
+
+            <LinkedinShareButton url={`http://dev-spotlight.vercel.app${asPath}`} >
               <ButtonWide icon={<IoShareSocialOutline size={15} className='text-mainPurple' />} text='Share' />
-            </Link>
+            </LinkedinShareButton>
           </div>
         </div>
 
@@ -181,7 +179,7 @@ const ProjectsDetails = () => {
 
         <motion.div
 
-          className="flex flex-col justify-center  gap-5 md:grid md:grid-cols-2 xl:grid-cols-3 mt-10 ">
+          className="flex flex-col justify-center items-center  gap-5 md:grid md:grid-cols-2 xl:grid-cols-3 mt-10 ">
           {projects.slice(0, 3).map(project => {
             return (
               <motion.div key={project.id}
