@@ -3,7 +3,7 @@ import TextIcon from './TextIcon'
 
 //icons
 import { AiOutlineArrowRight } from 'react-icons/ai'
-import { GoHeart, GoHeartFill } from "react-icons/go";
+import { GoHeart, GoHeartFill, GoLinkExternal } from "react-icons/go";
 import { FaReact, FaGithub } from "react-icons/fa";
 
 
@@ -27,19 +27,19 @@ const ProjectCard = ({ project }: Props) => {
         setIconHeart(false);
     }
 
-    // const {data:session} = useSession();
-    // const userProfilePhoto = session.user.githubProfilePhoto;
+    const { data: session } = useSession();
+    const userProfilePhoto = session?.user?.githubProfilePhoto;
 
     return (
         <motion.div
             initial={{ opacity: 0, }}
-            animate={{ opacity: 1,  }}
+            animate={{ opacity: 1, }}
             transition={{ duration: 1 }}
 
-            className='flex flex-col  bg-white/5 backdrop-blur-sm  border border-gray-500  rounded-[27px]  p-2 relative max-w-[400px]'>
+            className='flex flex-col  bg-white/5 backdrop-blur-sm  border border-gray-500  rounded-[27px]  p-2 relative max-w-[400px] '>
             <div className='flex gap-3 justify-between items-center '>
                 <div className='flex flex-col w-10 h-10'>
-                    <Image className='rounded-full object-cover' src={"/user.jpg"} width={40} height={40} alt='profile picture' />
+                    <Image className='rounded-full object-cover' src={userProfilePhoto ? userProfilePhoto : '/user.jpg'} width={40} height={40} alt='profile picture' />
                     <p className='text-mainGray text-xs flex items-center'>ugabb</p>
                 </div>
 
@@ -51,19 +51,29 @@ const ProjectCard = ({ project }: Props) => {
                 </motion.div>
             </div >
 
-            <div className="flex flex-col w-full mt-5 px-3">
-                <Link href={`/projects/details/${project.name}`} className='flex justify-center  w-full h-32 hover:border hover:border-mainPurple hover:rounded-md'>
-                    <Image className='object-cover rounded-md w-full ' src={project.projectImages[0].url} width={1920} height={1280} alt='profile picture' />
-                </Link>
-            </div>
+            {project.projectImages[0]?.url
+                ?
+                <div className="flex flex-col w-full mt-5 px-3">
+                    <Link href={`/projects/details/${project.name}`} className='flex justify-center  w-full h-32 bg-gradient-to-transparent hover:border hover:border-mainPurple hover:rounded-md'>
+                        <Image className='object-cover rounded-md w-full ' src={project.projectImages[0].url} width={1920} height={1280} alt='profile picture' />
+                    </Link>
+                </div>
+                :
+                <div className="flex flex-col w-full mt-5 px-3 ">
+                    <Link href={`/projects/details/${project.name}`} className='flex justify-center items-center bg-gradient-to-b from-mainPurple/10  hover:from-mainPurple  transition-colors ease-in-out rounded-md w-full h-32 hover:border hover:border-mainPurple hover:rounded-md text-mainGray hover:text-white'>
+                        <GoLinkExternal className='text-5xl ' />
+                    </Link>
+                </div>
+            }
 
-            <div className='p-3 text-mainGray w-full'>
+
+            <div className='p-3 text-mainGray w-full mt-5'>
                 <h3 className='text-xl text-white font-bold'>About</h3>
-                <p className='text-sm leading-4 break-words'>{project?.description}</p>
+                <p className='text-sm leading-4 break-words truncate'>{project?.description}</p>
             </div>
 
             <div className="flex flex-wrap gap-1 text-sm px-3 my-3">
-                {project?.technologies.map((tech,id) => (
+                {project?.technologies.map((tech, id) => (
                     <span className={`text-mainPurple text-xs p-1 rounded-md border border-mainPurple`} key={id}>{tech.name}</span>
                 ))}
             </div>
