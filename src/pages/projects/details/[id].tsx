@@ -23,7 +23,7 @@ import { IUser } from '@/interfaces/IUser';
 const ProjectsDetails = () => {
   const { query } = useRouter()
   const { data: session } = useSession()
-  const username = session.user.username
+  const username = session?.user?.username
 
   const [iconHeart, setIconHeart] = useState(false)
 
@@ -95,7 +95,7 @@ const ProjectsDetails = () => {
   return (
     <div className='md:my-24 md:mx-20'>
       <Header />
-      <div className='lg:w-2/3 mx-auto space-y-5 p-3'>
+      <div className='px-20 mx-auto space-y-5 p-3'>
         <div className='flex justify-between gap-3'>
           <h1 className='text-2xl font-bold text-mainGray tracking-widest uppercase font-georgeTown break-all'>{query.id}</h1>
           {iconHeart ? <GoHeartFill size={25} className='text-mainPurple' /> : <GoHeart className='text-mainGray' size={25} />}
@@ -181,7 +181,7 @@ const ProjectsDetails = () => {
 
         <motion.div
 
-          className="flex flex-col justify-center items-center gap-5 md:grid md:grid-cols-2 xl:grid-cols-3 mt-10 ">
+          className="flex flex-col justify-center  gap-5 md:grid md:grid-cols-2 xl:grid-cols-3 mt-10 ">
           {projects.slice(0, 3).map(project => {
             return (
               <motion.div key={project.id}
