@@ -1,4 +1,4 @@
-import { IProject } from '@/interfaces/IProject';
+import { IProjectToCreate } from '@/interfaces/IProject';
 import React from 'react'
 import { FieldErrors, FieldValues, UseFormRegister } from 'react-hook-form'
 
@@ -7,7 +7,7 @@ type Props = {
     registerName: string,
     register: UseFormRegister<FieldValues>,
     validationRules?: Object,
-    errors?: FieldErrors<IProject>;
+    errors?: FieldErrors<IProjectToCreate>;
 }
 
 

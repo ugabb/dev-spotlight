@@ -1,6 +1,6 @@
 import Header from '@/components/Header/Header'
 import ProjectCard from '@/components/ProjectCard'
-import { IProject } from '@/interfaces/IProject'
+import { IProject, IProjectToCreate } from '@/interfaces/IProject'
 import { motion } from 'framer-motion'
 import { GetServerSideProps } from 'next'
 import { useRouter } from 'next/router'
@@ -15,6 +15,7 @@ import {
   AlertDescription,
   AlertTitle,
 } from "@/components/ui/alert"
+import Footer from '@/components/Footer'
 
 const Projects = () => {
   const animationX = [0, 10, 20, 30, 40, 50, 60, 70]
@@ -50,7 +51,7 @@ const Projects = () => {
 
       })
 
-      const data = await response.json()
+      const data: IProject = await response.json()
       console.log(data)
       setProjects(data)
 
@@ -139,6 +140,8 @@ const Projects = () => {
 
           </Alert>
         </motion.div>}
+
+        <Footer/>
     </div>
   )
 }
