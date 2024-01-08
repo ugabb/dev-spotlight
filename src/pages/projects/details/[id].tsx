@@ -14,7 +14,7 @@ import ButtonIcon from '@/components/ButtonIcon';
 import { useRouter } from 'next/router';
 import Link from 'next/link';
 import ButtonWide from '@/components/ButtonWide';
-import { IProject } from '@/interfaces/IProject';
+import { IProject, IProjectToCreate } from '@/interfaces/IProject';
 import { motion } from 'framer-motion';
 import ProjectCard from '@/components/ProjectCard';
 import { useSession } from 'next-auth/react';
@@ -53,6 +53,8 @@ const ProjectsDetails = () => {
   const [userId, setUserId] = useState<number>(undefined);
   const [projects, setProjects] = useState<IProject[]>([]);
   const [currentProject, setCurrentProject] = useState<IProject>();
+  const userProfilePhoto = currentProject.user.githubProfilePhoto
+
   const router = useRouter();
 
   const getUserByUsername = async (username: string) => {
@@ -90,7 +92,7 @@ const ProjectsDetails = () => {
       })
 
       const data = await response.json()
-      console.log(data)
+      // console.log(data)
       setProjects(data)
 
     } catch (error) {
@@ -121,6 +123,9 @@ const ProjectsDetails = () => {
         <div className="md:mx-auto flex flex-col items-center ">
           <CarouselShad images={currentProject?.projectImages} />
         </div>
+
+        <Image className='rounded-full object-cover' src={userProfilePhoto} width={40} height={40} alt='profile picture' />
+
 
         <section className='space-y-3 md:mx-auto flex flex-col'>
           <h1 className='text-2xl text-mainGray font-bold tracking-widest uppercase font-georgeTown'>About</h1>
@@ -178,10 +183,10 @@ const ProjectsDetails = () => {
         <section>
           <h1 className='text-2xl text-mainGray font-bold tracking-widest uppercase font-georgeTown'>Creator</h1>
           <div className="flex gap-3">
-            <Image className='w-[55px] h-[55px] rounded-full' src={'/user.jpg'} width={640} height={640} alt='' />
+            <Image className='w-[55px] h-[55px] rounded-full' src={'https://avatars.githubusercontent.com/u/1234567?v=4'} width={640} height={640} alt='' />
             <div>
-              <h4 className='text-sm text-mainGray font-bold'>Gabriel Barros</h4>
-              <p className='text-xs text-mainGray'>@ugabb</p>
+              <h4 className='text-sm text-mainGray font-bold'>{currentProject?.user?.name}</h4>
+              <p className='text-xs text-mainGray'>@{currentProject?.user?.username}</p>
               <p className='text-xs text-white bg-mainPurple rounded-md px-1'>Web Devoloper</p>
 
             </div>
