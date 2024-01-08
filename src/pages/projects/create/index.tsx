@@ -26,20 +26,20 @@ import useUploadImages from '@/hooks/useUploadImage'
 import { IUser } from '@/interfaces/IUser'
 import { useRouter } from 'next/router'
 
-import { IProject, ITechnologies } from '@/interfaces/IProject'
+import { IProjectToCreate, ITechnologies } from '@/interfaces/IProject'
 import DialogComponent from '@/components/Dialog'
 
 
 type Props = {}
 
 const index = (props: Props) => {
-    const [project, setProject] = useState<IProject>();
+    const [project, setProject] = useState<IProjectToCreate>();
     const [icons, setIcons] = useState([]);
     const [selectedTechnologies, setSelectedTechnologies] = useState<ITechnologies[]>([]);
     const [filter, setFilter] = useState('');
     const [suggestedIcons, setSuggestedIcons] = useState([]);
 
-    const { register, handleSubmit, formState: { errors }, setError, setValue, getValues } = useForm<IProject>();
+    const { register, handleSubmit, formState: { errors }, setError, setValue, getValues } = useForm<IProjectToCreate>();
 
     // dialog
     const [openDialog, setOpenDialog] = useState<boolean>(false);
@@ -123,7 +123,7 @@ const index = (props: Props) => {
 
     const { uploadImagesToFirebase } = useUploadImages();
 
-    const createProject = async (project: IProject) => {
+    const createProject = async (project: IProjectToCreate) => {
         const userId = await getUserByUsername(username);
         project.userId = userId;
         project.likes = 0;
@@ -149,7 +149,7 @@ const index = (props: Props) => {
     }
 
 
-    const onSubmit: SubmitHandler<IProject> = async (data) => {
+    const onSubmit: SubmitHandler<IProjectToCreate> = async (data) => {
         //reset
         if(projectCreated !== "loading") setProjectCreated("loading")
         // open true 

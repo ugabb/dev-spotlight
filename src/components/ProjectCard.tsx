@@ -27,8 +27,8 @@ const ProjectCard = ({ project }: Props) => {
         setIconHeart(false);
     }
 
-    const { data: session } = useSession();
-    const userProfilePhoto = session?.user?.githubProfilePhoto;
+    const userProfilePhoto = project.user.githubProfilePhoto;
+    // console.log(userProfilePhoto)
 
     return (
         <motion.div
@@ -39,8 +39,8 @@ const ProjectCard = ({ project }: Props) => {
             className='flex flex-col  bg-white/5 backdrop-blur-sm  border border-gray-500  rounded-[27px]  p-2 relative max-w-[400px] min-w-[300px] '>
             <div className='flex gap-3 justify-between items-center '>
                 <div className='flex flex-col w-10 h-10'>
-                    <Image className='rounded-full object-cover' src={userProfilePhoto ? userProfilePhoto : '/user.jpg'} width={40} height={40} alt='profile picture' />
-                    <p className='text-mainGray text-xs flex items-center'>ugabb</p>
+                    <Image className='rounded-full object-cover' src={userProfilePhoto} width={40} height={40} alt='profile picture' />
+                    <p className='text-mainGray text-xs flex items-center'>{project.user.username}</p>
                 </div>
 
                 <h2 className='text-xl font-bold truncate hover:text-mainPurple'>{project?.name}</h2>

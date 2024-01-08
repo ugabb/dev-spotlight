@@ -13,7 +13,8 @@ import { motion } from 'framer-motion'
 import Link from 'next/link'
 import ProjectCard from '@/components/ProjectCard'
 import { useEffect, useState } from 'react'
-import { IProject } from '@/interfaces/IProject'
+import { IProjectToCreate } from '@/interfaces/IProject'
+import Footer from '@/components/Footer'
 
 
 const inter = Inter({ subsets: ['latin'] })
@@ -23,7 +24,7 @@ const Shine = ['Shine']
 export default function Home() {
 
 
-  const [projects, setProjects] = useState<IProject[]>([]);
+  const [projects, setProjects] = useState<IProjectToCreate[]>([]);
 
   const [isMounted, setIsMounted] = useState<boolean>(false);
   useEffect(() => {
@@ -151,9 +152,6 @@ export default function Home() {
               )
             })}
           </div>
-          <Link className='flex gap-3 items-center  rounded-md px-2 py-1 hover:text-mainPurple   transition-colors' href="/projects">
-            <TextIcon text='See All Projects' textColor='mainGray' icon={<AiOutlineArrowRight />} wrap='' />
-          </Link>
 
         </div>
 
@@ -164,17 +162,13 @@ export default function Home() {
           viewport={{ once: true }}
           transition={{ duration: 0.1, type: "spring", stiffness: 110, delay: 1 }}
           className='flex flex-col justify-center items-center  w-screen lg:w-full h-[160px]'>
-          <Link href="/projects" className='border z-10 border-white rounded-md px-5 py-2 text-lg absolute hover:bg-white hover:text-mainPurple transition-all ease-in-out'>Share your Projects</Link>
+          <Link href="/projects" className='border z-10 border-white rounded-md px-5 py-2 text-lg absolute hover:bg-white hover:text-mainPurple transition-all ease-in-out'>See All Projects</Link>
           <Image className="w-full h-full object-cover brightness-50 rounded-lg" src='/man-computer.jpg' alt='Man in front of computer' width={1920} height={1280} />
         </motion.div>
 
       </motion.main>
 
-      <footer className='h-[160px]  w-full bg-mainPurple/70 backdrop-blur-sm px-3 py-5 '>
-        <p>Dev-SpotiLght</p>
-        <p>Created by: Gabriel Barros</p>
-        <p>Github Twitter</p>
-      </footer>
+      <Footer />
 
     </div>
   )
