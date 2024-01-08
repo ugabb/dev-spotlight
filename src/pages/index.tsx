@@ -25,6 +25,12 @@ export default function Home() {
 
   const [projects, setProjects] = useState<IProject[]>([]);
 
+  const [isMounted, setIsMounted] = useState<boolean>(false);
+  useEffect(() => {
+    setIsMounted(true)
+  }, [])
+
+
   const handleFetchProjects = async () => {
     try {
       const response = await fetch('http://localhost:8080/projects', {
@@ -45,9 +51,11 @@ export default function Home() {
 
   return (
     <div className='flex flex-col gap-3 mx-auto overflow-hidden'>
-      <video autoPlay loop muted className='fixed z-0 h-full w-full top-0 left-0 object-cover opacity-30'>
-        <source src='/particles.mp4' />
-      </video>
+      {isMounted &&
+        <video autoPlay loop muted className='fixed z-0 h-full w-full top-0 left-0 object-cover opacity-30'>
+          <source src='/particles.mp4' />
+        </video>
+      }
       <Header />
 
       <motion.main
