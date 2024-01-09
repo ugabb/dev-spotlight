@@ -16,8 +16,8 @@ import {
 type Props = {
     open: boolean;
     setOpen: () => void;
-    isCreated: "created" | "error" | "loading";
-    loading: boolean;
+    isCreated?: "created" | "error" | "loading";
+    loading?: boolean;
 }
 
 const DialogComponent = ({ open, setOpen, isCreated, loading }: Props) => {

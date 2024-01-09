@@ -7,8 +7,10 @@ import Image from 'next/image';
 import { SwiperProps, SwiperSlide } from 'swiper/react';
 
 import { IoShareSocialOutline } from "react-icons/io5";
+import { FaXTwitter, FaLinkedin, FaWhatsapp } from "react-icons/fa6";
 import { RxExternalLink } from "react-icons/rx";
 import { FaReact } from 'react-icons/fa';
+
 import TextIcon from '@/components/TextIcon';
 import ButtonIcon from '@/components/ButtonIcon';
 import { useRouter } from 'next/router';
@@ -23,8 +25,10 @@ import CarouselShad from '@/components/Carousel/CarouselShad';
 import { useParams, useSearchParams } from 'next/navigation';
 
 // share
-import { LinkedinShareButton } from 'react-share'
+import { LinkedinShareButton, TwitterShareButton, WhatsappShareButton } from 'react-share'
 import { Toast } from '@/components/Toast';
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
+import DialogComponent from '@/components/Dialog';
 
 const ProjectsDetails = () => {
 
@@ -53,7 +57,10 @@ const ProjectsDetails = () => {
   const [userId, setUserId] = useState<number>(undefined);
   const [projects, setProjects] = useState<IProject[]>([]);
   const [currentProject, setCurrentProject] = useState<IProject>();
-  const userProfilePhoto = currentProject.user.githubProfilePhoto
+  const [openShare, setOpenShare] = useState<boolean>(false);
+  const handleOpenShareDialog = () => setOpenShare(share => !share);
+
+  const userProfilePhoto = currentProject?.user?.githubProfilePhoto
 
   const router = useRouter();
 
@@ -168,11 +175,33 @@ const ProjectsDetails = () => {
             <Toast cloneLink={currentProject?.linkRepo} />
 
 
-            {isMounted &&
-              <LinkedinShareButton url={`http://dev-spotlight.vercel.app${asPath}`} >
+            <Dialog>
+              <DialogTrigger>
                 <ButtonWide icon={<IoShareSocialOutline size={15} className='text-mainPurple' />} text='Share' />
-              </LinkedinShareButton>
-            }
+              </DialogTrigger>
+              <DialogContent className='h-auto w-[300px] md:w-full md:h-[300px] backdrop-blur-sm shadow-lg shadow-mainPurple'>
+                <DialogHeader >
+                  <DialogTitle className='font-georgeTown tracking-widest'>Share Project</DialogTitle>
+                  <DialogDescription className='flex flex-col justify-center items-center h-full'>
+                    {isMounted &&
+                      <div className='flex flex-col md:flex-row gap-5 my-3'>
+                        <LinkedinShareButton url={`http://dev-spotlight.vercel.app${asPath}`} >
+                          <FaLinkedin className='text-7xl hover:text-mainPurple' />
+                        </LinkedinShareButton>
+                        <TwitterShareButton url={`http://dev-spotlight.vercel.app${asPath}`} >
+                          <FaXTwitter className='text-7xl hover:text-mainPurple' />
+                        </TwitterShareButton>
+                        <WhatsappShareButton url={`http://dev-spotlight.vercel.app${asPath}`} >
+                          <FaWhatsapp className='text-7xl hover:text-mainPurple' />
+                        </WhatsappShareButton>
+                      </div>
+                    }
+                  </DialogDescription>
+                </DialogHeader>
+              </DialogContent>
+            </Dialog>
+
+
 
 
           </div>
