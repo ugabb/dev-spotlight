@@ -29,9 +29,9 @@ const Footer = () => {
                 </div>
             </section>
             <section className="flex flex-col text-mainGray">
-                <Link href={'/'} className='hover:text-white hover:underline'>Home</Link>
-                <Link href={'/projects'} className='hover:text-white hover:underline'>Projects</Link>
-                <Link href={'sign-up'} className='hover:text-white hover:underline'>Sign Up</Link>
+                <Link href={'/'} className='hover:text-white hover:underline hover:decoration-mainPurple'>Home</Link>
+                <Link href={'/projects'} className='hover:text-white hover:underline hover:decoration-mainPurple'>Projects</Link>
+                <Link href={'sign-up'} className='hover:text-white hover:underline hover:decoration-mainPurple'>Sign Up</Link>
             </section>
         </footer>
     )
