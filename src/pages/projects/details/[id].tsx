@@ -168,7 +168,7 @@ const ProjectsDetails = () => {
             <Link href={currentProject?.deployedLink || ''}>
               <ButtonWide icon={<Image src={'/external-link.svg'} width={15} height={15} alt='icon' />} text='Live Demo' />
             </Link>
-            <Link href={currentProject?.linkRepo || ''}>
+            <Link href={currentProject?.linkRepo || ''} target='_blank' >
               <ButtonWide icon={<Image src={'/external-link.svg'} width={15} height={15} alt='icon' />} text='Repository' />
             </Link>
 
