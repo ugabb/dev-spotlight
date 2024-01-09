@@ -36,7 +36,7 @@ const ProjectCard = ({ project }: Props) => {
             animate={{ opacity: 1, }}
             transition={{ duration: 1 }}
 
-            className='flex flex-col  bg-white/5 backdrop-blur-sm  border border-gray-500  rounded-[27px]  p-2 relative max-w-[400px] min-w-[300px] '>
+            className='flex flex-col  bg-white/5 backdrop-blur-sm  border border-gray-500  rounded-[27px]  p-2 relative max-w-[400px] lg:min-w-[300px] '>
             <div className='flex gap-3 justify-between items-center '>
                 <div className='flex flex-col w-10 h-10'>
                     <Image className='rounded-full object-cover' src={userProfilePhoto} width={40} height={40} alt='profile picture' />
