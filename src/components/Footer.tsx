@@ -5,10 +5,11 @@ import Image from 'next/image';
 
 import { FaXTwitter, FaGithub, FaLinkedin } from "react-icons/fa6";
 import Link from 'next/link';
+import { Separator } from './ui/separator';
 
 const Footer = () => {
     return (
-        <footer className='flex flex-col lg:flex-row gap-20 justify-center h-[160px]  w-full bg-gradient-to-t from-mainPurple to-mainPurple/5  backdrop-blur-sm px-20 py-5 '>
+        <footer className='flex items-center gap-3 md:gap-20 justify-center h-full  w-full bg-gradient-to-t from-mainPurple to-mainPurple/5  backdrop-blur-sm px-20 py-5 '>
             <section className='flex flex-col'>
                 <Image src={"/title.png"} className='pt-3' alt='Logo DevSpotligth' width={123} height={24} />
                 <div className="flex gap-3">
@@ -28,6 +29,9 @@ const Footer = () => {
                     </Link>
                 </div>
             </section>
+
+            <Separator className='bg-mainGray/50 h-[100px]' orientation='vertical' />
+
             <section className="flex flex-col text-mainGray">
                 <Link href={'/'} className='hover:text-white hover:underline hover:decoration-mainPurple'>Home</Link>
                 <Link href={'/projects'} className='hover:text-white hover:underline hover:decoration-mainPurple'>Projects</Link>
