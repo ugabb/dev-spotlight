@@ -70,17 +70,33 @@ export default function Home() {
           transition={{ duration: 0.1, type: "spring", stiffness: 110, delay: 0.2 }}
           className='flex flex-col md:flex-row justify-center items-center w-full md:gap-20'>
           <div className="flex flex-col justify-center m-10 font-bold">
-            <h1 className='text-7xl text-mainGray'>Devolop</h1>
-            <h1 className='text-7xl text-mainGray'>Share</h1>
-            <h1 className='text-7xl glow-text'>Shine</h1>
+            <motion.h1
+              initial={{ opacity: 0, x: 100 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ duration: 1 }}
+              className='text-7xl text-mainGray'>Devolop</motion.h1>
+            <motion.h1
+              initial={{ opacity: 0, x: 100 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ duration: 1.5 }}
+              className='text-7xl text-mainGray'>Share</motion.h1>
+            <motion.h1
+              initial={{ opacity: 0, x: 100 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ duration: 2 }}
+              className='text-7xl glow-text animate-pulse'>Shine</motion.h1>
           </div>
 
-          <div className="grid grid-cols-2 gap-5 h-[300px] w-[300px]">
-            <Image className="w-full h-[140px] object-cover rounded-lg" src='/man-computer.jpg' alt='Man in front of computer' width={1920} height={1280} />
-            <Image className="w-full h-[140px] object-cover rounded-lg" src='/user.jpg' alt='Man in front of computer' width={1920} height={1280} />
-            <Image className="w-full h-[140px] object-cover rounded-lg" src='/man-computer.jpg' alt='Man in front of computer' width={1920} height={1280} />
-            <Image className="w-full h-[140px] object-cover rounded-lg" src='/man-computer.jpg' alt='Man in front of computer' width={1920} height={1280} />
-          </div>
+          <motion.div
+            initial={{ opacity: 0, x: 100 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ duration: 1 }}
+            className="grid grid-cols-2 gap-5 h-[300px] w-[300px]">
+            <Image className="w-full h-[140px] object-cover rounded-lg shadow-lg shadow-mainPurple/20" src='/man-computer.jpg' alt='Man in front of computer' width={1920} height={1280} />
+            <Image className="w-full h-[140px] object-cover rounded-lg shadow-lg shadow-mainPurple/20" src='/jose.jpg' alt='Man in front of computer' width={1920} height={1280} />
+            <Image className="w-full h-[140px] object-cover rounded-lg shadow-lg shadow-mainPurple/20" src='/pc-triste.jpg' alt='Man in front of computer' width={1920} height={1280} />
+            <Image className="w-full h-[140px] object-cover rounded-lg shadow-lg shadow-mainPurple/20" src='/cafe.jpg' alt='Man in front of computer' width={1920} height={1280} />
+          </motion.div>
 
         </motion.div>
 
