@@ -28,6 +28,7 @@ import { useRouter } from 'next/router'
 
 import { IProjectToCreate, ITechnologies } from '@/interfaces/IProject'
 import DialogComponent from '@/components/Dialog'
+import { Textarea } from '@/components/ui/textarea'
 
 
 type Props = {}
@@ -53,14 +54,14 @@ const index = (props: Props) => {
     const [repositories, setRepositories] = useState([]); // [
     const [selectedRepository, setSelectedRepository] = useState(); // [
     const { data: session, status } = useSession()
-    // console.log(session.user)
+
     const username = session?.user?.username
 
     // if user is not authenticated push to home
     const router = useRouter()
 
     useEffect(() => {
-        if (status !== "authenticated") router.push('/')
+        if (status === "unauthenticated") router.push('/')
     }, [status])
 
 
@@ -127,20 +128,19 @@ const index = (props: Props) => {
         const userId = await getUserByUsername(username);
         project.userId = userId;
         project.likes = 0;
-        // console.log("este é o json enviado", project)
+        console.log("este é o json enviado", project)
         try {
-            const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/projects`, {
+            const response = await fetch(`${process.env.NEXT_PUBLIC_API}/projects`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
                 },
                 body: JSON.stringify(project)
             })
-            if (response.status === 500) {
-                console.log("erro 500")
+            if (response.status !== 200) {
+                console.log("Error", response.status)
                 return false;
             }
-            console.log("sucesso")
             return true;
         } catch (error) {
             console.log(error)
@@ -151,7 +151,7 @@ const index = (props: Props) => {
 
     const onSubmit: SubmitHandler<IProjectToCreate> = async (data) => {
         //reset
-        if(projectCreated !== "loading") setProjectCreated("loading")
+        if (projectCreated !== "loading") setProjectCreated("loading")
         // open true 
         handleOpenDialog()
 
@@ -165,10 +165,9 @@ const index = (props: Props) => {
         // setProject(valueSubmit)
         const isCreated = await createProject(valueSubmit);
 
-        console.log({isCreated})
-
         if (isCreated) {
             setProjectCreated("created")
+            router.push('/projects')
         } else {
             setProjectCreated("error")
         }
@@ -176,9 +175,8 @@ const index = (props: Props) => {
 
     const getUserByUsername = async (username: string) => {
         try {
-            const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/users/username/${username}`)
+            const response = await fetch(`${process.env.NEXT_PUBLIC_API}/users/username/${username}`)
             const data: IUser = await response.json();
-            console.log(data)
             return data?.id;
         } catch (error) {
             console.log(error)
@@ -193,15 +191,6 @@ const index = (props: Props) => {
         selectImageLocally(imagesSelected);
     }, [imagesSelected])
 
-    useEffect(() => {
-        // console.log(project)
-        // console.log(selectTechnologies)
-        // console.log(icons)
-        // console.log({ imagesSelected })
-        // console.log({ result })
-    }, [project, selectedTechnologies, imagesSelected, result, icons])
-
-
 
     return (
         <div className='md:py-24' >
@@ -209,21 +198,21 @@ const index = (props: Props) => {
             <div className='mx-auto space-y-5 w-full p-3  md:px-40'>
                 <h1 className='text-2xl font-bold text-mainGray text-center tracking-widest uppercase font-georgeTown break-all'>Create Project</h1>
 
-                <div className="flex flex-col">
+                {/* PESQUISAR O REPOSITORIO NO GITHUB */}
+                {/* <div className="flex flex-col">
                     <button onClick={(e) => handleFetchRepositories(e)} type="button" className='px-3 py-1 text-mainGray hover:text-mainPurple flex items-center'>
                         Seach in your Repositories
                         <GoLinkExternal className='text-mainPurple' />
                     </button>
                     {repositories.length > 0 && (
                         <select onChange={handleSelectedRepository} className='w-full bg-black rounded-md px-3 py-2 border border-zinc-700 hover:border-mainPurple focus:outline-none focus:border-mainPurple'>
-                            {/* <option>TESTE</option> */}
                             {repositories && repositories.map((repo, i) => (
                                 <option value={repo.name} key={repo.id}>{i} - {repo.name}</option>
                             ))}
                         </select>
                     )}
 
-                </div>
+                </div> */}
 
                 <form className='xl:max-w-3xl mx-auto flex flex-col gap-5' onSubmit={handleSubmit(onSubmit)}>
                     <div className="flex flex-col lg:flex-row gap-5">
@@ -235,12 +224,12 @@ const index = (props: Props) => {
                                     message: 'Minimum of 3 characters',
                                 },
 
-                            }} errors={errors} value={selectedRepository?.name} />
+                            }} errors={errors} value={selectedRepository && selectedRepository?.name} />
 
 
 
-                            <InputDefault register={register} label='Repository Link' registerName='linkRepo' validationRules={{ required: 'Repository Link is required' }} errors={errors} value={selectedRepository?.html_url} />
-                            <InputDefault register={register} label='Deploy Link' registerName='deployedLink' value={selectedRepository?.deploy} />
+                            <InputDefault register={register} label='Repository Link' registerName='linkRepo' validationRules={{ required: 'Repository Link is required' }} errors={errors} value={selectedRepository && selectedRepository?.html_url} />
+                            <InputDefault register={register} label='Deploy Link' registerName='deployedLink' value={selectedRepository && selectedRepository?.deploy} />
                         </div>
 
                         <div className='flex flex-col gap-5 lg:w-1/2 '>
@@ -311,12 +300,17 @@ const index = (props: Props) => {
                     </div>
 
                     <div className="flex flex-col gap-3">
-                        <InputDefault register={register} label='Description' registerName='description' validationRules={{
-                            required: 'Description is required', minLength: {
-                                value: 50,
-                                message: 'Minimum of 50 characters',
-                            },
-                        }} errors={errors} value={selectedRepository?.description} />
+                        <label className='flex flex-col text-mainGray italic'>
+                            Description:
+                            <Textarea
+                                {...register("description", { required: 'Description is required', minLength: { value: 50, message: 'Minimum of 50 characters', }, })}
+                                className={`w-full bg-black rounded-md px-3 py-2 border  hover:border-mainPurple  focus:outline-none focus:border-mainPurple focus-visible:ring-offset-0 focus-visible:ring-0 ${errors?.description ? 'border-red-500' : 'border-zinc-700'}`} />
+                            {errors.description && (
+                                <span className="text-red-500 text-xs">
+                                    {errors.description?.message}
+                                </span>
+                            )}
+                        </label>
                     </div>
                     <div className="flex flex-col md:flex-row flex-wrap  items-center gap-3">
                         {result.length < 5
