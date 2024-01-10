@@ -27,7 +27,7 @@ const ProjectCard = ({ project }: Props) => {
         setIconHeart(false);
     }
 
-    const userProfilePhoto = project.user.githubProfilePhoto;
+    const userProfilePhoto = project?.user?.githubProfilePhoto;
     // console.log(userProfilePhoto)
 
     return (
@@ -40,7 +40,7 @@ const ProjectCard = ({ project }: Props) => {
             <div className='flex gap-3 justify-between items-center '>
                 <div className='flex flex-col w-10 h-10'>
                     <Image className='rounded-full object-cover' src={userProfilePhoto} width={40} height={40} alt='profile picture' />
-                    <p className='text-mainGray text-xs flex items-center'>{project.user.username}</p>
+                    <p className='text-mainGray text-xs flex items-center'>{project?.user?.username}</p>
                 </div>
 
                 <h2 className='text-xl font-bold truncate hover:text-mainPurple'>{project?.name}</h2>
@@ -54,7 +54,7 @@ const ProjectCard = ({ project }: Props) => {
             {project.projectImages[0]?.url
                 ?
                 <div className="flex flex-col w-full mt-5 px-3">
-                    <Link href={`/projects/details/${project.name}`} className='flex justify-center  w-full h-32 bg-gradient-to-transparent hover:border hover:border-mainPurple hover:rounded-md'>
+                    <Link href={`/projects/details/${project.name}/user/${project?.user?.id}`} className='flex justify-center  w-full h-32 bg-gradient-to-transparent hover:border hover:border-mainPurple hover:rounded-md'>
                         <Image className='object-cover rounded-md w-full ' src={project.projectImages[0].url} width={1920} height={1280} alt='profile picture' />
                     </Link>
                 </div>
@@ -83,7 +83,7 @@ const ProjectCard = ({ project }: Props) => {
                     <p>GitHub</p>
                     <AiOutlineArrowRight />
                 </Link>
-                <Link className='flex gap-3 items-center  rounded-md px-2 py-1 hover:text-mainPurple hover:bg-white font-semibold bg-mainPurple text-white  transition-colors' href={`/projects/details/${project.name}/user/${project.user.id}`}>
+                <Link className='flex gap-3 items-center  rounded-md px-2 py-1 hover:text-mainPurple hover:bg-white font-semibold bg-mainPurple text-white  transition-colors' href={`/projects/details/${project.name}/user/${project?.user?.id}`}>
                     <p>More</p>
                     <AiOutlineArrowRight />
 
