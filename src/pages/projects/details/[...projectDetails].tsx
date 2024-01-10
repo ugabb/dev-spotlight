@@ -133,7 +133,7 @@ const ProjectsDetails = () => {
       {isMounted && (
         <div className='lg:px-20 mx-auto space-y-5 p-3'>
           <div className='flex justify-between gap-3'>
-            <h1 className='text-2xl font-bold text-mainGray tracking-widest uppercase font-georgeTown break-all'>{query?.projectDetails[0]}</h1>
+            <h1 className='text-2xl font-bold text-mainGray tracking-widest uppercase font-georgeTown break-all'>{query.projectDetails && query?.projectDetails[0]}</h1>
             {iconHeart ? <GoHeartFill size={25} className='text-mainPurple' /> : <GoHeart className='text-mainGray' size={25} />}
           </div>
 
@@ -151,14 +151,15 @@ const ProjectsDetails = () => {
           <h1 className='text-2xl text-mainGray font-bold tracking-widest uppercase font-georgeTown pt-20'>Technologies</h1>
           <section className='flex flex-col lg:justify-center lg:items-center lg:mx-auto lg:w-full'>
             <div className="grid grid-cols-2 gap-3 mx-auto lg:content-start lg:mx-0 lg:grid-cols-3">
-              {currentProject?.technologies.map((tech) => (
+              {currentProject?.technologies && currentProject?.technologies.map((tech) => (
                 <p key={tech.name} className={`text-center max-w-max  text-white px-3 py-1 rounded-md bg-mainPurple`}>{tech.name}</p>
               ))}
             </div>
           </section>
 
+          {/* MOBILE */}
           <div className="grid grid-cols-2 md:hidden items-start  gap-1">
-            <Link href={currentProject?.deployedLink || ''}>
+            <Link href={currentProject?.deployedLink || ''} >
               <ButtonIcon icon={<Image src={'/external-link.svg'} width={15} height={15} alt='icon' />} text='Live Demo' textColor='mainGray' textSize='sm' />
             </Link>
             <Link href={currentProject?.linkRepo || ''}>
@@ -172,10 +173,11 @@ const ProjectsDetails = () => {
             </Link>
           </div>
 
+          {/* DESKTOP */}
           <div className="hidden md:flex justify-center items-center">
             <div className="grid grid-cols-2 gap-3">
-              <Link href={currentProject?.deployedLink || ''}>
-                <ButtonWide icon={<Image src={'/external-link.svg'} width={15} height={15} alt='icon' />} text='Live Demo' />
+              <Link href={currentProject?.deployedLink || ''} className={`${!currentProject?.deployedLink && "grayscale opacity-50 cursor-default"}`}>
+                <ButtonWide icon={<Image src={'/external-link.svg'} width={15} height={15} alt='icon' />} text='Live Demo' disabled={!currentProject?.deployedLink} />
               </Link>
               <Link href={currentProject?.linkRepo || ''} target='_blank' >
                 <ButtonWide icon={<Image src={'/external-link.svg'} width={15} height={15} alt='icon' />} text='Repository' />
@@ -236,7 +238,7 @@ const ProjectsDetails = () => {
           <motion.div
 
             className="flex flex-col justify-center items-center  gap-5 md:grid md:grid-cols-2 xl:grid-cols-3 mt-10 max-w-6xl lg:mx-auto">
-            {projects.slice(0, 3).map(project => {
+            {projects?.slice(0, 3).map(project => {
               return (
                 <motion.div key={project.id}
                 // initial={{ opacity: 0, x: `${3 * project}px` }}
