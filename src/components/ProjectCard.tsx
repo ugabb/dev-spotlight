@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import TextIcon from './TextIcon'
 
 //icons
@@ -18,17 +18,38 @@ type Props = {
 }
 
 const ProjectCard = ({ project }: Props) => {
-    const [iconHeart, setIconHeart] = useState(false)
 
-    const handleIconHeartShow = () => {
-        setIconHeart(true);
+    const [iconHeart, setIconHeart] = useState(false);
+
+    const handleAddLike = async (projectId: number) => {
+        try {
+            const response = await fetch(`${process.env.NEXT_PUBLIC_API}/projects/${projectId}/likes/add`, { method: "POST" });
+            const data: IProject = await response.json();
+            const likesUpdated = data.likes;
+            if (response.ok) {
+                setIconHeart(true);
+                project.likes = likesUpdated;
+            }
+        } catch (error) {
+            console.error(error);
+        }
     }
-    const handleIconHeartHide = () => {
-        setIconHeart(false);
+
+    const handleRemoveLike = async (projectId: number) => {
+        try {
+            const response = await fetch(`${process.env.NEXT_PUBLIC_API}/projects/${projectId}/likes/remove`, { method: "POST" });
+            const data: IProject = await response.json();
+            const likesUpdated = data.likes;
+            if (response.ok) {
+                setIconHeart(false);
+                project.likes = likesUpdated;
+            }
+        } catch (error) {
+            console.error(error);
+        }
     }
 
     const userProfilePhoto = project?.user?.githubProfilePhoto;
-    // console.log(userProfilePhoto)
 
     return (
         <motion.div
@@ -45,9 +66,9 @@ const ProjectCard = ({ project }: Props) => {
 
                 <h2 className='text-xl font-bold truncate hover:text-mainPurple'>{project?.name}</h2>
 
-                <motion.div
-                    onMouseEnter={handleIconHeartShow} onMouseLeave={handleIconHeartHide} className='transition-all ease-in-out cursor-pointer'>
-                    {iconHeart ? <GoHeartFill size={25} className='text-mainPurple' /> : <GoHeart size={25} />}
+                <motion.div className='flex flex-col items-center transition-all ease-in-out cursor-pointer'>
+                    {iconHeart ? <GoHeartFill onClick={() => handleRemoveLike(project.id)} size={25} className='text-mainPurple' /> : <GoHeart onClick={() => handleAddLike(project.id)} size={25} />}
+                    <p className='text-mainGray text-xs'>{project?.likes}</p>
                 </motion.div>
             </div >
 
