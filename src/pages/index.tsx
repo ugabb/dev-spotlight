@@ -1,14 +1,10 @@
 import Image from 'next/image'
-import { Inter } from 'next/font/google'
 import Header from '@/components/Header/Header'
-import { Typewriter } from 'react-simple-typewriter'
-import Logo from '@/components/Logo'
 import TextIcon from '@/components/TextIcon'
 import { MdKeyboardDoubleArrowUp } from "react-icons/md";
 import { BsLightning } from "react-icons/bs";
 import { CiGlobe } from "react-icons/ci";
 import { TbBulb } from "react-icons/tb";
-import { AiOutlineArrowRight, AiOutlineArrowUp } from 'react-icons/ai'
 import { motion } from 'framer-motion'
 import Link from 'next/link'
 import ProjectCard from '@/components/ProjectCard'
@@ -17,9 +13,6 @@ import { IProject, IProjectToCreate } from '@/interfaces/IProject'
 import Footer from '@/components/Footer'
 
 
-const inter = Inter({ subsets: ['latin'] })
-
-const Shine = ['Shine']
 
 export default function Home() {
 
