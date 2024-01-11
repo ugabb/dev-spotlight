@@ -314,33 +314,43 @@ const Index = (props: Props) => {
                     <div className="flex flex-col md:flex-row flex-wrap  items-center gap-3">
                         {result.length < 5
                             ?
-                            <input
-                                type="file"
-                                multiple
-                                onChange={(e) => {
-                                    const selectedFiles = Array.from(e.target.files);
-                                    setImagesSelected((prev) => [...prev, ...selectedFiles]);
-
-                                }}
-                                className="text-sm text-mainGray
-                                file:mr-5 file:py-2 file:px-5 file:border file:border-mainPurple file:outline-none file:rounded-md
-                                file:text-sm file:bg-transparent file:text-mainPurple
-                                hover:file:cursor-pointer hover:file:bg-mainPurple
-                                hover:file:text-white file:transition-all file:ease-in-out"                            />
-                            :
-                            <div className="flex flex-col gap-2 ">
-                                <p className='text-xs text-red-500'>Max of 5 images</p>
+                            <label className='flex items-center gap-3 text-xs md:text-sm text-mainGray'>
+                                File input
                                 <input
                                     type="file"
+                                    multiple
                                     onChange={(e) => {
                                         const selectedFiles = Array.from(e.target.files);
                                         setImagesSelected((prev) => [...prev, ...selectedFiles]);
 
                                     }}
-                                    disabled
-                                    max={5}
-                                    className='md:w-1/3 h-full'
-                                />
+                                    className="text-sm text-mainGray
+                                file:mr-5 file:py-2 file:px-5 file:border file:border-mainPurple file:outline-none file:rounded-md
+                                file:text-sm file:bg-transparent file:text-mainPurple
+                                hover:file:cursor-pointer hover:file:bg-mainPurple
+                                hover:file:text-white file:transition-all file:ease-in-out"/>
+                            </label>
+                            :
+                            <div className="flex flex-col gap-2 ">
+                                <p className='text-xs text-red-500'>Max of 5 images</p>
+                                <label className='flex items-center gap-3 text-xs md:text-sm text-mainGray'>
+                                    File
+                                    <input
+                                        type="file"
+                                        onChange={(e) => {
+                                            const selectedFiles = Array.from(e.target.files);
+                                            setImagesSelected((prev) => [...prev, ...selectedFiles]);
+
+                                        }}
+                                        disabled
+                                        max={5}
+                                        className=' h-full text-sm text-mainGray
+                                        file:mr-5 file:py-2 file:px-5 file:border file:border-red-500/50 file:outline-none file:rounded-md
+                                        file:text-sm file:bg-transparent file:text-red-500/50
+                                        hover:file:cursor-pointer hover:file:bg-mainPurple
+                                        hover:file:text-white file:transition-all file:ease-in-out'
+                                    />
+                                </label>
                             </div>
                         }
 
