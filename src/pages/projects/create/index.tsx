@@ -59,9 +59,9 @@ const Index = (props: Props) => {
     // if user is not authenticated push to home
     const router = useRouter()
 
-    useEffect(() => {
-        if (status === "unauthenticated") router.push('/')
-    }, [status])
+    // useEffect(() => {
+    //     if (status === "unauthenticated") router.push('/')
+    // }, [status])
 
 
     const handleFetchRepositories = async (page = 1) => {
