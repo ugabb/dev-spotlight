@@ -36,7 +36,36 @@ const ProjectsDetails = () => {
   const { data: session } = useSession()
   const username = session?.user?.username
 
-  const [iconHeart, setIconHeart] = useState(false)
+  const [iconHeart, setIconHeart] = useState(false);
+
+  const handleAddLike = async (projectId: number) => {
+    try {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API}/projects/${projectId}/likes/add`, { method: "POST" });
+      const data: IProject = await response.json();
+      const likesUpdated = data.likes;
+      if (response.ok) {
+        setIconHeart(true);
+        currentProject.likes = likesUpdated;
+      }
+    } catch (error) {
+      console.error(error);
+    }
+  }
+
+  const handleRemoveLike = async (projectId: number) => {
+    try {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API}/projects/${projectId}/likes/remove`, { method: "POST" });
+      const data: IProject = await response.json();
+      const likesUpdated = data.likes;
+      if (response.ok) {
+        setIconHeart(false);
+        currentProject.likes = likesUpdated;
+      }
+    } catch (error) {
+      console.error(error);
+    }
+  }
+
   const [isMounted, setMounted] = useState<boolean>(false)
 
   useEffect(() => {
@@ -122,9 +151,9 @@ const ProjectsDetails = () => {
     }
   }, [query])
 
-  useEffect(() => {
-    console.log(currentProject)
-  }, [currentProject])
+  // useEffect(() => {
+  //   console.log(currentProject)
+  // }, [currentProject])
 
 
   return (
@@ -134,7 +163,12 @@ const ProjectsDetails = () => {
         <div className='lg:px-20 mx-auto space-y-5 p-3'>
           <div className='flex justify-between gap-3'>
             <h1 className='text-2xl font-bold text-mainGray tracking-widest uppercase font-georgeTown break-all'>{query.projectDetails && query?.projectDetails[0]}</h1>
-            {iconHeart ? <GoHeartFill size={25} className='text-mainPurple' /> : <GoHeart className='text-mainGray' size={25} />}
+            <motion.div className='flex flex-col items-center transition-all ease-in-out cursor-pointer'>
+              {iconHeart ? <GoHeartFill onClick={() => handleRemoveLike(currentProject.id)} size={25} className='text-mainPurple' /> : <GoHeart onClick={() => handleAddLike(currentProject.id)} size={25} />}
+              <p className='text-mainGray text-xs'>{currentProject?.likes}</p>
+            </motion.div>
+
+
           </div>
 
           {/* CArousel */}
