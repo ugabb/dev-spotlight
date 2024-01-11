@@ -51,7 +51,7 @@ const Projects = () => {
 
       })
 
-      const data: IProject = await response.json()
+      const data: IProject[] = await response.json()
       console.log(data)
       setProjects(data)
 
@@ -135,7 +135,7 @@ const Projects = () => {
               <AiOutlineClose className=' text-red-500 cursor-pointer' onClick={() => setProjectsFilteredToast(false)} />
             </AlertTitle>
             <AlertDescription className='text-red-500'>
-              The Project that you are looking for doesn't exist.
+              The Project that you are looking for does not exist.
             </AlertDescription>
 
           </Alert>

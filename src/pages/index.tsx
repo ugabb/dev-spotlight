@@ -13,7 +13,7 @@ import { motion } from 'framer-motion'
 import Link from 'next/link'
 import ProjectCard from '@/components/ProjectCard'
 import { useEffect, useState } from 'react'
-import { IProjectToCreate } from '@/interfaces/IProject'
+import { IProject, IProjectToCreate } from '@/interfaces/IProject'
 import Footer from '@/components/Footer'
 
 
@@ -24,7 +24,7 @@ const Shine = ['Shine']
 export default function Home() {
 
 
-  const [projects, setProjects] = useState<IProjectToCreate[]>([]);
+  const [projects, setProjects] = useState<IProject[]>([]);
 
   const [isMounted, setIsMounted] = useState<boolean>(false);
   useEffect(() => {

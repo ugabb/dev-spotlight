@@ -1,7 +1,6 @@
-
+//@ts-nocheck
 import Header from '@/components/Header/Header'
 import InputDefault from '@/components/inputs/InputDefault'
-import Select from '@/components/inputs/Select'
 import React, { ReactElement, useEffect, useState } from 'react'
 import { Controller, SubmitHandler, useForm } from 'react-hook-form'
 
@@ -33,7 +32,7 @@ import { Textarea } from '@/components/ui/textarea'
 
 type Props = {}
 
-const index = (props: Props) => {
+const Index = (props: Props) => {
     const [project, setProject] = useState<IProjectToCreate>();
     const [icons, setIcons] = useState([]);
     const [selectedTechnologies, setSelectedTechnologies] = useState<ITechnologies[]>([]);
@@ -375,4 +374,4 @@ const index = (props: Props) => {
     )
 }
 
-export default index
+export default Index

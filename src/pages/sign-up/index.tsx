@@ -27,7 +27,7 @@ const SignIn = () => {
             <div className="flex flex-col-reverse md:flex-row gap-3 ">
                 <div className="hidden md:flex justify-center items-center md:w-1/2 h-screen bg-black relative overflow-hidden">
                     <h1 className='text-6xl font-georgeTown font-bold  text-center z-10 uppercase tracking-widest glow-text backdrop-blur-sm w-full p-5 border-y border-zinc-500 '>Share</h1>
-                    <Image className="object-cover h-screen w-full brightness-50 absolute top-0" src={'/github-cyberpunk.jfif'} width={1024} height={1024} />
+                    <Image className="object-cover h-screen w-full brightness-50 absolute top-0" src={'/github-cyberpunk.jfif'} width={1024} height={1024} alt='Github logo cyberpunk by Ai' />
                     <div className="absolute top-0 right-0 h-full w-1/2 bg-gradient-to-r from-transparent to-black z-20"></div>
                 </div>
                 <div className="w-full h-screen md:w-1/2 flex flex-col justify-center items-center">

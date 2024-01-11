@@ -1,14 +1,13 @@
 import Image from 'next/image'
-import React, { useContext, useEffect, useRef, useState } from 'react'
-import { motion, sync, useCycle } from "framer-motion";
+import React, { useCallback, useEffect, useRef, useState } from 'react'
+import { motion, useCycle } from "framer-motion";
 
 import { AiOutlineMenu } from 'react-icons/ai'
 import { useDimensions } from './useDimensions';
 import { MenuToggle } from './MenuToggle';
 import { Navigation } from './Navigation';
 import Link from 'next/link';
-import { getProviders, getSession, signOut, useSession } from 'next-auth/react';
-import { ProfileContext } from '@/context/ProfileContext';
+import {  signOut, useSession } from 'next-auth/react';
 
 const sidebar = {
     open: (width = 1000) => ({
@@ -38,6 +37,10 @@ const Header = () => {
     // }
 
     const [isOpen, toggleOpen] = useCycle(false, true);
+    // Wrap toggleOpen in useCallback to memoize it
+    const memoizedToggleOpen = useCallback(() => {
+        toggleOpen();
+    }, [toggleOpen]);
     const containerRef = useRef(null);
     const { height } = useDimensions(containerRef);
 
@@ -64,9 +67,9 @@ const Header = () => {
 
     useEffect(() => {
         if (screenWidth >= 768 && isOpen) {
-            toggleOpen()
+            memoizedToggleOpen();
         }
-    }, [screenWidth])
+    },[screenWidth, isOpen, memoizedToggleOpen])
 
     return (
         <motion.nav

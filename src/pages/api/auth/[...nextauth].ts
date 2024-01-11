@@ -1,8 +1,7 @@
-import { ProfileContext } from "@/context/ProfileContext"
+
 import { IUser } from "@/interfaces/IUser"
-import NextAuth, { Awaitable, Session, User } from "next-auth"
-import GithubProvider, { GithubProfile } from "next-auth/providers/github"
-import { useContext } from "react"
+import NextAuth from "next-auth"
+import GithubProvider from "next-auth/providers/github"
 
 
 export const authOptions = {
@@ -93,5 +92,5 @@ export const authOptions = {
   },
 }
 
-
+//@ts-ignore
 export default NextAuth(authOptions)
