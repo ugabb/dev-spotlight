@@ -193,7 +193,7 @@ const ProjectsDetails = () => {
 
           {/* MOBILE */}
           <div className="grid grid-cols-2 md:hidden items-start  gap-1">
-            <Link href={currentProject?.deployedLink || ''} >
+            <Link href={currentProject?.deployedLink || ''} target='_blank'>
               <ButtonIcon icon={<Image src={'/external-link.svg'} width={15} height={15} alt='icon' />} text='Live Demo' textColor='mainGray' textSize='sm' />
             </Link>
             <Link href={currentProject?.linkRepo || ''}>
@@ -210,7 +210,7 @@ const ProjectsDetails = () => {
           {/* DESKTOP */}
           <div className="hidden md:flex justify-center items-center">
             <div className="grid grid-cols-2 gap-3">
-              <Link href={currentProject?.deployedLink || ''} className={`${!currentProject?.deployedLink && "grayscale opacity-50 cursor-default"}`}>
+              <Link href={currentProject?.deployedLink || ''} target='_blank' className={`${!currentProject?.deployedLink && "grayscale opacity-50 cursor-default"}`}>
                 <ButtonWide icon={<Image src={'/external-link.svg'} width={15} height={15} alt='icon' />} text='Live Demo' disabled={!currentProject?.deployedLink} />
               </Link>
               <Link href={currentProject?.linkRepo || ''} target='_blank' >
