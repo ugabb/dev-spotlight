@@ -1,102 +1,115 @@
 import { IUser } from "@/interfaces/IUser";
-import NextAuth from "next-auth";
+import { PrismaAdapter } from "@next-auth/prisma-adapter";
+import NextAuth, { AuthOptions } from "next-auth";
 import GithubProvider from "next-auth/providers/github";
 
-export const authOptions = {
+import prisma from "@/lib/prismadb";
+
+export const authOptions: AuthOptions = {
+  adapter: PrismaAdapter(prisma),
   // Configure one or more authentication providers
   providers: [
     GithubProvider({
-      clientId: process.env.GITHUB_ID,
-      clientSecret: process.env.GITHUB_SECRET,
+      clientId: process.env.GITHUB_ID as string,
+      clientSecret: process.env.GITHUB_SECRET as string,
     }),
     // ...add more providers here
   ],
+  debug: process.env.NODE_ENV === "development",
+  session: {
+    strategy: "jwt",
+  },
+  secret: process.env.NEXTAUTH_SECRET,
   callbacks: {
-    async jwt({ token, account, profile }) {
-      // Persist the OAuth access_token and or the user id to the token right after signin
-      if (account) {
-        token.accessToken = account.access_token;
-        token.id = profile.id;
-        token.username = profile.login;
-        token.name = profile.name;
-        token.email = profile.email;
-        token.githubProfileLink = profile.html_url;
-        token.githubProfilePhoto = profile.avatar_url;
-        token.followers = profile.followers;
-      }
-      // console.log("PRORORORR", profile)
-      return token;
-    },
-    async session({ session, token }) {
-      // Send properties to the client, like an access_token and user id from a provider.
-      // console.log(token)
-      session.accessToken = token.accessToken;
-      session.user.id = token.id;
-      session.user.username = token.username;
-      session.user.name = token.name;
-      session.user.email = token.email;
-      session.user.githubProfileLink = token.githubProfileLink;
-      session.user.githubProfilePhoto = token.githubProfilePhoto;
-      session.user.followers = token.followers;
+    async signIn({ user, account, profile, email }) {
+      // console.log(user, account, profile, email);
+      const {
+        name,
+        login,
+        email: profileEmail,
+        avatar_url,
+        html_url,
+        followers,
+      } = profile;
 
-      const user: IUser = {
-        email: session.user.email,
-        name: session.user.name,
-        username: session.user.username,
-        githubProfileLink: session.user.githubProfileLink,
-        githubProfilePhoto: session.user.githubProfilePhoto,
-        followers: session.user.followers,
-        favoritesRepositories: [],
-        role: "USER",
-      };
+      const existingUser = await prisma.user.findUnique({
+        where: {
+          email: profileEmail,
+        },
+      });
 
-      try {
-        const userResponse = await fetch(
-          `${process.env.NEXT_PUBLIC_API_URL}/users/username/${session.user.username}`
-        );
-
-        if (!userResponse.ok) {
-          throw new Error("User not found");
-        }
-
-        // User exists, proceed with your logic here
-      } catch (userFetchError) {
-        // console.error("Error fetching user:", userFetchError);
-
-        try {
-          // Create a new user in the database
-          console.log(user);
-          const createUserResponse = await fetch(
-            `${process.env.NEXT_PUBLIC_API_URL}/users`,
-            {
-              method: "POST",
-              headers: {
-                "Content-Type": "application/json",
-              },
-              body: JSON.stringify(user),
-            }
-          );
-
-          if (!createUserResponse.ok) {
-            console.log(createUserResponse.status);
-            throw new Error("Failed to create user");
-          }
-
-          if (createUserResponse.ok) {
-            console.log(
-              "New user created successfully",
-              createUserResponse.status
-            );
-          }
-
-          // Log the status or handle success as needed
-        } catch (createUserError) {
-          console.error("Error creating user:", createUserError);
-        }
+      if (existingUser) {
+        // If the user exists, update their profile information
+        await prisma.user.update({
+          where: { email: profileEmail },
+          data: {
+            name: name,
+            image: avatar_url,
+            followers,
+            username: login,
+            email: profileEmail,
+            githubProfileLink: html_url,
+          },
+        });
+      } else {
+        // If the user does not exist, create a new user in your database
+        await prisma.user.create({
+          data: {
+            name: name,
+            image: avatar_url,
+            followers,
+            username: login,
+            email: profileEmail,
+            githubProfileLink: html_url,
+          },
+        });
       }
 
-      return session;
+      return true;
     },
+
+    // async jwt({ token, account, profile }) {
+    //   // Persist the OAuth access_token and or the user id to the token right after signin
+    //   if (account) {
+    //     token.accessToken = account.access_token;
+    //     token.id = profile.id;
+    //     token.username = profile.login;
+    //     token.name = profile.name;
+    //     token.email = profile.email;
+    //     token.githubProfileLink = profile.html_url;
+    //     token.githubProfilePhoto = profile.avatar_url;
+    //     token.followers = profile.followers;
+    //   }
+    //   // console.log("PRORORORR", profile)
+    //   return token;
+    // },
+    // async session({ session, token }) {
+    //   // Send properties to the client, like an access_token and user id from a provider.
+    //   // console.log(token)
+    //   session.accessToken = token.accessToken;
+    //   session.user.id = token.id;
+    //   session.user.username = token.username;
+    //   session.user.name = token.name;
+    //   session.user.email = token.email;
+    //   session.user.githubProfileLink = token.githubProfileLink;
+    //   session.user.githubProfilePhoto = token.githubProfilePhoto;
+    //   session.user.followers = token.followers;
+
+    //   const user: IUser = {
+    //     email: session.user.email,
+    //     name: session.user.name,
+    //     username: session.user.username,
+    //     githubProfileLink: session.user.githubProfileLink,
+    //     githubProfilePhoto: session.user.githubProfilePhoto,
+    //     followers: session.user.followers,
+    //     favoritesRepositories: [],
+    //     role: "USER",
+    //   };
+
+    //   console.log({ user });
+
+    //   return session;
+    // },
   },
 };
 
