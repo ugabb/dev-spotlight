@@ -4,10 +4,17 @@ import React from 'react';
 import { AiFillGithub } from 'react-icons/ai';
 import Image from 'next/image';
 import { Typewriter } from 'react-simple-typewriter';
-import { signIn } from 'next-auth/react';
+import { getSession, signIn } from 'next-auth/react';
+import getCurrentUser from '@/actions/getCurrentUser';
 
-const SignIn = () => {
+interface SignUpProps {
+    currentUser: any;
+    session: any
+}
 
+const SignIn = ({ currentUser, session }: SignUpProps) => {
+
+    console.log("Props",currentUser,session)
 
     const handleSignIn = async () => {
         try {
@@ -38,7 +45,7 @@ const SignIn = () => {
                             {/* <Link href={'http://localhost:8080/oauth2/authorization/github'}>
                                 <AiFillGithub size={200} className="cursor-pointer z-10 transition-all ease-in-out hover:scale-105 hover:shadow-md hover:shadow-mainPurple rounded-full " />
                             </Link> */}
-                            <AiFillGithub onClick={() => signIn()} size={200} className="cursor-pointer z-10 transition-all ease-in-out hover:scale-105 hover:shadow-md hover:shadow-mainPurple rounded-full " />
+                            <AiFillGithub onClick={() => signIn("github")} size={200} className="cursor-pointer z-10 transition-all ease-in-out hover:scale-105 hover:shadow-md hover:shadow-mainPurple rounded-full " />
                         </div>
                     </div>
                 </div>
@@ -48,3 +55,19 @@ const SignIn = () => {
 };
 
 export default SignIn;
+
+
+
+export const getServerSideProps = async () => {
+    const session = await getSession();
+    console.log(session);
+    const currentUser = await getCurrentUser();
+    console.log(currentUser);
+
+    return {
+        props: {
+            session,
+            currentUser,
+        },
+    };
+};
