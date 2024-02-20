@@ -51,6 +51,8 @@ const ProjectCard = ({ project }: Props) => {
 
     const userProfilePhoto = project?.user?.githubProfilePhoto;
 
+    console.log(project)
+
     return (
         <motion.div
             initial={{ opacity: 0, }}
@@ -72,7 +74,7 @@ const ProjectCard = ({ project }: Props) => {
                 </motion.div>
             </div >
 
-            {project.projectImages[0]?.url
+            {project?.projectImages[0]?.url
                 ?
                 <div className="flex flex-col w-full mt-5 px-3">
                     <Link href={`/projects/details/${project.name}/user/${project?.user?.id}`} className='flex justify-center  w-full h-32 bg-gradient-to-transparent hover:border hover:border-mainPurple hover:rounded-md'>
