@@ -28,12 +28,15 @@ import { useRouter } from 'next/router'
 import { IProjectToCreate, ITechnologies } from '@/interfaces/IProject'
 import DialogComponent from '@/components/Dialog'
 import { Textarea } from '@/components/ui/textarea'
+import axios from 'axios'
+import { User } from '@prisma/client'
+import toast from 'react-hot-toast'
 
 
 type Props = {}
 
 const Index = (props: Props) => {
-    const [project, setProject] = useState<IProjectToCreate>();
+    const [loading, setLoading] = useState<boolean>(false);
     const [icons, setIcons] = useState([]);
     const [selectedTechnologies, setSelectedTechnologies] = useState<ITechnologies[]>([]);
     const [filter, setFilter] = useState('');
@@ -124,27 +127,23 @@ const Index = (props: Props) => {
     const { uploadImagesToFirebase } = useUploadImages();
 
     const createProject = async (project: IProjectToCreate) => {
+        setLoading(true)
         const userId = await getUserByUsername(username);
         project.userId = userId;
         project.likes = 0;
         console.log("este é o json enviado", project)
-        try {
-            const response = await fetch(`${process.env.NEXT_PUBLIC_API}/projects`, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify(project)
+        axios.post("/api/projects/create", project)
+            .then((res) => {
+                if (res.status === 201) {
+                    toast.success("Project created successfully")
+                    router.push("/projects")
+                }
             })
-            if (response.status !== 200) {
-                console.log("Error", response.status)
-                return false;
-            }
-            return true;
-        } catch (error) {
-            console.log(error)
-            return false;
-        }
+            .catch((error) => {
+                toast.error(error.response.data.message)
+                console.log(error.response.data.message)
+                return error
+            })
     }
 
 
@@ -162,20 +161,17 @@ const Index = (props: Props) => {
             valueSubmit.projectImages = imagesToUpload;
         }
         // setProject(valueSubmit)
-        const isCreated = await createProject(valueSubmit);
 
-        if (isCreated) {
-            setProjectCreated("created")
-            router.push('/projects')
-        } else {
-            setProjectCreated("error")
-        }
+
+
+        await createProject(valueSubmit);
     }
+
 
     const getUserByUsername = async (username: string) => {
         try {
-            const response = await fetch(`${process.env.NEXT_PUBLIC_API}/users/username/${username}`)
-            const data: IUser = await response.json();
+            const response = await fetch(`/api/users/username/${username}`)
+            const data: User = await response.json();
             return data?.id;
         } catch (error) {
             console.log(error)
@@ -189,6 +185,9 @@ const Index = (props: Props) => {
     useEffect(() => {
         selectImageLocally(imagesSelected);
     }, [imagesSelected])
+    // useEffect(() => {
+    //     console.log(session?.user)
+    // }, [session?.user])
 
 
     return (
@@ -374,8 +373,9 @@ const Index = (props: Props) => {
                             <ButtonIcon icon={<IoShareSocialOutline size={15} className='text-mainPurple' />} text='Share' textColor='mainGray' textSize='sm' />
                         </Link>
                     </div>
-                    <DialogComponent open={openDialog} setOpen={handleOpenDialog} isCreated={projectCreated} />
-                    {/* <Button onClick={handleOpenDialog}>Open Modal</Button> */}
+
+                    {/* <DialogComponent open={openDialog} setOpen={handleOpenDialog} isCreated={projectCreated} />
+                    <Button onClick={handleOpenDialog}>Open Modal</Button> */}
                     <GlowButton text='Create' type='submit' />
                 </form>
 
