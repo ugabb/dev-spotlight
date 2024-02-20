@@ -16,8 +16,10 @@ import {
   AlertTitle,
 } from "@/components/ui/alert"
 import Footer from '@/components/Footer'
+import { useSession } from 'next-auth/react'
 
 const Projects = () => {
+  const { data: session } = useSession()
   const animationX = [0, 10, 20, 30, 40, 50, 60, 70]
 
   const [projects, setProjects] = useState<IProject[]>([]);
@@ -44,19 +46,19 @@ const Projects = () => {
   // fetch projects
   const handleFetchProjects = async () => {
     try {
-      const response = await fetch('http://localhost:8080/projects', {
+      const response = await fetch('http://localhost:3000/api/projects', {
         method: 'GET',
         redirect: 'follow',
         credentials: 'include',
 
       })
 
-      const data: IProject[] = await response.json()
-      console.log(data)
-      setProjects(data)
+      const data = await response.json()
+      console.log(data?.projects)
+      setProjects(data?.projects)
 
     } catch (error) {
-
+      console.log(error)
     }
   }
 
@@ -141,7 +143,7 @@ const Projects = () => {
           </Alert>
         </motion.div>}
 
-        <Footer/>
+      <Footer />
     </div>
   )
 }

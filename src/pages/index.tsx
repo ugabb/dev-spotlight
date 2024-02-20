@@ -27,13 +27,13 @@ export default function Home() {
 
   const handleFetchProjects = async () => {
     try {
-      const response = await fetch('http://localhost:8080/projects', {
+      const response = await fetch('http://localhost:3000/api/projects', {
         method: 'GET',
         redirect: 'follow',
         credentials: 'include',
       })
       const data = await response.json()
-      setProjects(data)
+      setProjects(data?.projects)
     } catch (error) {
 
     }
