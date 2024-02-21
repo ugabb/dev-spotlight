@@ -148,7 +148,7 @@ export default function Home() {
             transition={{ duration: 0.1, type: "spring", stiffness: 110, delay: 0.7 }}
             className='text-2xl lg:text-3xl text-white font-bold'>Projects</motion.h1>
           <div className='flex flex-col md:grid md:grid-cols-2 xl:grid-cols-3 gap-5'>
-            {projects.map(project => {
+            {projects?.map(project => {
               return (
                 <motion.div key={project.id}
                 // initial={{ opacity: 0, x: `${3 * project}px` }}
