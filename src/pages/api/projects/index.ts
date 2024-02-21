@@ -1,8 +1,9 @@
 import { NextRequest, NextResponse } from "next/server";
 import prisma from "@/lib/prismadb";
 import getCurrentUser from "@/actions/getCurrentUser";
+import { NextApiRequest, NextApiResponse } from "next";
 
-export default async function GET(req: NextRequest, res: NextResponse) {
+export default async function GET(req: NextApiRequest, res: NextApiResponse) {
   try {
     const data = await prisma.project.findMany({
       include: {
