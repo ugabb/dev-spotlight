@@ -8,6 +8,12 @@ import prisma from "@/lib/prismadb";
 export const authOptions: AuthOptions = {
   adapter: PrismaAdapter(prisma),
   // Configure one or more authentication providers
+  session: {
+    strategy: "jwt",
+  },
+  // pages: {
+  //   signIn: "/sign-up",
+  // },
   providers: [
     GithubProvider({
       clientId: process.env.GITHUB_ID as string,
@@ -16,13 +22,10 @@ export const authOptions: AuthOptions = {
     // ...add more providers here
   ],
   debug: process.env.NODE_ENV === "development",
-  session: {
-    strategy: "jwt",
-  },
   secret: process.env.NEXTAUTH_SECRET,
   callbacks: {
     async signIn({ user, account, profile, email }) {
-      // console.log(user, account, profile, email);
+      console.log("Sign In Callback:", user, account, profile, email);
       const {
         name,
         login,
@@ -53,7 +56,7 @@ export const authOptions: AuthOptions = {
         });
       } else {
         // If the user does not exist, create a new user in your database
-        await prisma.user.create({
+        const newUser = await prisma.user.create({
           data: {
             name: name,
             image: avatar_url,
@@ -63,6 +66,18 @@ export const authOptions: AuthOptions = {
             githubProfileLink: html_url,
           },
         });
+
+        await prisma.account.create({
+          data: {
+            userId: newUser.id,
+            type: account.provider,
+            provider: account.provider,
+            providerAccountId: account.providerAccountId,
+            access_token: account.access_token,
+            token_type: account.token_type,
+            scope: account.scope
+          },
+        });
       }
 
       return true;
@@ -70,7 +85,7 @@ export const authOptions: AuthOptions = {
 
     async jwt({ token, account, profile }) {
       // Persist the OAuth access_token and or the user id to the token right after signin
-      console.log(token,account,profile)
+      console.log(token, account, profile);
       if (account) {
         token.accessToken = account.access_token;
         token.id = profile.id;
@@ -99,6 +114,10 @@ export const authOptions: AuthOptions = {
       console.log(session);
 
       return session;
+    },
+
+    redirect({ url, baseUrl }) {
+      return baseUrl + "/projects";
     },
   },
 };
