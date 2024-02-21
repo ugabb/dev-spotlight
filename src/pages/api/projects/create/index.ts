@@ -15,16 +15,44 @@ interface IProjectBody {
 export default async function POST(req: NextApiRequest, res: NextApiResponse) {
   try {
     const projectData = req.body as IProjectBody;
-    console.log(projectData);
 
     const existingProject = await prisma.project.findFirst({
+      // get the project with userId and name or linkRepo
       where: {
-        linkRepo: projectData.linkRepo,
+        userId: projectData.userId,
+        OR: [{ name: projectData.name }, { linkRepo: projectData.linkRepo }],
       },
     });
 
-    if (existingProject) {
-      return res.status(400).json({ message: "Projets already exists.\n The repository link already exist." });
+    if (
+      existingProject?.name === projectData?.name &&
+      existingProject?.linkRepo === projectData?.linkRepo
+    ) {
+      return res.status(500).json({
+        message:
+          "Projets already exists.\n The repository name and github link already exist.",
+      });
+    } else if (existingProject?.name === projectData?.name) {
+      return res.status(500).json({
+        message: "Projets already exists.\n The repository name already exist.",
+      });
+    } else if (existingProject?.linkRepo === projectData?.linkRepo) {
+      return res.status(500).json({
+        message: "Projets already exists.\n The repository link already exist.",
+      });
+    }
+
+    const existingGithubRepositoryLink = await prisma.project.findFirst({
+      where: {
+        linkRepo: projectData?.linkRepo,
+      },
+    });
+
+    if (existingGithubRepositoryLink?.linkRepo) {
+      return res.status(500).json({
+        message:
+          "Github Repository Link already exist in another project. Verify if this repository is valid. This repository link could be used by another user",
+      });
     }
 
     const projectCreated = await prisma.project.create({
@@ -52,5 +80,6 @@ export default async function POST(req: NextApiRequest, res: NextApiResponse) {
     return res.status(201).json(projectCreated);
   } catch (error) {
     console.log("PROJECT_CREATION_ERROR", error);
+    res.status(500).json(error.message);
   }
 }
