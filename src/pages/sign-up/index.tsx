@@ -14,8 +14,6 @@ interface SignUpProps {
 
 const SignIn = ({ currentUser, session }: SignUpProps) => {
 
-    console.log("Props",currentUser,session)
-
     const handleSignIn = async () => {
         try {
             const response = await fetch('http://localhost:8080/oauth2/authorization/github');
@@ -58,16 +56,16 @@ export default SignIn;
 
 
 
-export const getServerSideProps = async () => {
-    const session = await getSession();
-    console.log(session);
-    const currentUser = await getCurrentUser();
-    console.log(currentUser);
+// export const getServerSideProps = async () => {
+//     const session = await getSession();
+//     console.log(session);
+//     const currentUser = await getCurrentUser();
+//     console.log(currentUser);
 
-    return {
-        props: {
-            session,
-            currentUser,
-        },
-    };
-};
+//     return {
+//         props: {
+//             session,
+//             currentUser,
+//         },
+//     };
+// };

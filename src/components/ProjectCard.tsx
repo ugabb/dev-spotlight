@@ -12,16 +12,18 @@ import Image from 'next/image'
 import { motion } from 'framer-motion'
 import { IProject } from '@/interfaces/IProject';
 import { useSession } from 'next-auth/react';
+import { Project } from '@prisma/client';
 
 type Props = {
     project: IProject
 }
 
-const ProjectCard = ({ project }: Props) => {
+const 
+ProjectCard = ({ project }: Props) => {
 
     const [iconHeart, setIconHeart] = useState(false);
 
-    const handleAddLike = async (projectId: number) => {
+    const handleAddLike = async (projectId: string) => {
         try {
             const response = await fetch(`${process.env.NEXT_PUBLIC_API}/projects/${projectId}/likes/add`, { method: "POST" });
             const data: IProject = await response.json();
@@ -35,7 +37,7 @@ const ProjectCard = ({ project }: Props) => {
         }
     }
 
-    const handleRemoveLike = async (projectId: number) => {
+    const handleRemoveLike = async (projectId: string) => {
         try {
             const response = await fetch(`${process.env.NEXT_PUBLIC_API}/projects/${projectId}/likes/remove`, { method: "POST" });
             const data: IProject = await response.json();
@@ -49,9 +51,9 @@ const ProjectCard = ({ project }: Props) => {
         }
     }
 
-    const userProfilePhoto = project?.user?.githubProfilePhoto;
+    const userProfilePhoto = project?.user?.image;
 
-    console.log(project)
+    // console.log(project)
 
     return (
         <motion.div
@@ -63,13 +65,13 @@ const ProjectCard = ({ project }: Props) => {
             <div className='flex gap-3 justify-between items-center '>
                 <div className='flex flex-col w-10 h-10'>
                     <Image className='rounded-full object-cover' src={userProfilePhoto} width={40} height={40} alt='profile picture' />
-                    <p className='text-mainGray text-xs flex items-center'>{project?.user?.username}</p>
+                    <p className='text-mainGray text-xs flex items-center'>{project?.user?.userId}</p>
                 </div>
 
                 <h2 className='text-xl font-bold truncate hover:text-mainPurple'>{project?.name}</h2>
 
                 <motion.div className='flex flex-col items-center transition-all ease-in-out cursor-pointer'>
-                    {iconHeart ? <GoHeartFill onClick={() => handleRemoveLike(project.id)} size={25} className='text-mainPurple' /> : <GoHeart onClick={() => handleAddLike(project.id)} size={25} />}
+                    {iconHeart ? <GoHeartFill onClick={() => handleRemoveLike(project?.id)} size={25} className='text-mainPurple' /> : <GoHeart onClick={() => handleAddLike(project.id)} size={25} />}
                     <p className='text-mainGray text-xs'>{project?.likes}</p>
                 </motion.div>
             </div >
@@ -77,7 +79,7 @@ const ProjectCard = ({ project }: Props) => {
             {project?.projectImages[0]?.url
                 ?
                 <div className="flex flex-col w-full mt-5 px-3">
-                    <Link href={`/projects/details/${project.name}/user/${project?.user?.id}`} className='flex justify-center  w-full h-32 bg-gradient-to-transparent hover:border hover:border-mainPurple hover:rounded-md'>
+                    <Link href={`/projects/details/${project.name}/user/${project?.user.username}`} className='flex justify-center  w-full h-32 bg-gradient-to-transparent hover:border hover:border-mainPurple hover:rounded-md'>
                         <Image className='object-cover rounded-md w-full ' src={project.projectImages[0].url} width={1920} height={1280} alt='profile picture' />
                     </Link>
                 </div>
@@ -96,9 +98,9 @@ const ProjectCard = ({ project }: Props) => {
             </div>
 
             <div className="flex flex-wrap gap-1 text-sm px-3 my-3">
-                {project?.technologies.map((tech, id) => (
+                {/* {project?.technologies.map((tech, id) => (
                     <span className={`text-mainPurple text-xs p-1 rounded-md border border-mainPurple`} key={id}>{tech.name}</span>
-                ))}
+                ))} */}
             </div>
 
             <div className="flex justify-center gap-3 p-3  mx-auto text-mainGray ">
@@ -106,7 +108,7 @@ const ProjectCard = ({ project }: Props) => {
                     <p>GitHub</p>
                     <AiOutlineArrowRight />
                 </Link>
-                <Link className='flex gap-3 items-center  rounded-md px-2 py-1 hover:text-mainPurple hover:bg-white font-semibold bg-mainPurple text-white  transition-colors' href={`/projects/details/${project.name}/user/${project?.user?.id}`}>
+                <Link className='flex gap-3 items-center  rounded-md px-2 py-1 hover:text-mainPurple hover:bg-white font-semibold bg-mainPurple text-white  transition-colors' href={`/projects/details/${project.name}/user/${project?.user.username}`}>
                     <p>More</p>
                     <AiOutlineArrowRight />
 

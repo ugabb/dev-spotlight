@@ -9,6 +9,7 @@ export default async function GET(req: NextApiRequest, res: NextApiResponse) {
       include: {
         projectImages: true,
         technologies: true,
+        user: true,
       },
     });
 
