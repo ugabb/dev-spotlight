@@ -29,6 +29,7 @@ import { LinkedinShareButton, TwitterShareButton, WhatsappShareButton } from 're
 import { Toast } from '@/components/Toast';
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
 import DialogComponent from '@/components/Dialog';
+import axios from 'axios';
 
 const ProjectsDetails = () => {
 
@@ -40,10 +41,11 @@ const ProjectsDetails = () => {
 
   const handleAddLike = async (projectId: string) => {
     try {
-      const response = await fetch(`${process.env.NEXT_PUBLIC_API}/projects/${projectId}/likes/add`, { method: "POST" });
-      const data: IProject = await response.json();
+      const response = await axios.post(`/api/projects/like/add/${projectId}`);
+      console.log(response)
+      const data: IProject = await response.data;
       const likesUpdated = data.likes;
-      if (response.ok) {
+      if (response.statusText === "OK") {
         setIconHeart(true);
         currentProject.likes = likesUpdated;
       }
@@ -162,13 +164,13 @@ const ProjectsDetails = () => {
   // useEffect(() => {
   //   console.log(projects)
   // }, [projects])
-  useEffect(() => {
-    if (currentProject) {
-      console.log("[Current Project]", currentProject);
-    } else {
-      console.log("[Current Project] is null or undefined");
-    }
-  }, [currentProject]);
+  // useEffect(() => {
+  //   if (currentProject) {
+  //     console.log("[Current Project]", currentProject);
+  //   } else {
+  //     console.log("[Current Project] is null or undefined");
+  //   }
+  // }, [currentProject]);
 
 
 
