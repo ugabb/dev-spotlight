@@ -38,7 +38,7 @@ const ProjectsDetails = () => {
 
   const [iconHeart, setIconHeart] = useState(false);
 
-  const handleAddLike = async (projectId: number) => {
+  const handleAddLike = async (projectId: string) => {
     try {
       const response = await fetch(`${process.env.NEXT_PUBLIC_API}/projects/${projectId}/likes/add`, { method: "POST" });
       const data: IProject = await response.json();
@@ -52,7 +52,7 @@ const ProjectsDetails = () => {
     }
   }
 
-  const handleRemoveLike = async (projectId: number) => {
+  const handleRemoveLike = async (projectId: string) => {
     try {
       const response = await fetch(`${process.env.NEXT_PUBLIC_API}/projects/${projectId}/likes/remove`, { method: "POST" });
       const data: IProject = await response.json();
@@ -109,24 +109,30 @@ const ProjectsDetails = () => {
     }
   }
 
-  const handleFetchProjectByName = async (userId: number, projectName: string) => {
-    console.log(userId, projectName)
+  const handleFetchProjectByName = async (username: string, projectName: string) => {
     try {
-      const response = await fetch(`${process.env.NEXT_PUBLIC_API}/projects/${userId}/${projectName}`)
-      // const response = await fetch(`${process.env.NEXT_PUBLIC_API}/projects/1/${projectName}`)
-      const data = await response.json()
+      console.log('Fetching project by name:', username, projectName);
+      const response = await fetch(`/api/projects/${username}/${projectName}`);
+      const data = await response.json();
+      console.log('API Response:', response);
+      console.log('Data:', data);
 
-      setCurrentProject(data)
+      if (response.ok) {
+        setCurrentProject(data);
+
+      } else {
+        console.error('Error fetching project:', response.status, data);
+      }
     } catch (error) {
-      console.log(error)
+      console.error('Error fetching project:', error);
     }
-  }
+  };
 
 
 
   const handleFetchProjects = async () => {
     try {
-      const response = await fetch('http://localhost:8080/projects', {
+      const response = await fetch('/api/projects', {
         method: 'GET',
         redirect: 'follow',
         credentials: 'include',
@@ -134,8 +140,7 @@ const ProjectsDetails = () => {
       })
 
       const data = await response.json()
-      // console.log(data)
-      setProjects(data)
+      setProjects(data?.projects)
 
     } catch (error) {
 
@@ -144,16 +149,27 @@ const ProjectsDetails = () => {
 
   useEffect(() => {
     handleFetchProjects()
-
     if (query?.projectDetails) {
-      handleFetchProjectByName(Number(query?.projectDetails[2]), query?.projectDetails[0])
-      // setProjectToFetch({ projectName: , userId: ) });
+      const username = query?.projectDetails[2]
+      const projectName = query?.projectDetails[0]
+      if (username && projectName) {
+        handleFetchProjectByName(username, projectName)
+      }
     }
-  }, [query])
+
+  }, [])
 
   // useEffect(() => {
-  //   console.log(currentProject)
-  // }, [currentProject])
+  //   console.log(projects)
+  // }, [projects])
+  useEffect(() => {
+    if (currentProject) {
+      console.log("[Current Project]", currentProject);
+    } else {
+      console.log("[Current Project] is null or undefined");
+    }
+  }, [currentProject]);
+
 
 
   return (
@@ -164,7 +180,7 @@ const ProjectsDetails = () => {
           <div className='flex justify-between gap-3'>
             <h1 className='text-2xl font-bold text-mainGray tracking-widest uppercase font-georgeTown break-all'>{query.projectDetails && query?.projectDetails[0]}</h1>
             <motion.div className='flex flex-col items-center transition-all ease-in-out cursor-pointer'>
-              {iconHeart ? <GoHeartFill onClick={() => handleRemoveLike(currentProject.id)} size={25} className='text-mainPurple' /> : <GoHeart onClick={() => handleAddLike(currentProject.id)} size={25} />}
+              {iconHeart ? <GoHeartFill onClick={() => handleRemoveLike(currentProject?.id)} size={25} className='text-mainPurple' /> : <GoHeart onClick={() => handleAddLike(currentProject?.id)} size={25} />}
               <p className='text-mainGray text-xs'>{currentProject?.likes}</p>
             </motion.div>
 
@@ -186,7 +202,7 @@ const ProjectsDetails = () => {
           <section className='flex flex-col lg:justify-center lg:items-center lg:mx-auto lg:w-full'>
             <div className="grid grid-cols-2 gap-3 mx-auto lg:content-start lg:mx-0 lg:grid-cols-3">
               {currentProject?.technologies && currentProject?.technologies.map((tech) => (
-                <p key={tech.name} className={`text-center max-w-max  text-white px-3 py-1 rounded-md bg-mainPurple`}>{tech.name}</p>
+                <p key={tech?.id} className={`text-center max-w-max  text-white px-3 py-1 rounded-md bg-mainPurple`}>{tech?.name}</p>
               ))}
             </div>
           </section>
@@ -200,7 +216,7 @@ const ProjectsDetails = () => {
               <ButtonIcon icon={<Image src={'/external-link.svg'} width={15} height={15} alt='icon' />} text='Repository' textColor='mainGray' textSize='sm' />
             </Link>
 
-            <ButtonIcon icon={<Image src={'/copy-icon.svg'} width={15} height={15} alt='icon' />} text='Clone Project' textColor='mainGray' textSize='sm' onClick={() => navigator.clipboard.writeText(currentProject.linkRepo + ".git")} />
+            <ButtonIcon icon={<Image src={'/copy-icon.svg'} width={15} height={15} alt='icon' />} text='Clone Project' textColor='mainGray' textSize='sm' onClick={() => navigator.clipboard.writeText(currentProject?.linkRepo + ".git")} />
 
             <Link href={'/'}>
               <ButtonIcon icon={<IoShareSocialOutline size={15} className='text-mainPurple' />} text='Share' textColor='mainGray' textSize='sm' />
@@ -257,7 +273,7 @@ const ProjectsDetails = () => {
           <section>
             <h1 className='text-2xl text-mainGray font-bold tracking-widest uppercase font-georgeTown'>Creator</h1>
             <div className="flex gap-3">
-              <Image className='w-[55px] h-[55px] rounded-full' src={currentProject?.user?.githubProfilePhoto} width={640} height={640} alt='' />
+              <Image className='w-[55px] h-[55px] rounded-full' src={currentProject?.user?.githubProfilePhoto ? currentProject?.user?.githubProfilePhoto : ""} width={640} height={640} alt='' />
               <div>
                 <h4 className='text-sm text-mainGray font-bold'>{currentProject?.user?.name}</h4>
                 <p className='text-xs text-mainGray'>@{currentProject?.user?.username}</p>

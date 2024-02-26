@@ -46,7 +46,7 @@ const Projects = () => {
   // fetch projects
   const handleFetchProjects = async () => {
     try {
-      const response = await fetch('http://localhost:3000/api/projects', {
+      const response = await fetch('/api/projects', {
         method: 'GET',
         redirect: 'follow',
         credentials: 'include',
@@ -65,9 +65,9 @@ const Projects = () => {
   useEffect(() => {
     handleFetchProjects()
   }, [router.query])
-  // useEffect(() => {
-  //   console.log(projects)
-  // }, [projects])
+  useEffect(() => {
+    console.log(projects)
+  }, [projects])
   useEffect(() => {
     console.log({ projectFiltered })
   }, [projectFiltered])
@@ -99,7 +99,7 @@ const Projects = () => {
       <motion.div
         className="flex flex-col md:grid md:grid-cols-2 xl:grid-cols-3 gap-3 my-10 p-2 lg:px-40 mx-auto">
         {projectFiltered.length > 0 &&
-          projectFiltered.slice().reverse().map(project => {
+          projectFiltered?.slice().reverse().map(project => {
             return (
               <motion.div key={project.id}
               // initial={{ opacity: 0, x: `${3 * project}px` }}
