@@ -74,7 +74,7 @@ const Projects = () => {
 
 
   return (
-    <div className='lg:flex lg:flex-col min-h-screen'>
+    <div className='lg:flex lg:flex-col '>
       <video autoPlay loop muted className='fixed -z-10  h-full w-full top-0 left-0 object-cover opacity-30'>
         <source src='/particles.mp4' />
       </video>

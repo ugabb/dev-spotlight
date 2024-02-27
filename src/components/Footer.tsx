@@ -9,7 +9,7 @@ import { Separator } from './ui/separator';
 
 const Footer = () => {
     return (
-        <footer className='flex items-center gap-3 md:gap-20 justify-center absolute bottom-0 left-0 w-full bg-gradient-to-t from-mainPurple to-mainPurple/5  backdrop-blur-sm px-20 py-5 '>
+        <footer className='flex items-center gap-3 md:gap-20 justify-center  bottom-0 left-0 w-full bg-gradient-to-t from-mainPurple to-mainPurple/5  backdrop-blur-sm px-20 py-5 '>
             <section className='flex flex-col'>
                 <Image src={"/title.png"} className='pt-3' alt='Logo DevSpotligth' width={123} height={24} />
                 <div className="flex gap-3">

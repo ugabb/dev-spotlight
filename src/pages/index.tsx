@@ -44,7 +44,7 @@ export default function Home() {
   }, [])
 
   return (
-    <div className='flex flex-col gap-3 min-h-screen mx-auto overflow-hidden relative'>
+    <div className='flex flex-col gap-3  mx-auto overflow-hidden relative'>
       {isMounted &&
         <video autoPlay loop muted className='fixed z-0 h-screen w-screen top-0 left-0 object-cover opacity-30'>
           <source src='/particles.mp4' />
@@ -180,7 +180,7 @@ export default function Home() {
 
       </motion.main>
 
-      <Footer />
+      {/* <Footer /> */}
 
     </div>
   )
