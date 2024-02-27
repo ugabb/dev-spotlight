@@ -18,5 +18,6 @@ export default async function GET(req: NextApiRequest, res: NextApiResponse) {
     return res.status(200).json(user);
   } catch (error) {
     console.log("GET_USER_BY_USERNAME", error);
+    return res.status(404).json({ message: "User not Found", error });
   }
 }
