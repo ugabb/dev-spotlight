@@ -44,16 +44,16 @@ export default function Home() {
   }, [])
 
   return (
-    <div className='flex flex-col gap-3 mx-auto overflow-hidden'>
+    <div className='flex flex-col gap-3 min-h-screen mx-auto overflow-hidden relative'>
       {isMounted &&
-        <video autoPlay loop muted className='fixed z-0 h-full w-full top-0 left-0 object-cover opacity-30'>
+        <video autoPlay loop muted className='fixed z-0 h-screen w-screen top-0 left-0 object-cover opacity-30'>
           <source src='/particles.mp4' />
         </video>
       }
       <Header />
 
       <motion.main
-        className='flex flex-col justify-center items-center px-3 gap-3 md:px-20  md:my-24 lg:max-w-6xl xl:mx-auto z-10'>
+        className='flex flex-col justify-center items-center flex-grow px-3 gap-3 md:px-20  md:my-24 lg:max-w-6xl xl:mx-auto z-10'>
         <Spotlight className='hidden lg:block left-[450px]' />
 
         <motion.div
