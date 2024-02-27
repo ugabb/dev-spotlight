@@ -159,7 +159,7 @@ const ProjectsDetails = () => {
       }
     }
 
-  }, [])
+  }, [query])
 
   // useEffect(() => {
   //   console.log(projects)
@@ -175,10 +175,10 @@ const ProjectsDetails = () => {
 
 
   return (
-    <div className='md:my-24 md:mx-20'>
+    <div className='md:py-24 md:px-20'>
       <Header />
       {isMounted && (
-        <div className='lg:px-20 mx-auto space-y-5 p-3'>
+        <div className='lg:px-20 mx-auto space-y-5 p-3 '>
           <div className='flex justify-between gap-3'>
             <h1 className='text-2xl font-bold text-mainGray tracking-widest uppercase font-georgeTown break-all'>{query.projectDetails && query?.projectDetails[0]}</h1>
             <motion.div className='flex flex-col items-center transition-all ease-in-out cursor-pointer'>
@@ -197,7 +197,7 @@ const ProjectsDetails = () => {
 
           <section className='space-y-3 md:mx-auto flex flex-col'>
             <h1 className='text-2xl text-mainGray font-bold tracking-widest uppercase font-georgeTown'>About</h1>
-            <p className='text-xs md:text-base lg:text-lg text-mainGray leading-4'>{currentProject?.description}</p>
+            <p className='text-xs md:text-base lg:text-lg break-words text-mainGray leading-4'>{currentProject?.description}</p>
           </section>
 
           <h1 className='text-2xl text-mainGray font-bold tracking-widest uppercase font-georgeTown pt-20'>Technologies</h1>

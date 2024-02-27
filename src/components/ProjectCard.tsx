@@ -80,7 +80,7 @@ ProjectCard = ({ project }: Props) => {
                 ?
                 <div className="flex flex-col w-full mt-5 px-3">
                     <Link href={`/projects/details/${project.name}/user/${project?.user.username}`} className='flex justify-center  w-full h-32 bg-gradient-to-transparent hover:border hover:border-mainPurple hover:rounded-md'>
-                        <Image className='object-cover rounded-md w-full ' src={project.projectImages[0].url} width={1920} height={1280} alt='profile picture' />
+                        <img className='object-cover rounded-md w-full ' src={project.projectImages[0].url} width={1920} height={1280} alt='profile picture' />
                     </Link>
                 </div>
                 :

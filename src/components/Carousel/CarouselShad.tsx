@@ -27,7 +27,7 @@ export default function CarouselShad({ images }: Props) {
                 {images?.map((img) => (
                     <CarouselItem key={img?.id}>
                         <div className="p-1">
-                            <Image className="h-[300px]  object-cover  rounded-md" src={img?.url ? img.url : ""} width={1920} height={1080} alt="" />
+                            <img className="h-[300px]  object-cover  rounded-md" src={img?.url ? img.url : ""} width={1920} height={1080} alt="" />
                         </div>
                     </CarouselItem>
                 ))}
