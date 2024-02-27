@@ -33,15 +33,19 @@ import axios from 'axios'
 import { User } from '@prisma/client'
 import toast from 'react-hot-toast'
 import Footer from '@/components/Footer';
+import { Button } from '@/components/ui/button';
 
 
 type Props = {}
+
+interface ProjectImages {
+    url: string[]
+}
 
 const Index = (props: Props) => {
     const [loading, setLoading] = useState<boolean>(false);
     const [icons, setIcons] = useState([]);
     const [selectedTechnologies, setSelectedTechnologies] = useState<ITechnologies[]>([]);
-    const [selectedImage, setSelectedImage] = useState(null);
     const [filter, setFilter] = useState('');
     const [suggestedIcons, setSuggestedIcons] = useState([]);
 
@@ -127,7 +131,7 @@ const Index = (props: Props) => {
     //     fetchIcons()
     // }, [])
 
-    const { uploadImagesToFirebase } = useUploadImages();
+    // const { uploadImagesToFirebase } = useUploadImages();
 
     const createProject = async (project: IProjectToCreate) => {
         setLoading(true)
@@ -156,23 +160,25 @@ const Index = (props: Props) => {
         // open true 
         handleOpenDialog()
 
-        const imagesToUpload = await uploadImagesToFirebase(imagesSelected);
         const valueSubmit = data;
+        const images = await handleImageUpload().then((prjImages) => {
+            if (prjImages) {
+                console.log(prjImages);
+                valueSubmit.projectImages = prjImages;
+            }
+        })
+            .catch((error) => {
+                console.log(error)
+            });
 
         valueSubmit.technologies = selectedTechnologies;
-        if (imagesToUpload) {
-            valueSubmit.projectImages = imagesToUpload;
-        }
         // setProject(valueSubmit)
 
-
+        console.log(valueSubmit)
 
         await createProject(valueSubmit);
     }
 
-    const handleImageUpload = (selectedFiles) => {
-        setSelectedImage(selectedFiles[0]);
-    };
 
     const getUserByUsername = async (username: string) => {
         try {
@@ -186,14 +192,55 @@ const Index = (props: Props) => {
 
     // image input
     const [imagesSelected, setImagesSelected] = useState<File[]>([]);
-    // const { selectImageLocally, result } = useSelectImage()
+    const [imagesUploaded, setImagesUploaded] = useState<ProjectImages[]>([]);
 
-    // useEffect(() => {
-    //     selectImageLocally(imagesSelected);
-    // }, [imagesSelected])
+    const { selectImageLocally, result } = useSelectImage()
+    const handleImageUpload = async () => {
+        try {
+            setLoading(true);
+            let projectImages: ProjectImages[] = []
+            const uploadPromises = imagesSelected.map(async (file) => {
+
+                const formData = new FormData();
+                formData.append("upload_preset", "dev-spotlight");
+                formData.append("cloud_name", "du4wrvo5j");
+                formData.append("file", file);
+
+                return axios.post("https://api.cloudinary.com/v1_1/du4wrvo5j/image/upload", formData)
+                    .then((response) => {
+                        console.log(response.data.secure_url);
+                        setImagesUploaded(prev => [...prev, response.data.secure_url])
+                        projectImages.push({ url: response.data.secure_url })
+                    })
+                    .catch((error) => {
+                        console.error(error);
+                    });
+            });
+
+            await Promise.all(uploadPromises);
+
+            // imagesUploaded array now contains all secure_urls
+            console.log({ projectImages });
+            return projectImages;
+        } catch (error) {
+            console.error(error);
+        } finally {
+            setLoading(false);
+        }
+    };
+
+
+
+    useEffect(() => {
+        console.log(result)
+        selectImageLocally(imagesSelected);
+    }, [imagesSelected])
     // useEffect(() => {
     //     console.log(session?.user)
     // }, [session?.user])
+    useEffect(() => {
+        console.log(imagesUploaded)
+    }, [imagesUploaded])
 
 
     return (
@@ -318,25 +365,36 @@ const Index = (props: Props) => {
                     </div>
                     <div className="flex flex-col md:flex-row flex-wrap  items-center gap-3">
 
-                        <CldUploadWidget
-                            onUploadAdded={(selected) => handleImageUpload(selected)}
-                            uploadPreset="dev-spotlight"
-                            options={{ maxFiles: 5, resourceType: "image", maxImageFileSize: 5500000, multiple: true }}
-                        >
-                            {({ open }) => (
-                                <button className="mr-5 py-2 px-5 border border-mainPurple outline-none rounded-md text-sm bg-transparent text-mainPurple hover:cursor-pointer hover:bg-mainPurple hover:text-white transition-all ease-in-out" onClick={() => open()}>
-                                    Upload an Image
-                                </button>
-                            )}
-                        </CldUploadWidget>
+                        <label className='flex items-center gap-3 text-xs md:text-sm text-mainGray'>
+                            File input
+                            <input
+                                type="file"
+                                multiple
+                                onChange={(e) => {
+                                    const selectedFiles = Array.from(e.target.files);
+                                    setImagesSelected((prev) => [...prev, ...selectedFiles]);
+
+                                }}
+                                className="text-sm text-mainGray
+                            file:mr-5 file:py-2 file:px-5 file:border file:border-mainPurple file:outline-none file:rounded-md
+                            file:text-sm file:bg-transparent file:text-mainPurple
+                            hover:file:cursor-pointer hover:file:bg-mainPurple
+                            hover:file:text-white file:transition-all file:ease-in-out"
+                            />
+
+                        </label>
+
+                        {/* <Button onClick={handleImageUpload}>
+                            UPLOAD IMAGE
+                        </Button> */}
 
 
-
-                        {selectedImage && (
-                            <div>
-                                <img src={selectedImage} alt="Selected" />
+                        {result && result.map((img, index) => (
+                            <div key={index} className='flex flex-col md:flex-grid md:grid-cols-3 flex-wrap items-center gap-3'>
+                                <Image className='w-[150px] h-[100px] object-cover' src={img} alt={`Image ${index + 1}`} width={1920} height={1080} />
                             </div>
-                        )}
+                        ))}
+
                     </div>
                     <div className="grid grid-cols-2 md:hidden items-start md:flex gap-1">
                         <Link href={''}>
