@@ -8,7 +8,7 @@ export default function Document() {
         <title>Dev-Spotlight</title>
         <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/devicon.min.css" />
       </Head>
-      <body>
+      <body className='min-h-full'>
         <Main />
         <NextScript />
       </body>

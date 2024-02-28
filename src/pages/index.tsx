@@ -53,7 +53,7 @@ export default function Home() {
       <Header />
 
       <motion.main
-        className='flex flex-col justify-center items-center flex-grow px-3 gap-3 md:px-20  md:my-24 lg:max-w-6xl xl:mx-auto z-10'>
+        className='flex-grow flex flex-col justify-center items-center px-3 gap-3 md:px-20  md:my-24 lg:max-w-6xl xl:mx-auto z-10'>
         <Spotlight className='hidden lg:block left-[450px]' />
 
         <motion.div
@@ -173,14 +173,14 @@ export default function Home() {
           whileInView={{ opacity: 1 }}
         
           transition={{ duration: 0.1, type: "spring", stiffness: 110, delay: 1 }}
-          className='flex flex-col justify-center items-center  w-screen lg:w-full h-[160px]'>
+          className='flex flex-col justify-center items-center  w-screen lg:w-full h-[160px] mb-28'>
           <Link href="/projects" className='border z-10 border-white rounded-md px-5 py-2 text-lg absolute hover:bg-white hover:text-mainPurple transition-all ease-in-out'>See All Projects</Link>
           <Image className="w-full h-full object-cover brightness-50 rounded-lg" src='/man-computer.jpg' alt='Man in front of computer' width={1920} height={1280} />
         </motion.div>
 
       </motion.main>
 
-      {/* <Footer /> */}
+      <Footer />
 
     </div>
   )
