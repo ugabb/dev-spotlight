@@ -32,15 +32,31 @@ import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, Di
 import DialogComponent from '@/components/Dialog';
 import axios from 'axios';
 import toast from 'react-hot-toast';
+import getCurrentUser from '@/actions/getCurrentUser';
 
 const ProjectsDetails = () => {
 
   const { query, asPath } = useRouter()
   const { data: session } = useSession()
   const username = session?.user?.username
+ 
+
 
   const [iconHeart, setIconHeart] = useState(false);
   const [iconBookmark, setIconBookmark] = useState(false);
+
+  // check if the user already liked this project
+  // const handleIsAlreadyLiked = async (projectId: string) => {
+  //   if (!session.user) {
+  //     return
+  //   }
+
+  //   try {
+  //     await currentProject.projectsLikdd
+  //   } catch (error) {
+
+  //   }
+  // }
 
   const handleAddLike = async (projectId: string) => {
     if (!session.user) {
@@ -57,10 +73,12 @@ const ProjectsDetails = () => {
       const likesUpdated = data.likes;
       if (response.statusText === "OK") {
         setIconHeart(true);
+        console.log(likesUpdated)
         currentProject.likes = likesUpdated;
       }
     } catch (error) {
       console.error(error);
+      toast.error(error.response.data, { iconTheme: { primary: "#B95AFF", secondary: "#fff" } })
     }
   }
 
@@ -125,7 +143,10 @@ const ProjectsDetails = () => {
 
       if (response.ok) {
         setCurrentProject(data);
-
+        if (data.ProjectsLiked.userId === session.user.id) {
+          console.log(session.user.id)
+          setIconHeart(true)
+        }
       } else {
         console.error('Error fetching project:', response.status, data);
       }
@@ -168,15 +189,6 @@ const ProjectsDetails = () => {
   // useEffect(() => {
   //   console.log(projects)
   // }, [projects])
-  // useEffect(() => {
-  //   if (currentProject) {
-  //     console.log("[Current Project]", currentProject);
-  //   } else {
-  //     console.log("[Current Project] is null or undefined");
-  //   }
-  // }, [currentProject]);
-
-
 
   return (
     <div className='md:py-24 md:max-w-7xl mx-auto'>
@@ -191,7 +203,7 @@ const ProjectsDetails = () => {
               </motion.div>
               <motion.div className='flex flex-col items-center transition-all ease-in-out cursor-pointer'>
                 {iconHeart ? <GoHeartFill onClick={() => handleRemoveLike(currentProject?.id)} size={25} className='text-mainPurple' /> : <GoHeart className='text-mainGray hover:text-mainPurple transition-colors' onClick={() => handleAddLike(currentProject?.id)} size={25} />}
-                <p className='text-mainGray text-xs'>{currentProject?.likes}</p>
+                <p className='text-mainGray text-xs'>{currentProject?.ProjectsLiked.length}</p>
               </motion.div>
             </div>
 

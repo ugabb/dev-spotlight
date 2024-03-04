@@ -23,6 +23,7 @@ model User {
   accounts           Account[]
   favoritesProjects  FavoriteProject[]
   projects           Project[]
+  ProjectsLiked      ProjectsLiked[]
 }
 
 model Account {
@@ -44,24 +45,35 @@ model Account {
 }
 
 model Project {
-  id            String         @id @default(uuid())
-  name          String
-  description   String
-  deployedLink  String?
-  linkRepo      String         @unique
-  likes         Int
-  userId        String?
-  user          User?          @relation(fields: [userId], references: [id])
-  projectImages ProjectImage[]
-  technologies  Technology[]
+  id              String            @id @default(uuid())
+  name            String
+  description     String
+  deployedLink    String?
+  linkRepo        String            @unique
+  likes           Int
+  userId          String?
+  user            User?             @relation(fields: [userId], references: [id])
+  projectImages   ProjectImage[]
+  technologies    Technology[]
+  ProjectsLiked   ProjectsLiked[]
+  FavoriteProject FavoriteProject[]
 }
 
 model FavoriteProject {
-  id          String @id @default(uuid())
-  name        String
-  authorId    String
-  projectLink String
-  author      User   @relation(fields: [authorId], references: [id])
+  id        String  @id @default(uuid())
+  name      String
+  project   Project @relation(fields: [projectId], references: [id])
+  projectId String
+  author    User    @relation(fields: [authorId], references: [id])
+  authorId  String
+}
+
+model ProjectsLiked {
+  id        String  @id @default(uuid())
+  project   Project @relation(fields: [projectId], references: [id])
+  projectId String
+  user      User    @relation(fields: [userId], references: [id])
+  userId    String
 }
 
 model Technology {

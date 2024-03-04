@@ -15,7 +15,8 @@ export default async function GET(req: NextApiRequest, res: NextApiResponse) {
       include: {
         user: true,
         technologies: true,
-        projectImages: true
+        projectImages: true,
+        ProjectsLiked: true,
       },
     });
     console.log(project);
