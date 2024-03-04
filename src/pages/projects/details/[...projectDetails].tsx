@@ -30,6 +30,7 @@ import { Toast } from '@/components/Toast';
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
 import DialogComponent from '@/components/Dialog';
 import axios from 'axios';
+import toast from 'react-hot-toast';
 
 const ProjectsDetails = () => {
 
@@ -40,8 +41,15 @@ const ProjectsDetails = () => {
   const [iconHeart, setIconHeart] = useState(false);
 
   const handleAddLike = async (projectId: string) => {
+    if (!session.user) {
+      toast.error("You need to sign in to like!")
+      return
+    }
     try {
-      const response = await axios.post(`/api/projects/like/add/${projectId}`);
+      const response = await axios.post(`/api/projects/like/add`, {
+        projectId,
+        username
+      });
       console.log(response)
       const data: IProject = await response.data;
       const likesUpdated = data.likes;
@@ -55,6 +63,10 @@ const ProjectsDetails = () => {
   }
 
   const handleRemoveLike = async (projectId: string) => {
+    if (!session.user) {
+      toast.error("You need to sign in to dislike!")
+      return
+    }
     try {
       const response = await fetch(`${process.env.NEXT_PUBLIC_API}/projects/${projectId}/likes/remove`, { method: "POST" });
       const data: IProject = await response.json();
@@ -175,7 +187,7 @@ const ProjectsDetails = () => {
 
 
   return (
-    <div className='md:py-24 md:px-20'>
+    <div className='md:py-24 md:max-w-7xl mx-auto'>
       <Header />
       {isMounted && (
         <div className='lg:px-20 mx-auto space-y-5 p-3 '>
@@ -201,8 +213,8 @@ const ProjectsDetails = () => {
           </section>
 
           <h1 className='text-2xl text-mainGray font-bold tracking-widest uppercase font-georgeTown pt-20'>Technologies</h1>
-          <section className='flex flex-col lg:justify-center lg:items-center lg:mx-auto lg:w-full'>
-            <div className="grid grid-cols-2 gap-3 mx-auto lg:content-start lg:mx-0 lg:grid-cols-3">
+          <section className='flex flex-col lg:mx-auto lg:w-full'>
+            <div className="grid grid-cols-2 gap-3 mx-auto lg:content-start lg:mx-0 lg:flex lg:flex-wrap">
               {currentProject?.technologies && currentProject?.technologies.map((tech) => (
                 <p key={tech?.id} className={`text-center max-w-max  text-white px-3 py-1 rounded-md bg-mainPurple`}>{tech?.name}</p>
               ))}
@@ -237,7 +249,6 @@ const ProjectsDetails = () => {
 
               <Toast cloneLink={currentProject?.linkRepo} />
 
-
               <Dialog>
                 <DialogTrigger>
                   <ButtonWide icon={<IoShareSocialOutline size={15} className='text-mainPurple' />} text='Share' />
@@ -249,13 +260,13 @@ const ProjectsDetails = () => {
                       {isMounted &&
                         <div className='flex flex-col md:flex-row gap-5 my-3'>
                           <LinkedinShareButton url={`http://dev-spotlight.vercel.app${asPath}`} >
-                            <FaLinkedin className='text-7xl hover:text-mainPurple' />
+                            <FaLinkedin className='text-7xl text-mainPurple' />
                           </LinkedinShareButton>
                           <TwitterShareButton url={`http://dev-spotlight.vercel.app${asPath}`} >
-                            <FaXTwitter className='text-7xl hover:text-mainPurple' />
+                            <FaXTwitter className='text-7xl text-mainPurple' />
                           </TwitterShareButton>
                           <WhatsappShareButton url={`http://dev-spotlight.vercel.app${asPath}`} >
-                            <FaWhatsapp className='text-7xl hover:text-mainPurple' />
+                            <FaWhatsapp className='text-7xl text-mainPurple' />
                           </WhatsappShareButton>
                         </div>
                       }
