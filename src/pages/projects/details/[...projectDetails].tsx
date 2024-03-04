@@ -8,6 +8,7 @@ import { SwiperProps, SwiperSlide } from 'swiper/react';
 
 import { IoShareSocialOutline } from "react-icons/io5";
 import { FaXTwitter, FaLinkedin, FaWhatsapp } from "react-icons/fa6";
+import { PiBookmarkSimpleFill, PiBookmarkSimpleLight } from "react-icons/pi";
 import { RxExternalLink } from "react-icons/rx";
 import { FaReact } from 'react-icons/fa';
 
@@ -39,6 +40,7 @@ const ProjectsDetails = () => {
   const username = session?.user?.username
 
   const [iconHeart, setIconHeart] = useState(false);
+  const [iconBookmark, setIconBookmark] = useState(false);
 
   const handleAddLike = async (projectId: string) => {
     if (!session.user) {
@@ -85,16 +87,6 @@ const ProjectsDetails = () => {
   useEffect(() => {
     setMounted(true)
   }, [])
-
-
-  const settings: SwiperProps = {
-    spaceBetween: 50,
-    slidesPerView: 1,
-    navigation: true,
-    pagination: {
-      clickable: true
-    }
-  }
 
 
   const [projectToFetch, setProjectToFetch] = useState({
@@ -193,10 +185,15 @@ const ProjectsDetails = () => {
         <div className='lg:px-20 mx-auto space-y-5 p-3 '>
           <div className='flex justify-between gap-3'>
             <h1 className='text-2xl font-bold text-mainGray tracking-widest uppercase font-georgeTown break-all'>{query.projectDetails && query?.projectDetails[0]}</h1>
-            <motion.div className='flex flex-col items-center transition-all ease-in-out cursor-pointer'>
-              {iconHeart ? <GoHeartFill onClick={() => handleRemoveLike(currentProject?.id)} size={25} className='text-mainPurple' /> : <GoHeart onClick={() => handleAddLike(currentProject?.id)} size={25} />}
-              <p className='text-mainGray text-xs'>{currentProject?.likes}</p>
-            </motion.div>
+            <div className="flex  gap-3">
+              <motion.div className='flex flex-col items-center transition-all ease-in-out cursor-pointer'>
+                {iconBookmark ? <PiBookmarkSimpleFill onClick={() => setIconBookmark(!iconBookmark)} size={25} className='text-mainPurple' /> : <PiBookmarkSimpleLight className='text-mainGray hover:text-mainPurple transition-colors' onClick={() => setIconBookmark(!iconBookmark)} size={25} />}
+              </motion.div>
+              <motion.div className='flex flex-col items-center transition-all ease-in-out cursor-pointer'>
+                {iconHeart ? <GoHeartFill onClick={() => handleRemoveLike(currentProject?.id)} size={25} className='text-mainPurple' /> : <GoHeart className='text-mainGray hover:text-mainPurple transition-colors' onClick={() => handleAddLike(currentProject?.id)} size={25} />}
+                <p className='text-mainGray text-xs'>{currentProject?.likes}</p>
+              </motion.div>
+            </div>
 
 
           </div>
