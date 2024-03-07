@@ -33,16 +33,25 @@ import DialogComponent from '@/components/Dialog';
 import axios from 'axios';
 import toast from 'react-hot-toast';
 import getCurrentUser from '@/actions/getCurrentUser';
+import userStore from '@/store/userStore';
+import { Project, ProjectsLiked } from '@prisma/client';
 
 const ProjectsDetails = () => {
 
   const { query, asPath } = useRouter()
   const { data: session } = useSession()
   const username = session?.user?.username
- 
 
+  // zustand store
+  const { setCurrentUser, currentUser } = userStore((state) => state)
 
-  const [iconHeart, setIconHeart] = useState(false);
+  useEffect(() => {
+    setCurrentUser(session?.user.username)
+  }, [session?.user.username])
+  useEffect(() => {
+    console.log(currentUser);
+  }, [currentUser])
+
   const [iconBookmark, setIconBookmark] = useState(false);
 
   // check if the user already liked this project
@@ -185,6 +194,26 @@ const ProjectsDetails = () => {
     }
 
   }, [query])
+
+  // icon heart
+  const [iconHeart, setIconHeart] = useState(false);
+  const isCurrentUserAlreadyLikedTheProject = (currentProjectId: string) => {
+    const currentUserProjectsLiked = currentUser?.ProjectsLiked;
+
+    if (currentUserProjectsLiked) {
+      const projectExist = currentUserProjectsLiked.find((project: ProjectsLiked) => {
+        return project.projectId === currentProjectId
+      })
+      console.log(projectExist)
+
+      if (projectExist) return setIconHeart(true);
+    }
+
+    return setIconHeart(false)
+  }
+  useEffect(() => {
+    isCurrentUserAlreadyLikedTheProject(currentProject?.id)
+  }, [currentProject, currentUser])
 
   // useEffect(() => {
   //   console.log(projects)
