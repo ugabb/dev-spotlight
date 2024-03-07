@@ -31,33 +31,32 @@ export default async function POST(req: NextApiRequest, res: NextApiResponse) {
       },
     });
 
-    if (currentUser) {
-      console.log("Already liked");
-      return res.status(400).json("Already liked");
+    if (!currentUser) {
+      return res.status(400).json("User didn't like");
     }
 
-    // Add the current project to the list of projects liked by the current user
-    const projectLiked = await prisma.project.update({
+    // Remove the project from the ProjectsLiked table
+    await prisma.projectsLiked.deleteMany({
       where: {
-        id: projectId,
+        projectId: project.id,
+        userId: currentUser.id,
+      },
+    });
+
+    // Save the updated project
+    console.log(project.likes);
+    const updatedProject = await prisma.project.update({
+      where: {
+        id: project.id,
       },
       data: {
         likes: {
-          increment: 1,
-        },
-        ProjectsLiked: {
-          create: {
-            user: {
-              connect: {
-                username,
-              },
-            },
-          },
+          decrement: 1,
         },
       },
     });
 
-    return res.status(200).json(projectLiked);
+    return res.status(200).json(updatedProject);
   } catch (error) {
     console.log(error);
     res.status(500).json(error);

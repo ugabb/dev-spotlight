@@ -232,7 +232,7 @@ const ProjectsDetails = () => {
               </motion.div>
               <motion.div className='flex flex-col items-center transition-all ease-in-out cursor-pointer'>
                 {iconHeart ? <GoHeartFill onClick={() => handleRemoveLike(currentProject?.id)} size={25} className='text-mainPurple' /> : <GoHeart className='text-mainGray hover:text-mainPurple transition-colors' onClick={() => handleAddLike(currentProject?.id)} size={25} />}
-                <p className='text-mainGray text-xs'>{currentProject?.ProjectsLiked.length}</p>
+                <p className='text-mainGray text-xs'>{currentProject?.likes}</p>
               </motion.div>
             </div>
 

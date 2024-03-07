@@ -14,6 +14,8 @@ import { IProject } from '@/interfaces/IProject';
 import { useSession } from 'next-auth/react';
 import { Project, ProjectsLiked } from '@prisma/client';
 import userStore from '@/store/userStore';
+import axios from 'axios';
+import toast from 'react-hot-toast';
 
 type Props = {
     project: IProject
@@ -31,16 +33,12 @@ const ProjectCard = ({ project }: Props) => {
 
     const [iconHeart, setIconHeart] = useState(false);
     const isCurrentUserAlreadyLikedTheProject = (currentProjectId: string) => {
-        console.log(currentUser);
-
         const currentUserProjectsLiked = currentUser?.ProjectsLiked;
 
         if (currentUserProjectsLiked) {
             const projectExist = currentUserProjectsLiked.find((project: ProjectsLiked) => {
                 return project.projectId === currentProjectId
             })
-            console.log(projectExist)
-
             if (projectExist) return setIconHeart(true);
         }
 
@@ -51,25 +49,38 @@ const ProjectCard = ({ project }: Props) => {
     }, [project, currentUser])
 
     const handleAddLike = async (projectId: string) => {
+        if (!session.user) {
+            toast.error("You need to sign in to like!")
+            return
+        }
         try {
-            const response = await fetch(`${process.env.NEXT_PUBLIC_API}/projects/${projectId}/likes/add`, { method: "POST" });
-            const data: IProject = await response.json();
+            const response = await axios.post(`/api/projects/like/add`, {
+                projectId,
+                username
+            });
+            console.log(response)
+            const data: IProject = await response.data;
             const likesUpdated = data.likes;
-            if (response.ok) {
+            if (response.statusText === "OK") {
                 setIconHeart(true);
+                console.log(likesUpdated)
                 project.likes = likesUpdated;
             }
         } catch (error) {
             console.error(error);
+            toast.error(error.response.data, { iconTheme: { primary: "#B95AFF", secondary: "#fff" } })
         }
     }
 
     const handleRemoveLike = async (projectId: string) => {
         try {
-            const response = await fetch(`${process.env.NEXT_PUBLIC_API}/projects/${projectId}/likes/remove`, { method: "POST" });
-            const data: IProject = await response.json();
+            const { data, statusText } = await axios.post(`/api/projects/like/remove`, {
+                projectId,
+                username
+            });
             const likesUpdated = data.likes;
-            if (response.ok) {
+            if (statusText === "OK") {
+                console.log(data.likes)
                 setIconHeart(false);
                 project.likes = likesUpdated;
             }
