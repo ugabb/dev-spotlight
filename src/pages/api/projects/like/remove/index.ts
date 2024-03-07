@@ -44,7 +44,6 @@ export default async function POST(req: NextApiRequest, res: NextApiResponse) {
     });
 
     // Save the updated project
-    console.log(project.likes);
     const updatedProject = await prisma.project.update({
       where: {
         id: project.id,

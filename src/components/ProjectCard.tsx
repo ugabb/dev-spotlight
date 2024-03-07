@@ -58,12 +58,10 @@ const ProjectCard = ({ project }: Props) => {
                 projectId,
                 username
             });
-            console.log(response)
             const data: IProject = await response.data;
             const likesUpdated = data.likes;
             if (response.statusText === "OK") {
                 setIconHeart(true);
-                console.log(likesUpdated)
                 project.likes = likesUpdated;
             }
         } catch (error) {
@@ -80,7 +78,6 @@ const ProjectCard = ({ project }: Props) => {
             });
             const likesUpdated = data.likes;
             if (statusText === "OK") {
-                console.log(data.likes)
                 setIconHeart(false);
                 project.likes = likesUpdated;
             }
@@ -91,7 +88,6 @@ const ProjectCard = ({ project }: Props) => {
 
     const userProfilePhoto = project?.user?.image;
 
-    // console.log(project)
 
     return (
         <motion.div

@@ -32,7 +32,6 @@ export default async function POST(req: NextApiRequest, res: NextApiResponse) {
     });
 
     if (currentUser) {
-      console.log("Already liked");
       return res.status(400).json("Already liked");
     }
 
