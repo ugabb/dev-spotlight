@@ -12,16 +12,43 @@ import Image from 'next/image'
 import { motion } from 'framer-motion'
 import { IProject } from '@/interfaces/IProject';
 import { useSession } from 'next-auth/react';
-import { Project } from '@prisma/client';
+import { Project, ProjectsLiked } from '@prisma/client';
+import userStore from '@/store/userStore';
 
 type Props = {
     project: IProject
 }
 
-const 
-ProjectCard = ({ project }: Props) => {
+const ProjectCard = ({ project }: Props) => {
+    const { data: session } = useSession()
+    const username = session?.user?.username
+
+    const { setCurrentUser, currentUser } = userStore((state) => state)
+
+    useEffect(() => {
+        setCurrentUser(username)
+    }, [username])
 
     const [iconHeart, setIconHeart] = useState(false);
+    const isCurrentUserAlreadyLikedTheProject = (currentProjectId: string) => {
+        console.log(currentUser);
+
+        const currentUserProjectsLiked = currentUser?.ProjectsLiked;
+
+        if (currentUserProjectsLiked) {
+            const projectExist = currentUserProjectsLiked.find((project: ProjectsLiked) => {
+                return project.projectId === currentProjectId
+            })
+            console.log(projectExist)
+
+            if (projectExist) return setIconHeart(true);
+        }
+
+        return setIconHeart(false)
+    }
+    useEffect(() => {
+        isCurrentUserAlreadyLikedTheProject(project?.id)
+    }, [project, currentUser])
 
     const handleAddLike = async (projectId: string) => {
         try {
