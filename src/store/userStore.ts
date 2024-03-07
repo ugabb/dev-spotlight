@@ -5,7 +5,7 @@ import { create } from "zustand";
 interface IUserStore {
   currentUser: User;
   projects: Project[];
-  projectsLiked: ProjectsLiked[];
+  ProjectsLiked: ProjectsLiked[];
 }
 
 interface ICurrentUserStore {

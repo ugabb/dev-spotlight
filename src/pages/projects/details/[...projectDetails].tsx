@@ -46,8 +46,8 @@ const ProjectsDetails = () => {
   const { setCurrentUser, currentUser } = userStore((state) => state)
 
   useEffect(() => {
-    setCurrentUser(session?.user.username)
-  }, [session?.user.username])
+    setCurrentUser(username)
+  }, [username])
   useEffect(() => {
     console.log(currentUser);
   }, [currentUser])
