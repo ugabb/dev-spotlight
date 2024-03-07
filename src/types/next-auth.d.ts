@@ -15,6 +15,7 @@ declare module "next-auth" {
       id: string;
       githubProfileLink: string;
       githubProfilePhoto: string;
+      userId: string;
     };
   }
   interface User {
@@ -26,6 +27,7 @@ declare module "next-auth" {
     id: string;
     githubProfileLink: string;
     githubProfilePhoto: string;
+    userId: string;
   }
   interface Profile {
     id: string;

@@ -3,11 +3,23 @@ import React, { useCallback, useEffect, useRef, useState } from 'react'
 import { motion, useCycle } from "framer-motion";
 
 import { AiOutlineMenu } from 'react-icons/ai'
+import { PiCaretDown } from 'react-icons/pi'
 import { useDimensions } from './useDimensions';
 import { MenuToggle } from './MenuToggle';
 import { Navigation } from './Navigation';
 import Link from 'next/link';
-import {  signOut, useSession } from 'next-auth/react';
+import { signOut, useSession } from 'next-auth/react';
+
+// shadcn dropdown
+import {
+    DropdownMenu,
+    DropdownMenuContent,
+    DropdownMenuItem,
+    DropdownMenuLabel,
+    DropdownMenuSeparator,
+    DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu"
+
 
 const sidebar = {
     open: (width = 1000) => ({
@@ -69,7 +81,7 @@ const Header = () => {
         if (screenWidth >= 768 && isOpen) {
             memoizedToggleOpen();
         }
-    },[screenWidth, isOpen, memoizedToggleOpen])
+    }, [screenWidth, isOpen, memoizedToggleOpen])
 
     return (
         <motion.nav
@@ -94,18 +106,36 @@ const Header = () => {
             </motion.div>
             <MenuToggle toggle={() => toggleOpen()} />
 
-            <motion.ul className="hidden md:flex gap-5 text-mainGray ">
+            <motion.ul className="hidden md:flex md:items-center gap-5 text-mainGray ">
                 <Link href={'/'} className='hover:text-white hover:underline hover:decoration-mainPurple transition-all cursor-pointer hover:scale-105'>Home</Link>
                 <Link href={'/projects'} className='hover:text-white hover:underline hover:decoration-mainPurple transition-all cursor-pointer hover:scale-105'>Projects</Link>
                 {status === "authenticated" &&
                     <Link href={'/projects/create'} className='hover:text-white hover:underline hover:decoration-mainPurple transition-all cursor-pointer hover:scale-105'>Create Project</Link>
                 }
 
+
+
+
                 {status === "authenticated"
-                    ? <div className='flex gap-3 items-center'>
-                        <Image onClick={() => signOut()} className='rounded-full hover:scale-105 cursor-pointer' src={session.user.image} height={30} width={30} alt='user profile photo' />
-                        <p className='text-sm'>{session.user.name}</p>
-                    </div>
+                    ? <DropdownMenu >
+                        <DropdownMenuTrigger asChild>
+                            <div className='flex gap-3 items-center '>
+                                <div className="flex flex-col items-center relative">
+                                    <Image className='rounded-full hover:scale-105 cursor-pointer' src={session.user.image} height={30} width={30} alt='user profile photo' />
+                                    <PiCaretDown className='absolute -bottom-4 cursor-pointer' />
+                                </div>
+                                <p className='text-sm'>{session.user.name}</p>
+                            </div>
+                        </DropdownMenuTrigger>
+                        <DropdownMenuContent className='border-none bg-mainPurple/20'>
+                            <DropdownMenuLabel className='text-mainPurple'>My Account</DropdownMenuLabel>
+                            <DropdownMenuSeparator />
+                            <DropdownMenuItem className='cursor-pointer hover:underline'>
+                                <Link href={"/profile-settings"}>Profile Settings</Link>
+                            </DropdownMenuItem>
+                            <DropdownMenuItem onClick={() => signOut()} className='cursor-pointer hover:underline'>Sign Out</DropdownMenuItem>
+                        </DropdownMenuContent>
+                    </DropdownMenu>
                     : <Link href={'/sign-up'} className=' hover:text-mainPurple hover:underline hover:decoration-mainPurple transition-all font-semibold hover:glow-text cursor-pointer hover:scale-105'>Sign Up</Link>
                 }
 

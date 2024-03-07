@@ -12,9 +12,10 @@ import { useEffect, useState } from 'react'
 import { IProject, IProjectToCreate } from '@/interfaces/IProject'
 import Footer from '@/components/Footer'
 import { Spotlight } from '@/components/acertenity-ui/Spotlight';
+import userStore from '@/store/userStore';
+import { useSession } from 'next-auth/react';
 
 export default function Home() {
-
 
   const [projects, setProjects] = useState<IProject[]>([]);
 
@@ -22,6 +23,7 @@ export default function Home() {
   useEffect(() => {
     setIsMounted(true)
   }, [])
+
 
 
   const handleFetchProjects = async () => {
@@ -59,7 +61,7 @@ export default function Home() {
         <motion.div
           initial={{ opacity: 0, y: 50 }}
           whileInView={{ opacity: 1, y: 0 }}
-        
+
           transition={{ duration: 0.1, type: "spring", stiffness: 110, delay: 0.2 }}
           className='flex flex-col md:flex-row justify-center items-center w-full md:gap-20'>
           <div className="flex flex-col justify-center m-10 font-bold">
@@ -96,7 +98,7 @@ export default function Home() {
         <motion.div
           initial={{ opacity: 0 }}
           whileInView={{ opacity: 1 }}
-        
+
           transition={{ duration: 0.1, type: "spring", stiffness: 110, delay: 0.5 }}
           className="">
           <div className='text-[#B9B9B9] text-sm md:text-base mb-10'>
@@ -108,7 +110,7 @@ export default function Home() {
         <motion.div
           initial={{ opacity: 0, y: 50 }}
           whileInView={{ opacity: 1, y: 0 }}
-        
+
           transition={{ duration: 0.1, type: "spring", stiffness: 110, delay: 0.2 }}
           className='flex flex-col justify-center items-center gap-3 border-y border-mainPurple w-screen p-3 mb-10 backdrop-blur-sm bg-white/3'>
           <h3 className='text-2xl font-bold font-george'>Why to use?</h3>
@@ -127,7 +129,7 @@ export default function Home() {
         <motion.div
           initial={{ opacity: 0 }}
           whileInView={{ opacity: 1 }}
-        
+
           transition={{ duration: 0.1, type: "spring", stiffness: 110, delay: 0.7 }}
           className="space-y-3  space-x-3 mb-10 lg:grid lg:grid-cols-2 ">
           <div className="flex flex-col gap-1 ">
@@ -144,7 +146,7 @@ export default function Home() {
           <motion.h1
             initial={{ opacity: 0 }}
             whileInView={{ opacity: 1 }}
-          
+
             transition={{ duration: 0.1, type: "spring", stiffness: 110, delay: 0.7 }}
             className='text-2xl lg:text-3xl text-white font-bold'>Projects</motion.h1>
 
@@ -171,7 +173,7 @@ export default function Home() {
         <motion.div
           initial={{ opacity: 0 }}
           whileInView={{ opacity: 1 }}
-        
+
           transition={{ duration: 0.1, type: "spring", stiffness: 110, delay: 1 }}
           className='flex flex-col justify-center items-center  w-screen lg:w-full h-[160px] mb-28'>
           <Link href="/projects" className='border z-10 border-white rounded-md px-5 py-2 text-lg absolute hover:bg-white hover:text-mainPurple transition-all ease-in-out'>See All Projects</Link>

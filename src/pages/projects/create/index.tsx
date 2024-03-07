@@ -244,7 +244,7 @@ const Index = (props: Props) => {
 
 
     return (
-        <div className='md:py-24 min-h-screen' >
+        <div className='md:py-24' >
             <Header />
             <div className='mx-auto space-y-5 w-full p-3  md:px-40'>
                 <h1 className='text-2xl font-bold text-mainGray text-center tracking-widest uppercase font-georgeTown break-all'>Create Project</h1>
@@ -418,7 +418,7 @@ const Index = (props: Props) => {
 
             </div >
 
-            <Footer />
+            {/* <Footer /> */}
         </div >
     )
 }
