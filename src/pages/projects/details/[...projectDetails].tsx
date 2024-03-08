@@ -17,7 +17,7 @@ import ButtonIcon from '@/components/ButtonIcon';
 import { useRouter } from 'next/router';
 import Link from 'next/link';
 import ButtonWide from '@/components/ButtonWide';
-import { IProject, IProjectToCreate } from '@/interfaces/IProject';
+import { IProject, IProjectToCreate, ITechnologies } from '@/interfaces/IProject';
 import { motion } from 'framer-motion';
 import ProjectCard from '@/components/ProjectCard';
 import { useSession } from 'next-auth/react';
@@ -48,9 +48,9 @@ const ProjectsDetails = () => {
   useEffect(() => {
     setCurrentUser(username)
   }, [username])
-  useEffect(() => {
-    console.log(currentUser);
-  }, [currentUser])
+  // useEffect(() => {
+  //   console.log(currentUser);
+  // }, [currentUser])
 
   const [iconBookmark, setIconBookmark] = useState(false);
 
@@ -109,6 +109,23 @@ const ProjectsDetails = () => {
     }
   }
 
+  const handleAddToFavorites = async (projectId: string, userId: string) => {
+
+    try {
+      const response = await axios.post("/api/projects/favorite-project", {
+        projectId,
+        userId
+      })
+
+      if (response.statusText === "OK") {
+        toast.success(response.data.message, { iconTheme: { primary: "#B95AFF", secondary: "#fff" } })
+        setIconBookmark(prev => prev === false ? true : false)
+      }
+    } catch (error) {
+      toast.error(error.response.data, { iconTheme: { primary: "#B95AFF", secondary: "#fff" } })
+    }
+  }
+
   const [isMounted, setMounted] = useState<boolean>(false)
 
   useEffect(() => {
@@ -164,8 +181,6 @@ const ProjectsDetails = () => {
     }
   };
 
-
-
   const handleFetchProjects = async () => {
     try {
       const response = await fetch('/api/projects', {
@@ -204,7 +219,7 @@ const ProjectsDetails = () => {
       const projectExist = currentUserProjectsLiked.find((project: ProjectsLiked) => {
         return project.projectId === currentProjectId
       })
-      console.log(projectExist)
+
 
       if (projectExist) return setIconHeart(true);
     }
@@ -215,9 +230,27 @@ const ProjectsDetails = () => {
     isCurrentUserAlreadyLikedTheProject(currentProject?.id)
   }, [currentProject, currentUser])
 
+
+
+  const isCurrentUserAlreadySavedAsFavoriteProject = (currentProjectId: string) => {
+    const currentProjectsSaved = currentUser?.favoritesProjects;
+    if (currentProjectsSaved) {
+      const isProjectAlreadySaved = currentProjectsSaved.find((project) => project.projectId === currentProjectId)
+      if (isProjectAlreadySaved) return setIconBookmark(true);
+    }
+
+    return setIconBookmark(false);
+  }
+  useEffect(() => {
+    isCurrentUserAlreadySavedAsFavoriteProject(currentProject?.id)
+  }, [currentProject, currentUser])
+
   // useEffect(() => {
   //   console.log(projects)
   // }, [projects])
+  // useEffect(() => {
+  //   console.log(currentProject)
+  // }, [currentProject])
 
   return (
     <div className='md:py-24 md:max-w-7xl mx-auto'>
@@ -228,7 +261,7 @@ const ProjectsDetails = () => {
             <h1 className='text-2xl font-bold text-mainGray tracking-widest uppercase font-georgeTown break-all'>{query.projectDetails && query?.projectDetails[0]}</h1>
             <div className="flex  gap-3">
               <motion.div className='flex flex-col items-center transition-all ease-in-out cursor-pointer'>
-                {iconBookmark ? <PiBookmarkSimpleFill onClick={() => setIconBookmark(!iconBookmark)} size={25} className='text-mainPurple' /> : <PiBookmarkSimpleLight className='text-mainGray hover:text-mainPurple transition-colors' onClick={() => setIconBookmark(!iconBookmark)} size={25} />}
+                {iconBookmark ? <PiBookmarkSimpleFill onClick={() => handleAddToFavorites(currentProject?.id, currentUser?.id)} size={25} className='text-mainPurple' /> : <PiBookmarkSimpleLight className='text-mainGray hover:text-mainPurple transition-colors' onClick={() => handleAddToFavorites(currentProject?.id, currentUser?.id)} size={25} />}
               </motion.div>
               <motion.div className='flex flex-col items-center transition-all ease-in-out cursor-pointer'>
                 {iconHeart ? <GoHeartFill onClick={() => handleRemoveLike(currentProject?.id)} size={25} className='text-mainPurple' /> : <GoHeart className='text-mainGray hover:text-mainPurple transition-colors' onClick={() => handleAddLike(currentProject?.id)} size={25} />}
@@ -253,7 +286,7 @@ const ProjectsDetails = () => {
           <h1 className='text-2xl text-mainGray font-bold tracking-widest uppercase font-georgeTown pt-20'>Technologies</h1>
           <section className='flex flex-col lg:mx-auto lg:w-full'>
             <div className="grid grid-cols-2 gap-3 mx-auto lg:content-start lg:mx-0 lg:flex lg:flex-wrap">
-              {currentProject?.technologies && currentProject?.technologies.map((tech) => (
+              {currentProject?.technologies && currentProject?.technologies.map((tech: ITechnologies, i) => (
                 <p key={tech?.id} className={`text-center max-w-max  text-white px-3 py-1 rounded-md bg-mainPurple`}>{tech?.name}</p>
               ))}
             </div>

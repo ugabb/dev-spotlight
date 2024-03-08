@@ -1,4 +1,4 @@
-import { Project, ProjectsLiked, User } from "@prisma/client";
+import { FavoriteProject, Project, ProjectsLiked, User } from "@prisma/client";
 import axios from "axios";
 import { create } from "zustand";
 
@@ -9,7 +9,11 @@ interface IUserStore {
 }
 
 interface ICurrentUserStore {
-  currentUser: IUserStore | undefined;
+  currentUser: User & {
+    projects: Project[];
+    ProjectsLiked: ProjectsLiked[];
+    favoritesProjects: FavoriteProject[];
+  } | undefined;
   setCurrentUser: (username: string) => void;
 }
 
@@ -20,7 +24,7 @@ const userStore = create<ICurrentUserStore>()((set) => ({
       const { data } = await axios.get(`/api/users/username/${username}`);
       console.log(data);
       set({
-        currentUser: data as IUserStore,
+        currentUser: data as User,
       });
     } catch (error) {
       console.log(error);
