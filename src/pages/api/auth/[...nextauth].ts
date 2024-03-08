@@ -4,6 +4,7 @@ import NextAuth, { AuthOptions } from "next-auth";
 import GithubProvider from "next-auth/providers/github";
 
 import prisma from "@/lib/prismadb";
+import { JWT } from "next-auth";
 
 export const authOptions: AuthOptions = {
   adapter: PrismaAdapter(prisma),
@@ -75,7 +76,7 @@ export const authOptions: AuthOptions = {
             providerAccountId: account.providerAccountId,
             access_token: account.access_token,
             token_type: account.token_type,
-            scope: account.scope
+            scope: account.scope,
           },
         });
       }
@@ -101,15 +102,15 @@ export const authOptions: AuthOptions = {
     },
     async session({ session, token }) {
       // Send properties to the client, like an access_token and user id from a provider.
-      // console.log(token)
-      session.accessToken = token.accessToken;
-      session.user.id = token.id;
-      session.user.username = token.username;
-      session.user.name = token.name;
-      session.user.email = token.email;
-      session.user.githubProfileLink = token.githubProfileLink;
-      session.user.githubProfilePhoto = token.githubProfilePhoto;
-      session.user.followers = token.followers;
+      console.log(session);
+
+      session.user.accessToken = (token as unknown as JWT)?.accessToken;
+      session.user.id = (token as unknown as JWT).id;
+      session.user.username = (token as unknown as JWT).username;
+      session.user.name = (token as unknown as JWT).name;
+      session.user.email = (token as unknown as JWT).email;
+      session.user.githubProfileLink = (token as unknown as JWT).githubProfileLink;
+      session.user.githubProfilePhoto = (token as unknown as JWT).githubProfilePhoto;
 
       console.log(session);
 

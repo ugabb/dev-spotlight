@@ -5,6 +5,16 @@ declare module "next-auth" {
   /**
    * Returned by `useSession`, `getSession` and received as a prop on the `SessionProvider` React Context
    */
+  interface JWT {
+    accessToken: string;
+    id: string;
+    username: string;
+    name: string;
+    email: string;
+    githubProfileLink: string;
+    githubProfilePhoto: string;
+    followers: number;
+  }
   interface Session {
     user: {
       /** The user's postal address. */
@@ -16,6 +26,7 @@ declare module "next-auth" {
       githubProfileLink: string;
       githubProfilePhoto: string;
       userId: string;
+      accessToken: string;
     };
   }
   interface User {
