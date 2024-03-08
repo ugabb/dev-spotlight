@@ -123,7 +123,7 @@ const Header = () => {
                                 <Image className='rounded-full hover:scale-105 cursor-pointer' src={session?.user.image} height={30} width={30} alt='user profile photo' />
                                 <PiCaretDown className='absolute -bottom-4 cursor-pointer' />
                             </div>
-                            <p className='text-sm cursor-pointer'>{session?.user.name}</p>
+                            <p className='text-sm cursor-pointer hover:text-white hover:underline hover:decoration-mainPurple transition-all'>{session?.user.name}</p>
                         </div>
                     </DropdownTrigger>
                     <DropdownMenu
@@ -147,30 +147,6 @@ const Header = () => {
                         <DropdownItem variant='flat' key="sign-out" onClick={() => signOut()} >Sign Out</DropdownItem>
                     </DropdownMenu>
                 </Dropdown>
-
-
-                {/* {status === "authenticated"
-                    ? <DropdownMenu >
-                        <DropdownMenuTrigger asChild className=''>
-                            <div className='flex gap-3 items-center '>
-                                <div className="flex flex-col items-center relative">
-                                    <Image className='rounded-full hover:scale-105 cursor-pointer' src={session.user.image} height={30} width={30} alt='user profile photo' />
-                                    <PiCaretDown className='absolute -bottom-4 cursor-pointer' />
-                                </div>
-                                <p className='text-sm'>{session.user.name}</p>
-                            </div>
-                        </DropdownMenuTrigger>
-                        <DropdownMenuContent className='w-56 bg-mainPurple/20'>
-                            <DropdownMenuLabel className='text-mainPurple'>My Account</DropdownMenuLabel>
-                            <DropdownMenuSeparator />
-                            <DropdownMenuItem className='cursor-pointer hover:underline'>
-                                <Link href={"/profile-settings"}>Profile Settings</Link>
-                            </DropdownMenuItem>
-                            <DropdownMenuItem onClick={() => signOut()} className='cursor-pointer hover:underline'>Sign Out</DropdownMenuItem>
-                        </DropdownMenuContent>
-                    </DropdownMenu>
-                    : <Link href={'/sign-up'} className=' hover:text-mainPurple hover:underline hover:decoration-mainPurple transition-all font-semibold hover:glow-text cursor-pointer hover:scale-105'>Sign Up</Link>
-                } */}
 
             </motion.ul>
 

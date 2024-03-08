@@ -138,11 +138,11 @@ const ProjectCard = ({ project }: Props) => {
             </div>
 
             <div className="flex justify-center gap-3 p-3  mx-auto text-mainGray ">
-                <Link className='flex gap-3 items-center  rounded-md px-2 py-1 hover:text-mainPurple hover:bg-white font-semibold bg-mainPurple text-white   transition-colors' href={project ? project.linkRepo : '/'} target='_blank'>
+                <Link className='flex gap-3 items-center  rounded-md px-2 py-1 hover:text-mainPurple hover:bg-transparent border border-transparent hover:border-mainPurple font-semibold bg-mainPurple text-white   transition-colors' href={project ? project.linkRepo : '/'} target='_blank'>
                     <p>GitHub</p>
                     <AiOutlineArrowRight />
                 </Link>
-                <Link className='flex gap-3 items-center  rounded-md px-2 py-1 hover:text-mainPurple hover:bg-white font-semibold bg-mainPurple text-white  transition-colors' href={`/projects/details/${project.name}/user/${project?.user.username}`}>
+                <Link className='flex gap-3 items-center  rounded-md px-2 py-1 hover:text-mainPurple hover:bg-transparent border border-transparent hover:border-mainPurple font-semibold bg-mainPurple text-white  transition-colors' href={`/projects/details/${project.name}/user/${project?.user.username}`}>
                     <p>More</p>
                     <AiOutlineArrowRight />
 
