@@ -24,7 +24,7 @@ const userStore = create<ICurrentUserStore>()((set) => ({
       const { data } = await axios.get(`/api/users/username/${username}`);
       console.log(data);
       set({
-        currentUser: data as User,
+        currentUser: data,
       });
     } catch (error) {
       console.log(error);
