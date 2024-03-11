@@ -8,7 +8,7 @@ import { useDimensions } from './useDimensions';
 import { MenuToggle } from './MenuToggle';
 import { Navigation } from './Navigation';
 import Link from 'next/link';
-import { signOut, useSession } from 'next-auth/react';
+import { signOut, signIn, useSession } from 'next-auth/react';
 
 // // shadcn dropdown
 // import {
@@ -115,38 +115,44 @@ const Header = () => {
                 }
 
 
-
-                <Dropdown className='bg-zinc-950 border border-mainPurple/50 mt-2'>
-                    <DropdownTrigger>
-                        <div className='flex gap-3 items-center '>
-                            <div className="flex flex-col items-center relative">
-                                <Image className='rounded-full hover:scale-105 cursor-pointer' src={session?.user.image} height={30} width={30} alt='user profile photo' />
-                                <PiCaretDown className='absolute -bottom-4 cursor-pointer' />
+                {session?.user.image ?
+                    <Dropdown className='bg-zinc-950 border border-mainPurple/50 mt-2'>
+                        <DropdownTrigger>
+                            <div className='flex gap-3 items-center '>
+                                <div className="flex flex-col items-center relative">
+                                    <Image className='rounded-full hover:scale-105 cursor-pointer' src={session?.user.image} height={30} width={30} alt='user profile photo' />
+                                    <PiCaretDown className='absolute -bottom-4 cursor-pointer' />
+                                </div>
+                                <p className='text-sm cursor-pointer hover:text-white hover:underline hover:decoration-mainPurple transition-all'>{session?.user.name}</p>
                             </div>
-                            <p className='text-sm cursor-pointer hover:text-white hover:underline hover:decoration-mainPurple transition-all'>{session?.user.name}</p>
-                        </div>
-                    </DropdownTrigger>
-                    <DropdownMenu
-                        aria-label="Static Actions"
-                        variant='shadow'
-                        itemClasses={{
-                            base: [
-                                "rounded-md",
-                                "text-mainGray",
-                                "transition-opacity",
-                                "data-[hover=true]:text-mainPurple",
-                                "data-[hover=true]:font-bold",
-                                "data-[hover=true]:bg-mainPurple/20",
-                                "data-[selectable=true]:focus:bg-default-50",
-                                "data-[pressed=true]:opacity-70",
-                                "data-[focus-visible=true]:ring-default-500",
-                            ],
-                        }}
-                    >
-                        <DropdownItem variant='flat' key="settings"><Link href={"/profile-settings"}>Profile Settings</Link></DropdownItem>
-                        <DropdownItem variant='flat' key="sign-out" onClick={() => signOut()} >Sign Out</DropdownItem>
-                    </DropdownMenu>
-                </Dropdown>
+                        </DropdownTrigger>
+                        <DropdownMenu
+                            aria-label="Static Actions"
+                            variant='shadow'
+                            itemClasses={{
+                                base: [
+                                    "rounded-md",
+                                    "text-mainGray",
+                                    "transition-opacity",
+                                    "data-[hover=true]:text-mainPurple",
+                                    "data-[hover=true]:font-bold",
+                                    "data-[hover=true]:bg-mainPurple/20",
+                                    "data-[selectable=true]:focus:bg-default-50",
+                                    "data-[pressed=true]:opacity-70",
+                                    "data-[focus-visible=true]:ring-default-500",
+                                ],
+                            }}
+                        >
+                            <DropdownItem variant='flat' key="settings"><Link href={"/profile-settings"}>Profile Settings</Link></DropdownItem>
+                            <DropdownItem variant='flat' key="sign-out" onClick={() => signOut()} >Sign Out</DropdownItem>
+                        </DropdownMenu>
+                    </Dropdown>
+
+                    :
+                    <Link className='hover:text-white hover:underline hover:decoration-mainPurple transition-all cursor-pointer hover:scale-105' href={"/sign-up"}>Sign Up</Link>
+
+                }
+
 
             </motion.ul>
 
