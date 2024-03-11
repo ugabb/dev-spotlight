@@ -97,15 +97,19 @@ const ProjectsDetails = () => {
       return
     }
     try {
-      const response = await fetch(`${process.env.NEXT_PUBLIC_API}/projects/${projectId}/likes/remove`, { method: "POST" });
-      const data: IProject = await response.json();
+      const response = await axios.post(`/api/projects/like/remove`, {
+        projectId,
+        username
+      });;
+      const data: IProject = await response.data;
       const likesUpdated = data.likes;
-      if (response.ok) {
+      if (response.statusText === "OK") {
         setIconHeart(false);
         currentProject.likes = likesUpdated;
       }
     } catch (error) {
       console.error(error);
+      toast.error(error.response.data, { iconTheme: { primary: "#B95AFF", secondary: "#fff" } })
     }
   }
 
