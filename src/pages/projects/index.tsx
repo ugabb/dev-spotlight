@@ -114,9 +114,10 @@ const Projects = () => {
         {(projects && projectFiltered.length <= 0) && projects.slice().reverse().map(project => {
           return (
             <motion.div key={project.id}
-            // initial={{ opacity: 0, x: `${3 * project}px` }}
-            // animate={{ opacity: 1, x: '0px' }}
-            // exit={{ opacity: 0 }}
+              initial={{ opacity: 0, y: 50 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ ease: "easeInOut", duration: 1 }}
+              exit={{ opacity: 0 }}
             >
               <ProjectCard project={project} />
             </motion.div>
