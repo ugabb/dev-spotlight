@@ -6,7 +6,7 @@ import { Controller, SubmitHandler, useForm } from 'react-hook-form'
 
 import { CldUploadButton, CldUploadWidget } from 'next-cloudinary';
 
-
+import { Triangle } from "react-loader-spinner"
 
 import GlowButton from '@/components/GlowButton'
 import useSelectImage from '@/hooks/useSelectImage'
@@ -34,6 +34,11 @@ import { User } from '@prisma/client'
 import toast from 'react-hot-toast'
 import Footer from '@/components/Footer';
 import { Button } from '@/components/ui/button';
+import { PiCircleNotch } from 'react-icons/pi';
+import { DropdownMenu, DropdownTrigger } from '@nextui-org/dropdown';
+import { Dialog } from '@/components/ui/dialog';
+import { DialogContent, DialogOverlay, DialogTrigger } from '@radix-ui/react-dialog';
+import Loading from '@/components/Loading';
 
 
 type Props = {}
@@ -53,8 +58,8 @@ const Index = (props: Props) => {
 
     // dialog
     const [openDialog, setOpenDialog] = useState<boolean>(false);
-    const [projectCreated, setProjectCreated] = useState<"created" | "error" | "loading">("loading");
     const [loadingDialog, setLoadingDialog] = useState<boolean>(false);
+
     const handleOpenDialog = () => setOpenDialog(dialog => !dialog);
     const handleLoadingDialog = () => setLoadingDialog(loading => !loading);
 
@@ -144,22 +149,19 @@ const Index = (props: Props) => {
                 if (res.status === 201) {
                     toast.success("Project created successfully")
                     router.push("/projects")
+                    setLoading(false)
                 }
             })
             .catch((error) => {
                 toast.error(error.response.data.message)
                 console.log(error.response.data.message)
+                setLoading(false)
                 return error
             })
     }
 
 
     const onSubmit: SubmitHandler<IProjectToCreate> = async (data) => {
-        //reset
-        if (projectCreated !== "loading") setProjectCreated("loading")
-        // open true 
-        handleOpenDialog()
-
         const valueSubmit = data;
         const images = await handleImageUpload().then((prjImages) => {
             if (prjImages) {
@@ -245,6 +247,7 @@ const Index = (props: Props) => {
 
     return (
         <div className='md:py-24' >
+            {loading && <Loading />}
             <Header />
             <div className='mx-auto space-y-5 w-full p-3  md:px-40'>
                 <h1 className='text-2xl font-bold text-mainGray text-center tracking-widest uppercase font-georgeTown break-all'>Create Project</h1>

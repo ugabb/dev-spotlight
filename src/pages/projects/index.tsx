@@ -17,8 +17,12 @@ import {
 } from "@/components/ui/alert"
 import Footer from '@/components/Footer'
 import { useSession } from 'next-auth/react'
+import axios from 'axios'
+
+import Loading from '@/components/Loading'
 
 const Projects = () => {
+  const [loading, setloading] = useState(false)
   const { data: session } = useSession()
   const animationX = [0, 10, 20, 30, 40, 50, 60, 70]
 
@@ -45,36 +49,37 @@ const Projects = () => {
 
   // fetch projects
   const handleFetchProjects = async () => {
+    setloading(true)
     try {
-      const response = await fetch('/api/projects', {
-        method: 'GET',
-        redirect: 'follow',
-        credentials: 'include',
-
-      })
-
-      const data = await response.json()
-      console.log(data?.projects)
-      setProjects(data?.projects)
+      const { data, statusText } = await axios.get('/api/projects')
+      if (statusText === "OK") {
+        console.log(data?.projects)
+        setProjects(data?.projects)
+        setloading(false)
+      }
 
     } catch (error) {
       console.log(error)
+      setloading(false)
     }
   }
 
   useEffect(() => {
     handleFetchProjects()
   }, [router.query])
-  useEffect(() => {
-    console.log(projects)
-  }, [projects])
-  useEffect(() => {
-    console.log({ projectFiltered })
-  }, [projectFiltered])
+  // useEffect(() => {
+  //   console.log(projects)
+  // }, [projects])
+  // useEffect(() => {
+  //   console.log({ projectFiltered })
+  // }, [projectFiltered])
 
 
   return (
     <div className='lg:flex lg:flex-col '>
+      {loading &&
+        <Loading />
+      }
       <video autoPlay loop muted className='fixed -z-10  h-full w-full top-0 left-0 object-cover opacity-30'>
         <source src='/particles.mp4' />
       </video>
