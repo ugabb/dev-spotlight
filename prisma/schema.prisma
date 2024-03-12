@@ -1,0 +1,90 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id                 String            @id @default(uuid())
+  name               String?
+  email              String?           @unique
+  emailVerified      DateTime?
+  username           String?           @unique
+  image              String?
+  hashedPassword     String?
+  githubProfileLink  String?
+  githubProfilePhoto String?
+  followers          Int?
+  createdAt          DateTime          @default(now())
+  updatedAt          DateTime          @updatedAt
+  accounts           Account[]
+  favoritesProjects  FavoriteProject[]
+  projects           Project[]
+  ProjectsLiked      ProjectsLiked[]
+}
+
+model Account {
+  id                String  @id @default(uuid())
+  userId            String
+  type              String
+  provider          String
+  providerAccountId String
+  refresh_token     String?
+  access_token      String?
+  expires_at        Int?
+  token_type        String?
+  scope             String?
+  id_token          String?
+  session_state     String?
+  user              User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([provider, providerAccountId])
+}
+
+model Project {
+  id              String            @id @default(uuid())
+  name            String
+  description     String
+  deployedLink    String?
+  linkRepo        String            @unique
+  likes           Int
+  userId          String?
+  user            User?             @relation(fields: [userId], references: [id])
+  projectImages   ProjectImage[]
+  technologies    Technology[]
+  ProjectsLiked   ProjectsLiked[]
+  FavoriteProject FavoriteProject[]
+}
+
+model FavoriteProject {
+  id        String  @id @default(uuid())
+  project   Project @relation(fields: [projectId], references: [id])
+  projectId String
+  author    User    @relation(fields: [authorId], references: [id])
+  authorId  String
+}
+
+model ProjectsLiked {
+  id        String  @id @default(uuid())
+  project   Project @relation(fields: [projectId], references: [id])
+  projectId String
+  user      User    @relation(fields: [userId], references: [id])
+  userId    String
+}
+
+model Technology {
+  id        String   @id @default(uuid())
+  name      String
+  projectId String?
+  Project   Project? @relation(fields: [projectId], references: [id])
+}
+
+model ProjectImage {
+  id        String   @id @default(uuid())
+  url       String
+  projectId String?
+  Project   Project? @relation(fields: [projectId], references: [id])
+}

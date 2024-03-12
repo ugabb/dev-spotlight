@@ -16,8 +16,14 @@ import {
   AlertTitle,
 } from "@/components/ui/alert"
 import Footer from '@/components/Footer'
+import { useSession } from 'next-auth/react'
+import axios from 'axios'
+
+import Loading from '@/components/Loading'
 
 const Projects = () => {
+  const [loading, setloading] = useState(false)
+  const { data: session } = useSession()
   const animationX = [0, 10, 20, 30, 40, 50, 60, 70]
 
   const [projects, setProjects] = useState<IProject[]>([]);
@@ -43,20 +49,18 @@ const Projects = () => {
 
   // fetch projects
   const handleFetchProjects = async () => {
+    setloading(true)
     try {
-      const response = await fetch('http://localhost:8080/projects', {
-        method: 'GET',
-        redirect: 'follow',
-        credentials: 'include',
-
-      })
-
-      const data: IProject[] = await response.json()
-      console.log(data)
-      setProjects(data)
+      const { data, statusText } = await axios.get('/api/projects')
+      if (statusText === "OK") {
+        console.log(data?.projects)
+        setProjects(data?.projects)
+        setloading(false)
+      }
 
     } catch (error) {
-
+      console.log(error)
+      setloading(false)
     }
   }
 
@@ -66,14 +70,17 @@ const Projects = () => {
   // useEffect(() => {
   //   console.log(projects)
   // }, [projects])
-  useEffect(() => {
-    console.log({ projectFiltered })
-  }, [projectFiltered])
+  // useEffect(() => {
+  //   console.log({ projectFiltered })
+  // }, [projectFiltered])
 
 
   return (
     <div className='lg:flex lg:flex-col '>
-      <video autoPlay loop muted className='fixed -z-10 h-full w-full top-0 left-0 object-cover opacity-30'>
+      {loading &&
+        <Loading />
+      }
+      <video autoPlay loop muted className='fixed -z-10  h-full w-full top-0 left-0 object-cover opacity-30'>
         <source src='/particles.mp4' />
       </video>
       <Header />
@@ -97,7 +104,7 @@ const Projects = () => {
       <motion.div
         className="flex flex-col md:grid md:grid-cols-2 xl:grid-cols-3 gap-3 my-10 p-2 lg:px-40 mx-auto">
         {projectFiltered.length > 0 &&
-          projectFiltered.slice().reverse().map(project => {
+          projectFiltered?.slice().reverse().map(project => {
             return (
               <motion.div key={project.id}
               // initial={{ opacity: 0, x: `${3 * project}px` }}
@@ -112,9 +119,10 @@ const Projects = () => {
         {(projects && projectFiltered.length <= 0) && projects.slice().reverse().map(project => {
           return (
             <motion.div key={project.id}
-            // initial={{ opacity: 0, x: `${3 * project}px` }}
-            // animate={{ opacity: 1, x: '0px' }}
-            // exit={{ opacity: 0 }}
+              initial={{ opacity: 0, y: 50 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ ease: "easeInOut", duration: 1 }}
+              exit={{ opacity: 0 }}
             >
               <ProjectCard project={project} />
             </motion.div>
@@ -141,7 +149,7 @@ const Projects = () => {
           </Alert>
         </motion.div>}
 
-        <Footer/>
+      <Footer />
     </div>
   )
 }

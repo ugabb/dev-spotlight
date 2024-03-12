@@ -1,11 +1,12 @@
 import Header from '@/components/Header/Header';
-import Link from 'next/link';
-import React from 'react';
+import { PiCircleNotchLight } from "react-icons/pi";
+import React, { useState } from 'react';
 import { AiFillGithub } from 'react-icons/ai';
 import Image from 'next/image';
 import { Typewriter } from 'react-simple-typewriter';
 import { getSession, signIn } from 'next-auth/react';
 import getCurrentUser from '@/actions/getCurrentUser';
+import toast from 'react-hot-toast';
 
 interface SignUpProps {
     currentUser: any;
@@ -13,20 +14,30 @@ interface SignUpProps {
 }
 
 const SignIn = ({ currentUser, session }: SignUpProps) => {
-
-    console.log("Props",currentUser,session)
+    const [loading, setLoading] = useState<boolean>(false)
 
     const handleSignIn = async () => {
+        setLoading(true);
         try {
-            const response = await fetch('http://localhost:8080/oauth2/authorization/github');
-            console.log(response);
+            const result = await signIn("github");
+            if (result?.ok) {
+                toast.custom(<div className='w-40 h-20 bg-mainPurple rounded-lg shadow'>
+                    <h1 className='text-white text2xl'>Welcome!</h1>
+                </div>);
+            }
         } catch (error) {
-            console.log(error);
+            console.error(error);
+            toast.error("Failed to sign in!");
+        } finally {
+            setLoading(false);
         }
     };
 
+    if (loading) {
+        return <span><PiCircleNotchLight size={50} className='text-mainPurple animate-spin' /></span>;
+    }
 
-    const word = ['Share', "Build"]
+
 
     return (
         <div className="flex flex-col justify-center bg-black">
@@ -45,7 +56,7 @@ const SignIn = ({ currentUser, session }: SignUpProps) => {
                             {/* <Link href={'http://localhost:8080/oauth2/authorization/github'}>
                                 <AiFillGithub size={200} className="cursor-pointer z-10 transition-all ease-in-out hover:scale-105 hover:shadow-md hover:shadow-mainPurple rounded-full " />
                             </Link> */}
-                            <AiFillGithub onClick={() => signIn("github")} size={200} className="cursor-pointer z-10 transition-all ease-in-out hover:scale-105 hover:shadow-md hover:shadow-mainPurple rounded-full " />
+                            <AiFillGithub onClick={handleSignIn} size={200} className="cursor-pointer z-10 transition-all ease-in-out hover:scale-105 hover:shadow-md hover:shadow-mainPurple rounded-full " />
                         </div>
                     </div>
                 </div>
@@ -58,16 +69,16 @@ export default SignIn;
 
 
 
-export const getServerSideProps = async () => {
-    const session = await getSession();
-    console.log(session);
-    const currentUser = await getCurrentUser();
-    console.log(currentUser);
+// export const getServerSideProps = async () => {
+//     const session = await getSession();
+//     console.log(session);
+//     const currentUser = await getCurrentUser();
+//     console.log(currentUser);
 
-    return {
-        props: {
-            session,
-            currentUser,
-        },
-    };
-};
+//     return {
+//         props: {
+//             session,
+//             currentUser,
+//         },
+//     };
+// };

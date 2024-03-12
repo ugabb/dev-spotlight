@@ -4,8 +4,9 @@ import InputDefault from '@/components/inputs/InputDefault'
 import React, { ReactElement, useEffect, useState } from 'react'
 import { Controller, SubmitHandler, useForm } from 'react-hook-form'
 
-//uuid
-import { v4 } from 'uuid'
+import { CldUploadButton, CldUploadWidget } from 'next-cloudinary';
+
+import { Triangle } from "react-loader-spinner"
 
 import GlowButton from '@/components/GlowButton'
 import useSelectImage from '@/hooks/useSelectImage'
@@ -28,12 +29,26 @@ import { useRouter } from 'next/router'
 import { IProjectToCreate, ITechnologies } from '@/interfaces/IProject'
 import DialogComponent from '@/components/Dialog'
 import { Textarea } from '@/components/ui/textarea'
+import axios from 'axios'
+import { User } from '@prisma/client'
+import toast from 'react-hot-toast'
+import Footer from '@/components/Footer';
+import { Button } from '@/components/ui/button';
+import { PiCircleNotch } from 'react-icons/pi';
+import { DropdownMenu, DropdownTrigger } from '@nextui-org/dropdown';
+import { Dialog } from '@/components/ui/dialog';
+import { DialogContent, DialogOverlay, DialogTrigger } from '@radix-ui/react-dialog';
+import Loading from '@/components/Loading';
 
 
 type Props = {}
 
+interface ProjectImages {
+    url: string[]
+}
+
 const Index = (props: Props) => {
-    const [project, setProject] = useState<IProjectToCreate>();
+    const [loading, setLoading] = useState<boolean>(false);
     const [icons, setIcons] = useState([]);
     const [selectedTechnologies, setSelectedTechnologies] = useState<ITechnologies[]>([]);
     const [filter, setFilter] = useState('');
@@ -43,8 +58,8 @@ const Index = (props: Props) => {
 
     // dialog
     const [openDialog, setOpenDialog] = useState<boolean>(false);
-    const [projectCreated, setProjectCreated] = useState<"created" | "error" | "loading">("loading");
     const [loadingDialog, setLoadingDialog] = useState<boolean>(false);
+
     const handleOpenDialog = () => setOpenDialog(dialog => !dialog);
     const handleLoadingDialog = () => setLoadingDialog(loading => !loading);
 
@@ -121,61 +136,56 @@ const Index = (props: Props) => {
     //     fetchIcons()
     // }, [])
 
-    const { uploadImagesToFirebase } = useUploadImages();
+    // const { uploadImagesToFirebase } = useUploadImages();
 
     const createProject = async (project: IProjectToCreate) => {
+        setLoading(true)
         const userId = await getUserByUsername(username);
         project.userId = userId;
         project.likes = 0;
         console.log("este é o json enviado", project)
-        try {
-            const response = await fetch(`${process.env.NEXT_PUBLIC_API}/projects`, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify(project)
+        axios.post("/api/projects/create", project)
+            .then((res) => {
+                if (res.status === 201) {
+                    toast.success("Project created successfully")
+                    router.push("/projects")
+                    setLoading(false)
+                }
             })
-            if (response.status !== 200) {
-                console.log("Error", response.status)
-                return false;
-            }
-            return true;
-        } catch (error) {
-            console.log(error)
-            return false;
-        }
+            .catch((error) => {
+                toast.error(error.response.data.message)
+                console.log(error.response.data.message)
+                setLoading(false)
+                return error
+            })
     }
 
 
     const onSubmit: SubmitHandler<IProjectToCreate> = async (data) => {
-        //reset
-        if (projectCreated !== "loading") setProjectCreated("loading")
-        // open true 
-        handleOpenDialog()
-
-        const imagesToUpload = await uploadImagesToFirebase(imagesSelected);
         const valueSubmit = data;
+        const images = await handleImageUpload().then((prjImages) => {
+            if (prjImages) {
+                console.log(prjImages);
+                valueSubmit.projectImages = prjImages;
+            }
+        })
+            .catch((error) => {
+                console.log(error)
+            });
 
         valueSubmit.technologies = selectedTechnologies;
-        if (imagesToUpload) {
-            valueSubmit.projectImages = imagesToUpload;
-        }
         // setProject(valueSubmit)
-        const isCreated = await createProject(valueSubmit);
 
-        if (isCreated) {
-            setProjectCreated("created")
-            router.push('/projects')
-        } else {
-            setProjectCreated("error")
-        }
+        console.log(valueSubmit)
+
+        await createProject(valueSubmit);
     }
+
 
     const getUserByUsername = async (username: string) => {
         try {
-            const response = await fetch(`${process.env.NEXT_PUBLIC_API}/users/username/${username}`)
-            const data: IUser = await response.json();
+            const response = await fetch(`/api/users/username/${username}`)
+            const data: User = await response.json();
             return data?.id;
         } catch (error) {
             console.log(error)
@@ -184,15 +194,60 @@ const Index = (props: Props) => {
 
     // image input
     const [imagesSelected, setImagesSelected] = useState<File[]>([]);
+    const [imagesUploaded, setImagesUploaded] = useState<ProjectImages[]>([]);
+
     const { selectImageLocally, result } = useSelectImage()
+    const handleImageUpload = async () => {
+        try {
+            setLoading(true);
+            let projectImages: ProjectImages[] = []
+            const uploadPromises = imagesSelected.map(async (file) => {
+
+                const formData = new FormData();
+                formData.append("upload_preset", "dev-spotlight");
+                formData.append("cloud_name", "du4wrvo5j");
+                formData.append("file", file);
+
+                return axios.post("https://api.cloudinary.com/v1_1/du4wrvo5j/image/upload", formData)
+                    .then((response) => {
+                        console.log(response.data.secure_url);
+                        setImagesUploaded(prev => [...prev, response.data.secure_url])
+                        projectImages.push({ url: response.data.secure_url })
+                    })
+                    .catch((error) => {
+                        console.error(error);
+                    });
+            });
+
+            await Promise.all(uploadPromises);
+
+            // imagesUploaded array now contains all secure_urls
+            console.log({ projectImages });
+            return projectImages;
+        } catch (error) {
+            console.error(error);
+        } finally {
+            setLoading(false);
+        }
+    };
+
+
 
     useEffect(() => {
+        console.log(result)
         selectImageLocally(imagesSelected);
     }, [imagesSelected])
+    // useEffect(() => {
+    //     console.log(session?.user)
+    // }, [session?.user])
+    useEffect(() => {
+        console.log(imagesUploaded)
+    }, [imagesUploaded])
 
 
     return (
         <div className='md:py-24' >
+            {loading && <Loading />}
             <Header />
             <div className='mx-auto space-y-5 w-full p-3  md:px-40'>
                 <h1 className='text-2xl font-bold text-mainGray text-center tracking-widest uppercase font-georgeTown break-all'>Create Project</h1>
@@ -312,53 +367,37 @@ const Index = (props: Props) => {
                         </label>
                     </div>
                     <div className="flex flex-col md:flex-row flex-wrap  items-center gap-3">
-                        {result.length < 5
-                            ?
-                            <label className='flex items-center gap-3 text-xs md:text-sm text-mainGray'>
-                                File input
-                                <input
-                                    type="file"
-                                    multiple
-                                    onChange={(e) => {
-                                        const selectedFiles = Array.from(e.target.files);
-                                        setImagesSelected((prev) => [...prev, ...selectedFiles]);
 
-                                    }}
-                                    className="text-sm text-mainGray
-                                file:mr-5 file:py-2 file:px-5 file:border file:border-mainPurple file:outline-none file:rounded-md
-                                file:text-sm file:bg-transparent file:text-mainPurple
-                                hover:file:cursor-pointer hover:file:bg-mainPurple
-                                hover:file:text-white file:transition-all file:ease-in-out"/>
-                            </label>
-                            :
-                            <div className="flex flex-col gap-2 ">
-                                <p className='text-xs text-red-500'>Max of 5 images</p>
-                                <label className='flex items-center gap-3 text-xs md:text-sm text-mainGray'>
-                                    File
-                                    <input
-                                        type="file"
-                                        onChange={(e) => {
-                                            const selectedFiles = Array.from(e.target.files);
-                                            setImagesSelected((prev) => [...prev, ...selectedFiles]);
+                        <label className='flex items-center gap-3 text-xs md:text-sm text-mainGray'>
+                            File input
+                            <input
+                                type="file"
+                                multiple
+                                onChange={(e) => {
+                                    const selectedFiles = Array.from(e.target.files);
+                                    setImagesSelected((prev) => [...prev, ...selectedFiles]);
 
-                                        }}
-                                        disabled
-                                        max={5}
-                                        className=' h-full text-sm text-mainGray
-                                        file:mr-5 file:py-2 file:px-5 file:border file:border-red-500/50 file:outline-none file:rounded-md
-                                        file:text-sm file:bg-transparent file:text-red-500/50
-                                        hover:file:cursor-pointer hover:file:bg-mainPurple
-                                        hover:file:text-white file:transition-all file:ease-in-out'
-                                    />
-                                </label>
-                            </div>
-                        }
+                                }}
+                                className="text-sm text-mainGray
+                            file:mr-5 file:py-2 file:px-5 file:border file:border-mainPurple file:outline-none file:rounded-md
+                            file:text-sm file:bg-transparent file:text-mainPurple
+                            hover:file:cursor-pointer hover:file:bg-mainPurple
+                            hover:file:text-white file:transition-all file:ease-in-out"
+                            />
+
+                        </label>
+
+                        {/* <Button onClick={handleImageUpload}>
+                            UPLOAD IMAGE
+                        </Button> */}
+
 
                         {result && result.map((img, index) => (
                             <div key={index} className='flex flex-col md:flex-grid md:grid-cols-3 flex-wrap items-center gap-3'>
                                 <Image className='w-[150px] h-[100px] object-cover' src={img} alt={`Image ${index + 1}`} width={1920} height={1080} />
                             </div>
                         ))}
+
                     </div>
                     <div className="grid grid-cols-2 md:hidden items-start md:flex gap-1">
                         <Link href={''}>
@@ -374,12 +413,15 @@ const Index = (props: Props) => {
                             <ButtonIcon icon={<IoShareSocialOutline size={15} className='text-mainPurple' />} text='Share' textColor='mainGray' textSize='sm' />
                         </Link>
                     </div>
-                    <DialogComponent open={openDialog} setOpen={handleOpenDialog} isCreated={projectCreated} />
-                    {/* <Button onClick={handleOpenDialog}>Open Modal</Button> */}
+
+                    {/* <DialogComponent open={openDialog} setOpen={handleOpenDialog} isCreated={projectCreated} />
+                    <Button onClick={handleOpenDialog}>Open Modal</Button> */}
                     <GlowButton text='Create' type='submit' />
                 </form>
 
             </div >
+
+            {/* <Footer /> */}
         </div >
     )
 }

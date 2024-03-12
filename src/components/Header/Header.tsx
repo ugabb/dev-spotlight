@@ -3,11 +3,24 @@ import React, { useCallback, useEffect, useRef, useState } from 'react'
 import { motion, useCycle } from "framer-motion";
 
 import { AiOutlineMenu } from 'react-icons/ai'
+import { PiCaretDown } from 'react-icons/pi'
 import { useDimensions } from './useDimensions';
 import { MenuToggle } from './MenuToggle';
 import { Navigation } from './Navigation';
 import Link from 'next/link';
-import {  signOut, useSession } from 'next-auth/react';
+import { signOut, signIn, useSession } from 'next-auth/react';
+
+// // shadcn dropdown
+// import {
+//     DropdownMenu,
+//     DropdownMenuContent,
+//     DropdownMenuItem,
+//     DropdownMenuLabel,
+//     DropdownMenuSeparator,
+//     DropdownMenuTrigger,
+// } from "@/components/ui/dropdown-menu"
+
+import { Dropdown, DropdownTrigger, DropdownMenu, DropdownSection, DropdownItem } from "@nextui-org/dropdown";
 
 const sidebar = {
     open: (width = 1000) => ({
@@ -69,7 +82,7 @@ const Header = () => {
         if (screenWidth >= 768 && isOpen) {
             memoizedToggleOpen();
         }
-    },[screenWidth, isOpen, memoizedToggleOpen])
+    }, [screenWidth, isOpen, memoizedToggleOpen])
 
     return (
         <motion.nav
@@ -81,7 +94,7 @@ const Header = () => {
             animate={isOpen ? "open" : "closed"}
             custom={height}
             ref={containerRef}
-            className='flex justify-between items-center md:w-full md:h-20 md:backdrop-blur-sm md:bg-black/20 md:fixed md:top-0 md:left-0 md:mx-auto px-3 md:px-40 z-20'>
+            className='flex justify-between items-center md:w-full md:h-20 md:backdrop-blur-sm md:bg-black/20 md:fixed md:top-0 md:left-0 md:mx-auto px-3 md:px-40 z-40 shadow-sm shadow-mainPurple/40'>
 
             <motion.div variants={sidebar} className={`background relative ${isOpen ? "block" : "hidden"} z-20  rounded-sm`}>
                 <Navigation isOpen={isOpen} />
@@ -94,20 +107,52 @@ const Header = () => {
             </motion.div>
             <MenuToggle toggle={() => toggleOpen()} />
 
-            <motion.ul className="hidden md:flex gap-5 text-mainGray ">
+            <motion.ul className="hidden md:flex md:items-center gap-5 text-mainGray ">
                 <Link href={'/'} className='hover:text-white hover:underline hover:decoration-mainPurple transition-all cursor-pointer hover:scale-105'>Home</Link>
                 <Link href={'/projects'} className='hover:text-white hover:underline hover:decoration-mainPurple transition-all cursor-pointer hover:scale-105'>Projects</Link>
                 {status === "authenticated" &&
                     <Link href={'/projects/create'} className='hover:text-white hover:underline hover:decoration-mainPurple transition-all cursor-pointer hover:scale-105'>Create Project</Link>
                 }
 
-                {status === "authenticated"
-                    ? <div className='flex gap-3 items-center'>
-                        <Image onClick={() => signOut()} className='rounded-full hover:scale-105 cursor-pointer' src={session.user.image} height={30} width={30} alt='user profile photo' />
-                        <p className='text-sm'>{session.user.name}</p>
-                    </div>
-                    : <Link href={'/sign-up'} className=' hover:text-mainPurple hover:underline hover:decoration-mainPurple transition-all font-semibold hover:glow-text cursor-pointer hover:scale-105'>Sign Up</Link>
+
+                {session?.user.image ?
+                    <Dropdown className='bg-zinc-950 border border-mainPurple/50 mt-2'>
+                        <DropdownTrigger>
+                            <div className='flex gap-3 items-center '>
+                                <div className="flex flex-col items-center relative">
+                                    <Image className='rounded-full hover:scale-105 cursor-pointer' src={session?.user.image} height={30} width={30} alt='user profile photo' />
+                                    <PiCaretDown className='absolute -bottom-4 cursor-pointer' />
+                                </div>
+                                <p className='text-sm cursor-pointer hover:text-white hover:underline hover:decoration-mainPurple transition-all'>{session?.user.name}</p>
+                            </div>
+                        </DropdownTrigger>
+                        <DropdownMenu
+                            aria-label="Static Actions"
+                            variant='shadow'
+                            itemClasses={{
+                                base: [
+                                    "rounded-md",
+                                    "text-mainGray",
+                                    "transition-opacity",
+                                    "data-[hover=true]:text-mainPurple",
+                                    "data-[hover=true]:font-bold",
+                                    "data-[hover=true]:bg-mainPurple/20",
+                                    "data-[selectable=true]:focus:bg-default-50",
+                                    "data-[pressed=true]:opacity-70",
+                                    "data-[focus-visible=true]:ring-default-500",
+                                ],
+                            }}
+                        >
+                            <DropdownItem variant='flat' key="settings"><Link href={"/profile-settings"}>Profile Settings</Link></DropdownItem>
+                            <DropdownItem variant='flat' key="sign-out" onClick={() => signOut()} >Sign Out</DropdownItem>
+                        </DropdownMenu>
+                    </Dropdown>
+
+                    :
+                    <Link className='hover:text-white hover:underline hover:decoration-mainPurple transition-all cursor-pointer hover:scale-105' href={"/sign-up"}>Sign Up</Link>
+
                 }
+
 
             </motion.ul>
 

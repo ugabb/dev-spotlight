@@ -1,13 +1,15 @@
 export interface IUser {
-  id?: number;
-  name: string
-  username: string
-  email: string
-  githubProfileLink: string
-  githubProfilePhoto: string
-  followers: number
-  favoritesRepositories: IFavoriteRepository[]
-  role: string
+  id: string;
+  name: string;
+  email: string;
+  followers: number;
+  githubProfileLink: string;
+  githubProfilePhoto: string | null;
+  image: string;
+  username: string;
+  createdAt: string;
+  updatedAt: string;
+  userId: string;
 }
 
 

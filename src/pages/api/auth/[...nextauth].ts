@@ -1,19 +1,92 @@
 import { IUser } from "@/interfaces/IUser";
-import NextAuth from "next-auth";
+import { PrismaAdapter } from "@next-auth/prisma-adapter";
+import NextAuth, { AuthOptions } from "next-auth";
 import GithubProvider from "next-auth/providers/github";
 
-export const authOptions = {
+import prisma from "@/lib/prismadb";
+import { JWT } from "next-auth";
+
+export const authOptions: AuthOptions = {
+  adapter: PrismaAdapter(prisma),
   // Configure one or more authentication providers
+  session: {
+    strategy: "jwt",
+  },
+  // pages: {
+  //   signIn: "/sign-up",
+  // },
   providers: [
     GithubProvider({
-      clientId: process.env.GITHUB_ID,
-      clientSecret: process.env.GITHUB_SECRET,
+      clientId: process.env.GITHUB_ID as string,
+      clientSecret: process.env.GITHUB_SECRET as string,
     }),
     // ...add more providers here
   ],
+  debug: process.env.NODE_ENV === "development",
+  secret: process.env.NEXTAUTH_SECRET,
   callbacks: {
+    async signIn({ user, account, profile, email }) {
+      console.log("Sign In Callback:", user, account, profile, email);
+      const {
+        name,
+        login,
+        email: profileEmail,
+        avatar_url,
+        html_url,
+        followers,
+      } = profile;
+
+      const existingUser = await prisma.user.findUnique({
+        where: {
+          email: profileEmail,
+        },
+      });
+
+      if (existingUser) {
+        // If the user exists, update their profile information
+        await prisma.user.update({
+          where: { email: profileEmail },
+          data: {
+            name: name,
+            image: avatar_url,
+            followers,
+            username: login,
+            email: profileEmail,
+            githubProfileLink: html_url,
+          },
+        });
+      } else {
+        // If the user does not exist, create a new user in your database
+        const newUser = await prisma.user.create({
+          data: {
+            name: name,
+            image: avatar_url,
+            followers,
+            username: login,
+            email: profileEmail,
+            githubProfileLink: html_url,
+          },
+        });
+
+        await prisma.account.create({
+          data: {
+            userId: newUser.id,
+            type: account.provider,
+            provider: account.provider,
+            providerAccountId: account.providerAccountId,
+            access_token: account.access_token,
+            token_type: account.token_type,
+            scope: account.scope,
+          },
+        });
+      }
+
+      return true;
+    },
+
     async jwt({ token, account, profile }) {
       // Persist the OAuth access_token and or the user id to the token right after signin
+      console.log(token, account, profile);
       if (account) {
         token.accessToken = account.access_token;
         token.id = profile.id;
@@ -29,73 +102,23 @@ export const authOptions = {
     },
     async session({ session, token }) {
       // Send properties to the client, like an access_token and user id from a provider.
-      // console.log(token)
-      session.accessToken = token.accessToken;
-      session.user.id = token.id;
-      session.user.username = token.username;
-      session.user.name = token.name;
-      session.user.email = token.email;
-      session.user.githubProfileLink = token.githubProfileLink;
-      session.user.githubProfilePhoto = token.githubProfilePhoto;
-      session.user.followers = token.followers;
+      console.log(session);
 
-      const user: IUser = {
-        email: session.user.email,
-        name: session.user.name,
-        username: session.user.username,
-        githubProfileLink: session.user.githubProfileLink,
-        githubProfilePhoto: session.user.githubProfilePhoto,
-        followers: session.user.followers,
-        favoritesRepositories: [],
-        role: "USER",
-      };
+      session.user.accessToken = (token as unknown as JWT)?.accessToken;
+      session.user.id = (token as unknown as JWT).id;
+      session.user.username = (token as unknown as JWT).username;
+      session.user.name = (token as unknown as JWT).name;
+      session.user.email = (token as unknown as JWT).email;
+      session.user.githubProfileLink = (token as unknown as JWT).githubProfileLink;
+      session.user.githubProfilePhoto = (token as unknown as JWT).githubProfilePhoto;
 
-      try {
-        const userResponse = await fetch(
-          `${process.env.NEXT_PUBLIC_API_URL}/users/username/${session.user.username}`
-        );
-
-        if (!userResponse.ok) {
-          throw new Error("User not found");
-        }
-
-        // User exists, proceed with your logic here
-      } catch (userFetchError) {
-        // console.error("Error fetching user:", userFetchError);
-
-        try {
-          // Create a new user in the database
-          console.log(user);
-          const createUserResponse = await fetch(
-            `${process.env.NEXT_PUBLIC_API_URL}/users`,
-            {
-              method: "POST",
-              headers: {
-                "Content-Type": "application/json",
-              },
-              body: JSON.stringify(user),
-            }
-          );
-
-          if (!createUserResponse.ok) {
-            console.log(createUserResponse.status);
-            throw new Error("Failed to create user");
-          }
-
-          if (createUserResponse.ok) {
-            console.log(
-              "New user created successfully",
-              createUserResponse.status
-            );
-          }
-
-          // Log the status or handle success as needed
-        } catch (createUserError) {
-          console.error("Error creating user:", createUserError);
-        }
-      }
+      console.log(session);
 
       return session;
+    },
+
+    redirect({ url, baseUrl }) {
+      return baseUrl + "/projects";
     },
   },
 };
