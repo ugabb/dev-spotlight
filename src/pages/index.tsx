@@ -16,7 +16,7 @@ import userStore from '@/store/userStore';
 import { useSession } from 'next-auth/react';
 
 export default function Home() {
-
+  const [loading, setloading] = useState(false)
   const [projects, setProjects] = useState<IProject[]>([]);
 
   const [isMounted, setIsMounted] = useState<boolean>(false);
@@ -27,6 +27,7 @@ export default function Home() {
 
 
   const handleFetchProjects = async () => {
+    setloading(true)
     try {
       const response = await fetch('/api/projects', {
         method: 'GET',
@@ -36,7 +37,8 @@ export default function Home() {
       const data = await response.json()
       setProjects(data?.projects)
     } catch (error) {
-
+      setloading(false)
+      console.log(error)
     }
   }
 
