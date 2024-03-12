@@ -113,7 +113,7 @@ const ProjectCard = ({ project }: Props) => {
             {project?.projectImages[0]?.url
                 ?
                 <div className="flex flex-col w-full mt-5 px-3">
-                    <Link href={`/projects/details/${project.name}/user/${project?.user.username}`} className='flex justify-center  w-full h-32 bg-gradient-to-transparent hover:border hover:border-mainPurple hover:rounded-md'>
+                    <Link href={`/projects/details/${project.name}/user/${project?.user?.username}`} className='flex justify-center  w-full h-32 bg-gradient-to-transparent hover:border hover:border-mainPurple hover:rounded-md'>
                         <img className='object-cover rounded-md w-full ' src={project.projectImages[0].url} width={1920} height={1280} alt='profile picture' />
                     </Link>
                 </div>
@@ -140,9 +140,9 @@ const ProjectCard = ({ project }: Props) => {
             <div className="flex justify-center gap-3 p-3  mx-auto text-mainGray ">
                 <Link className='flex gap-3 items-center  rounded-md px-2 py-1 hover:text-mainPurple hover:bg-transparent border border-transparent hover:border-mainPurple font-semibold bg-mainPurple text-white   transition-colors' href={project ? project.linkRepo : '/'} target='_blank'>
                     <p>GitHub</p>
-                    <AiOutlineArrowRight />
+                <AiOutlineArrowRight />
                 </Link>
-                <Link className='flex gap-3 items-center  rounded-md px-2 py-1 hover:text-mainPurple hover:bg-transparent border border-transparent hover:border-mainPurple font-semibold bg-mainPurple text-white  transition-colors' href={`/projects/details/${project.name}/user/${project?.user.username}`}>
+                <Link className='flex gap-3 items-center  rounded-md px-2 py-1 hover:text-mainPurple hover:bg-transparent border border-transparent hover:border-mainPurple font-semibold bg-mainPurple text-white  transition-colors' href={`/projects/details/${project.name}/user/${project?.user?.username}`}>
                     <p>More</p>
                     <AiOutlineArrowRight />
 

@@ -252,9 +252,9 @@ const ProjectsDetails = () => {
   // useEffect(() => {
   //   console.log(projects)
   // }, [projects])
-  // useEffect(() => {
-  //   console.log(currentProject)
-  // }, [currentProject])
+  useEffect(() => {
+    console.log(currentProject)
+  }, [currentProject])
 
   return (
     <div className='md:py-24 md:max-w-7xl mx-auto'>
