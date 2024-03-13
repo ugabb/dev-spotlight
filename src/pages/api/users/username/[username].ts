@@ -4,8 +4,7 @@ import { NextRequest, NextResponse } from "next/server";
 export default async function GET(req: NextApiRequest, res: NextApiResponse) {
   try {
     const username = req.query.username as string;
-    console.log(username);
-
+    
     const user = await prisma.user.findUnique({
       where: {
         username,
