@@ -1,18 +1,14 @@
-import Carousel from '@/components/Carousel/Carousel'
+
 import Header from '@/components/Header/Header'
 import React, { useEffect, useState } from 'react'
 import { GoHeart, GoHeartFill } from 'react-icons/go'
 
 import Image from 'next/image';
-import { SwiperProps, SwiperSlide } from 'swiper/react';
 
 import { IoShareSocialOutline } from "react-icons/io5";
 import { FaXTwitter, FaLinkedin, FaWhatsapp } from "react-icons/fa6";
 import { PiArrowArcLeft, PiBookmarkSimpleFill, PiBookmarkSimpleLight, PiCaretDown, PiTrash } from "react-icons/pi";
-import { RxExternalLink } from "react-icons/rx";
-import { FaReact } from 'react-icons/fa';
 
-import TextIcon from '@/components/TextIcon';
 import ButtonIcon from '@/components/ButtonIcon';
 import { useRouter } from 'next/router';
 import Link from 'next/link';
@@ -29,10 +25,8 @@ import { useParams, useSearchParams } from 'next/navigation';
 import { LinkedinShareButton, TwitterShareButton, WhatsappShareButton } from 'react-share'
 import { Toast } from '@/components/Toast';
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
-import DialogComponent from '@/components/Dialog';
 import axios from 'axios';
 import toast from 'react-hot-toast';
-import getCurrentUser from '@/actions/getCurrentUser';
 import userStore from '@/store/userStore';
 import { Project, ProjectsLiked } from '@prisma/client';
 import Loading from '@/components/Loading';
@@ -306,6 +300,15 @@ const ProjectsDetails = () => {
                   </motion.div>
                 </div>
 
+              <div className="flex  gap-3">
+                <motion.div className='flex flex-col items-center transition-all ease-in-out cursor-pointer'>
+                  {iconBookmark ? <PiBookmarkSimpleFill onClick={() => handleAddToFavorites(currentProject?.id, currentUser?.id)} size={25} className='text-mainPurple' /> : <PiBookmarkSimpleLight className='text-mainGray hover:text-mainPurple transition-colors' onClick={() => handleAddToFavorites(currentProject?.id, currentUser?.id)} size={25} />}
+                </motion.div>
+                <motion.div className='flex flex-col items-center transition-all ease-in-out cursor-pointer'>
+                  {iconHeart ? <GoHeartFill onClick={() => handleRemoveLike(currentProject?.id)} size={25} className='text-mainPurple' /> : <GoHeart className='text-mainGray hover:text-mainPurple transition-colors' onClick={() => handleAddLike(currentProject?.id)} size={25} />}
+                  <p className='text-mainGray text-xs'>{currentProject?.likes}</p>
+                </motion.div>
+              </div>
 
               </div>
 
