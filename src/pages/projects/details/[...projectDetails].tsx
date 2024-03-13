@@ -35,6 +35,8 @@ import toast from 'react-hot-toast';
 import getCurrentUser from '@/actions/getCurrentUser';
 import userStore from '@/store/userStore';
 import { Project, ProjectsLiked } from '@prisma/client';
+import Loading from '@/components/Loading';
+import { Skeleton } from '@/components/ui/skeleton';
 
 const ProjectsDetails = () => {
 
@@ -278,7 +280,7 @@ const ProjectsDetails = () => {
 
           {/* CArousel */}
           <div className="md:mx-auto flex flex-col items-center ">
-            <CarouselShad images={currentProject?.projectImages} />
+            {currentProject?.projectImages ? <CarouselShad images={currentProject?.projectImages} /> : <Skeleton className='w-full max-w-2xl h-[300px] bg-mainGray/50' />}
           </div>
 
 

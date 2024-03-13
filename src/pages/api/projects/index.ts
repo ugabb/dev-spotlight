@@ -16,5 +16,6 @@ export default async function GET(req: NextApiRequest, res: NextApiResponse) {
     return res.status(200).json({ projects: data });
   } catch (error) {
     res.json(error);
+    console.log(error)
   }
 }

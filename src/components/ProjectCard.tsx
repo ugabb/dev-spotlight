@@ -47,6 +47,10 @@ const ProjectCard = ({ project }: Props) => {
     useEffect(() => {
         isCurrentUserAlreadyLikedTheProject(project?.id)
     }, [project, currentUser])
+    useEffect(() => {
+        console.log(project);
+
+    }, [project])
 
     const handleAddLike = async (projectId: string) => {
         if (!session.user) {
@@ -99,7 +103,7 @@ const ProjectCard = ({ project }: Props) => {
             <div className='flex gap-3 justify-between items-center '>
                 <div className='flex flex-col w-10 h-10'>
                     <Image className='rounded-full object-cover  min-h-10 min-w-10' src={userProfilePhoto} width={40} height={40} alt='profile picture' />
-                    <p className='text-mainGray text-xs flex items-center'>{project?.user?.username}</p>
+                    <p className='text-mainGray text-xs flex items-center'>{username}</p>
                 </div>
 
                 <h2 className='text-xl font-bold truncate hover:text-mainPurple'>{project?.name}</h2>
@@ -140,7 +144,7 @@ const ProjectCard = ({ project }: Props) => {
             <div className="flex justify-center gap-3 p-3  mx-auto text-mainGray ">
                 <Link className='flex gap-3 items-center  rounded-md px-2 py-1 hover:text-mainPurple hover:bg-transparent border border-transparent hover:border-mainPurple font-semibold bg-mainPurple text-white   transition-colors' href={project ? project.linkRepo : '/'} target='_blank'>
                     <p>GitHub</p>
-                <AiOutlineArrowRight />
+                    <AiOutlineArrowRight />
                 </Link>
                 <Link className='flex gap-3 items-center  rounded-md px-2 py-1 hover:text-mainPurple hover:bg-transparent border border-transparent hover:border-mainPurple font-semibold bg-mainPurple text-white  transition-colors' href={`/projects/details/${project.name}/user/${project?.user?.username}`}>
                     <p>More</p>
