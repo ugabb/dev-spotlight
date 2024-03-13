@@ -162,9 +162,6 @@ const ProjectsDetails = () => {
           console.log(session.user.id)
           setIconHeart(true)
         }
-      } else {
-        setLoading(false)
-        console.error('Error fetching project:', status, data);
       }
     } catch (error) {
       console.error('Error fetching project:', error);
