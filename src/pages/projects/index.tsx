@@ -53,10 +53,10 @@ const Projects = () => {
     try {
       const { data, statusText } = await axios.get('/api/projects')
       if (statusText === "OK") {
-        console.log(data?.projects)
         setProjects(data?.projects)
         setloading(false)
       }
+      setloading(false)
 
     } catch (error) {
       console.log(error)

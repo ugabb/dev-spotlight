@@ -103,7 +103,7 @@ const ProjectCard = ({ project }: Props) => {
             <div className='flex gap-3 justify-between items-center '>
                 <div className='flex flex-col w-10 h-10'>
                     <Image className='rounded-full object-cover  min-h-10 min-w-10' src={userProfilePhoto} width={40} height={40} alt='profile picture' />
-                    <p className='text-mainGray text-xs flex items-center'>{username}</p>
+                    <p className='text-mainGray text-xs flex items-center'>{project?.user?.username}</p>
                 </div>
 
                 <h2 className='text-xl font-bold truncate hover:text-mainPurple'>{project?.name}</h2>
