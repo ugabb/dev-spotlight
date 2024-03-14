@@ -96,7 +96,7 @@ const Header = () => {
             ref={containerRef}
             className='flex justify-between items-center md:w-full md:h-20 md:backdrop-blur-sm md:bg-black/20 md:fixed md:top-0 md:left-0 md:mx-auto px-3 md:px-40 z-40 shadow-sm shadow-mainPurple/40'>
 
-            <motion.div variants={sidebar} className={`background relative ${isOpen ? "block" : "hidden"} z-20  rounded-sm`}>
+            <motion.div variants={sidebar} className={`background relative ${isOpen ? "block" : "hidden"} z-[60]  rounded-sm`}>
                 <Navigation isOpen={isOpen} />
             </motion.div>
 
