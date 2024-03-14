@@ -291,7 +291,7 @@ const ProjectsDetails = () => {
                     </Dropdown>}
                 </div>
 
-                <div className="flex fixed md:static right-1 bg-black md:bg-transparent z-[100] rounded-lg shadow-sm shadow-mainPurple md:shadow-none items-center md:items-start p-2  gap-3">
+                <div className="flex fixed md:static right-1 bg-black md:bg-transparent z-[50] rounded-lg shadow-sm shadow-mainPurple md:shadow-none items-center md:items-start p-2  gap-3">
                   <motion.div className='flex flex-col items-center transition-all ease-in-out cursor-pointer'>
                     {iconBookmark ? <PiBookmarkSimpleFill onClick={() => handleAddToFavorites(currentProject?.id, currentUser?.id)}  className='text-mainPurple text-sm lg:text-2xl' /> : <PiBookmarkSimpleLight className='text-mainGray hover:text-mainPurple transition-colors text-sm lg:text-2xl' onClick={() => handleAddToFavorites(currentProject?.id, currentUser?.id)}  />}
                   </motion.div>
