@@ -7,7 +7,7 @@ import Image from 'next/image';
 
 import { IoShareSocialOutline } from "react-icons/io5";
 import { FaXTwitter, FaLinkedin, FaWhatsapp } from "react-icons/fa6";
-import { PiArrowArcLeft, PiBookmarkSimpleFill, PiBookmarkSimpleLight, PiCaretDown, PiTrash } from "react-icons/pi";
+import { PiArrowArcLeft, PiBookmarkSimpleFill, PiBookmarkSimpleLight, PiCaretDown, PiTrash, PiUser } from "react-icons/pi";
 
 import ButtonIcon from '@/components/ButtonIcon';
 import { useRouter } from 'next/router';
@@ -198,6 +198,10 @@ const ProjectsDetails = () => {
     }
 
   }, [query])
+  useEffect(() => {
+    console.log(currentProject?.user);
+    
+  }, [currentProject])
 
   // icon heart
   const [iconHeart, setIconHeart] = useState(false);
@@ -250,7 +254,7 @@ const ProjectsDetails = () => {
           <Header />
           {isMounted && (
             <div className='lg:px-20 mx-auto space-y-5 p-3 '>
-              <div className='flex justify-between gap-3'>
+              <div className='flex  lg:flex-row justify-between gap-3'>
                 <div className="flex items-center gap-1">
                   <h1 className='text-2xl font-bold text-mainGray tracking-widest uppercase font-georgeTown break-all'>{query.projectDetails && query?.projectDetails[0]}</h1>
                   {username === currentProject?.user?.username &&
@@ -287,21 +291,22 @@ const ProjectsDetails = () => {
                     </Dropdown>}
                 </div>
 
-              <div className="flex  gap-3">
-                <motion.div className='flex flex-col items-center transition-all ease-in-out cursor-pointer'>
-                  {iconBookmark ? <PiBookmarkSimpleFill onClick={() => handleAddToFavorites(currentProject?.id, currentUser?.id)} size={25} className='text-mainPurple' /> : <PiBookmarkSimpleLight className='text-mainGray hover:text-mainPurple transition-colors' onClick={() => handleAddToFavorites(currentProject?.id, currentUser?.id)} size={25} />}
-                </motion.div>
-                <motion.div className='flex flex-col items-center transition-all ease-in-out cursor-pointer'>
-                  {iconHeart ? <GoHeartFill onClick={() => handleRemoveLike(currentProject?.id)} size={25} className='text-mainPurple' /> : <GoHeart className='text-mainGray hover:text-mainPurple transition-colors' onClick={() => handleAddLike(currentProject?.id)} size={25} />}
-                  <p className='text-mainGray text-xs'>{currentProject?.likes}</p>
-                </motion.div>
-              </div>
+                <div className="flex fixed md:static right-1 bg-black md:bg-transparent z-[100] rounded-lg shadow-sm shadow-mainPurple md:shadow-none items-center md:items-start p-2  gap-3">
+                  <motion.div className='flex flex-col items-center transition-all ease-in-out cursor-pointer'>
+                    {iconBookmark ? <PiBookmarkSimpleFill onClick={() => handleAddToFavorites(currentProject?.id, currentUser?.id)}  className='text-mainPurple text-sm lg:text-2xl' /> : <PiBookmarkSimpleLight className='text-mainGray hover:text-mainPurple transition-colors text-sm lg:text-2xl' onClick={() => handleAddToFavorites(currentProject?.id, currentUser?.id)}  />}
+                  </motion.div>
+                  <motion.div className='flex flex-col items-center transition-all ease-in-out cursor-pointer'>
+                    {iconHeart ? <GoHeartFill onClick={() => handleRemoveLike(currentProject?.id)}  className='text-mainPurple text-sm lg:text-2xl' /> : <GoHeart className='text-mainGray hover:text-mainPurple transition-colors text-sm lg:text-2xl' onClick={() => handleAddLike(currentProject?.id)}  />}
+                    <p className='text-mainGray text-xs hidden lg:block'>{currentProject?.likes}</p>
+                  </motion.div>
+                </div>
 
               </div>
 
               {/* CArousel */}
               <div className="md:mx-auto flex flex-col items-center ">
-                {loading ? <Skeleton className='w-full max-w-2xl h-[300px] bg-mainGray/50' /> : <CarouselShad images={currentProject?.projectImages} />}
+                {loading && <Skeleton className='w-full max-w-2xl h-[300px] bg-mainGray/50' />}
+                {(!loading && currentProject.projectImages.length !== 0) && <CarouselShad images={currentProject?.projectImages} />}
               </div>
 
 
@@ -405,7 +410,12 @@ const ProjectsDetails = () => {
               <section>
                 <h1 className='text-2xl text-mainGray font-bold tracking-widest uppercase font-georgeTown'>Creator</h1>
                 <div className="flex gap-3">
-                  <Image className='w-[55px] h-[55px] rounded-full' src={currentProject?.user?.githubProfilePhoto ? currentProject?.user?.githubProfilePhoto : ""} width={640} height={640} alt='' />
+                  {userProfilePhoto
+                    ?
+                    <Image className='w-[55px] h-[55px] rounded-full' src={userProfilePhoto} width={640} height={640} alt='' />
+                    :
+                    <PiUser className='w-[55px] h-[55px] rounded-full border border-mainGray text-mainGray' />
+                  }
                   <div>
                     <h4 className='text-sm text-mainGray font-bold'>{currentProject?.user?.name}</h4>
                     <p className='text-xs text-mainGray'>@{currentProject?.user?.username}</p>
