@@ -53,6 +53,7 @@ export const authOptions: AuthOptions = {
             username: login,
             email: profileEmail,
             githubProfileLink: html_url,
+            githubProfilePhoto: avatar_url
           },
         });
       } else {
@@ -65,6 +66,7 @@ export const authOptions: AuthOptions = {
             username: login,
             email: profileEmail,
             githubProfileLink: html_url,
+            githubProfilePhoto: avatar_url
           },
         });
 
