@@ -123,7 +123,7 @@ const ProjectCard = ({ project }: Props) => {
                 </div>
                 :
                 <div className="flex flex-col w-full mt-5 px-3 ">
-                    <Link href={`/projects/details/${project.name}`} className='flex justify-center items-center bg-gradient-to-b from-mainPurple/10  hover:from-mainPurple  transition-colors ease-in-out rounded-md w-full h-32 hover:border hover:border-mainPurple hover:rounded-md text-mainGray hover:text-white'>
+                    <Link href={`/projects/details/${project.name}/user/${project?.user?.username}`} className='flex justify-center items-center bg-gradient-to-b from-mainPurple/10  hover:from-mainPurple  transition-colors ease-in-out rounded-md w-full h-32 hover:border hover:border-mainPurple hover:rounded-md text-mainGray hover:text-white'>
                         <GoLinkExternal className='text-5xl ' />
                     </Link>
                 </div>
