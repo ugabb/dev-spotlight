@@ -39,6 +39,7 @@ import { DropdownMenu, DropdownTrigger } from '@nextui-org/dropdown';
 import { Dialog } from '@/components/ui/dialog';
 import { DialogContent, DialogOverlay, DialogTrigger } from '@radix-ui/react-dialog';
 import Loading from '@/components/Loading';
+import Tiptap from '@/components/Editor/Tiptap';
 
 
 type Props = {}
@@ -268,7 +269,7 @@ const Index = (props: Props) => {
 
                 </div> */}
 
-                <form className='xl:max-w-3xl mx-auto flex flex-col gap-5' onSubmit={handleSubmit(onSubmit)}>
+                <form className='xl:max-w-5xl mx-auto flex flex-col gap-5' onSubmit={handleSubmit(onSubmit)}>
                     <div className="flex flex-col lg:flex-row gap-5">
                         <div className='flex flex-col gap-5 lg:w-1/2 '>
                             <InputDefault register={register} label='Name' registerName='name' validationRules={{
@@ -312,22 +313,9 @@ const Index = (props: Props) => {
                         </div>
                     </div>
 
-                    <div className="flex flex-col gap-3">
-                        <label className='flex flex-col text-mainGray italic'>
-                            Description:
-                            <Textarea
-                                {...register("description", { required: 'Description is required', minLength: { value: 50, message: 'Minimum of 50 characters', }, })}
-                                className={`w-full bg-black rounded-md px-3 py-2 border  hover:border-mainPurple  focus:outline-none focus:border-mainPurple focus-visible:ring-offset-0 focus-visible:ring-0 ${errors?.description ? 'border-red-500' : 'border-zinc-700'}`} />
-                            {errors.description && (
-                                <span className="text-red-500 text-xs">
-                                    {errors.description?.message}
-                                </span>
-                            )}
-                        </label>
-                    </div>
+
 
                     <div className="flex flex-col md:flex-row flex-wrap  items-center gap-3">
-
                         <label htmlFor='fileInput' className="text-sm 
                             mr-5 py-2 px-5 border border-mainPurple outline-none rounded-md
                            bg-transparent text-mainPurple
@@ -360,20 +348,24 @@ const Index = (props: Props) => {
                         ))}
 
                     </div>
-                    <div className="grid grid-cols-2  items-start md:flex gap-1">
-                        <Link href={''}>
-                            <ButtonIcon icon={<Image src={'/external-link.svg'} width={15} height={15} alt='icon' />} text='Live Demo' textColor='mainGray' textSize='sm' />
-                        </Link>
-                        <Link href={'/'}>
-                            <ButtonIcon icon={<Image src={'/external-link.svg'} width={15} height={15} alt='icon' />} text='Repository' textColor='mainGray' textSize='sm' />
-                        </Link>
-                        <Link href={'/'}>
-                            <ButtonIcon icon={<Image src={'/copy-icon.svg'} width={15} height={15} alt='icon' />} text='Clone Project' textColor='mainGray' textSize='sm' />
-                        </Link>
-                        <Link href={'/'}>
-                            <ButtonIcon icon={<IoShareSocialOutline size={15} className='text-mainPurple' />} text='Share' textColor='mainGray' textSize='sm' />
-                        </Link>
+
+                    <div className="flex flex-col gap-3 lg:hidden">
+                        <label className='flex flex-col text-mainGray italic'>
+                            Description:
+                            <Textarea
+                                {...register("description", { required: 'Description is required', minLength: { value: 50, message: 'Minimum of 50 characters', }, })}
+                                className={`w-full bg-black rounded-md px-3 py-2 border  hover:border-mainPurple  focus:outline-none focus:border-mainPurple focus-visible:ring-offset-0 focus-visible:ring-0 ${errors?.description ? 'border-red-500' : 'border-zinc-700'}`} />
+                            {errors.description && (
+                                <span className="text-red-500 text-xs">
+                                    {errors.description?.message}
+                                </span>
+                            )}
+                        </label>
                     </div>
+
+
+                    <Tiptap />
+
 
                     {/* <DialogComponent open={openDialog} setOpen={handleOpenDialog} isCreated={projectCreated} />
                     <Button onClick={handleOpenDialog}>Open Modal</Button> */}
