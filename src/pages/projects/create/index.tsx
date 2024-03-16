@@ -325,26 +325,28 @@ const Index = (props: Props) => {
                             )}
                         </label>
                     </div>
+
                     <div className="flex flex-col md:flex-row flex-wrap  items-center gap-3">
 
-                        <label className='flex items-center gap-3 text-xs md:text-sm text-mainGray'>
-                            File input
-                            <input
-                                type="file"
-                                multiple
-                                onChange={(e) => {
-                                    const selectedFiles = Array.from(e.target.files);
-                                    setImagesSelected((prev) => [...prev, ...selectedFiles]);
-
-                                }}
-                                className="text-sm text-mainGray
-                            file:mr-5 file:py-2 file:px-5 file:border file:border-mainPurple file:outline-none file:rounded-md
-                            file:text-sm file:bg-transparent file:text-mainPurple
-                            hover:file:cursor-pointer hover:file:bg-mainPurple
-                            hover:file:text-white file:transition-all file:ease-in-out"
-                            />
-
+                        <label htmlFor='fileInput' className="text-sm 
+                            mr-5 py-2 px-5 border border-mainPurple outline-none rounded-md
+                           bg-transparent text-mainPurple
+                            hover:cursor-pointer hover:bg-mainPurple
+                            hover:text-white transition-all ease-in-out w-56 flex items-center justify-center">
+                            <p>Select Images</p>
                         </label>
+                        <input
+                            id='fileInput'
+                            type="file"
+                            multiple
+                            onChange={(e) => {
+                                const selectedFiles = Array.from(e.target.files);
+                                setImagesSelected((prev) => [...prev, ...selectedFiles]);
+
+                            }}
+
+                            className='hidden'
+                        />
 
                         {/* <Button onClick={handleImageUpload}>
                             UPLOAD IMAGE
@@ -358,7 +360,7 @@ const Index = (props: Props) => {
                         ))}
 
                     </div>
-                    <div className="grid grid-cols-2 md:hidden items-start md:flex gap-1">
+                    <div className="grid grid-cols-2  items-start md:flex gap-1">
                         <Link href={''}>
                             <ButtonIcon icon={<Image src={'/external-link.svg'} width={15} height={15} alt='icon' />} text='Live Demo' textColor='mainGray' textSize='sm' />
                         </Link>
