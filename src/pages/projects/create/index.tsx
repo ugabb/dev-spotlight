@@ -234,15 +234,15 @@ const Index = (props: Props) => {
 
 
     useEffect(() => {
-        console.log(result)
+        // console.log(result)
         selectImageLocally(imagesSelected);
     }, [imagesSelected])
     // useEffect(() => {
     //     console.log(session?.user)
     // }, [session?.user])
-    useEffect(() => {
-        console.log(imagesUploaded)
-    }, [imagesUploaded])
+    // useEffect(() => {
+    //     console.log(imagesUploaded)
+    // }, [imagesUploaded])
 
 
     return (
@@ -310,47 +310,6 @@ const Index = (props: Props) => {
                                 )
                             }
                         </div>
-
-
-                        {/* <div className='lg:w-1/2 '>
-                            <label className='flex flex-col text-mainGray italic '>
-                                Technologies
-                                <Controller
-                                    name='technologies' // This should match the name in your form data
-                                    control={control}
-                                    defaultValue='' // Set the default value, if any
-                                    render={({ field }) => (
-                                        <Autocomplete
-                                            {...field}
-                                            className='w-full bg-black rounded-md text-white focus:outline-none'
-                                            style={{ color: "#fff" }}
-                                            disablePortal
-
-                                            id='combo-box-demo'
-                                            options={icons?.map((icon) => icon.name)}
-                                            sx={{
-                                                width: 300,
-                                                '& .MuiAutocomplete-input': {
-                                                    color: "#B9B9B9",
-                                                    "&:focus": {
-                                                        outline: 'none'
-                                                    }
-                                                },
-                                            }}
-
-                                            onChange={(event, value) => field.onChange(value)}
-                                            renderInput={(params) => <TextField {...params} fullWidth className='text-white  focus:outline-0' sx={{
-                                                '& .MuiTextField': {
-                                                    outline: 'none'
-                                                }
-                                            }} />}
-                                        />
-                                    )}
-                                />
-
-                            </label>
-
-                        </div> */}
                     </div>
 
                     <div className="flex flex-col gap-3">
