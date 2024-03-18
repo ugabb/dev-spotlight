@@ -33,7 +33,16 @@ const Tiptap = () => {
 
   const handleHeading = (level: any) => {
     editor.chain().focus().setHeading({ level: level }).run()
+    // const content = editor.getJSON().content
+    // console.log(content)
+    // const newContent = content.map((con) => con.content.filter((conteudo) => {
+    //   console.log(conteudo)
+    //   return conteudo.text !== "/" && conteudo.type === "text"
+    // }))
+    // console.log(newContent)
+    // editor.commands.setContent(newContent)
   }
+
 
 
   return (

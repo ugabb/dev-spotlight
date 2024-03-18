@@ -40,6 +40,7 @@ import { Dialog } from '@/components/ui/dialog';
 import { DialogContent, DialogOverlay, DialogTrigger } from '@radix-ui/react-dialog';
 import Loading from '@/components/Loading';
 import Tiptap from '@/components/Editor/Tiptap';
+import ReactEditor from '@/components/ReactEditor';
 
 
 type Props = {}
@@ -364,7 +365,10 @@ const Index = (props: Props) => {
                     </div>
 
 
-                    <Tiptap />
+                    {/* <Tiptap /> */}
+                    <div id='editorjs-container' className='bg-zinc-900 rounded-lg prose prose-invert'>
+                        <ReactEditor />
+                    </div>
 
 
                     {/* <DialogComponent open={openDialog} setOpen={handleOpenDialog} isCreated={projectCreated} />
