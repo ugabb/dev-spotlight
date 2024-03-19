@@ -1,3 +1,4 @@
+
 import { Html, Head, Main, NextScript } from 'next/document'
 
 
@@ -11,6 +12,8 @@ export default function Document() {
       <body className='min-h-full'>
         <Main />
         <NextScript />
+
+
       </body>
     </Html>
   )

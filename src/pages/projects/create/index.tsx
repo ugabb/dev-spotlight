@@ -1,12 +1,13 @@
-//@ts-nocheck
+"use client"
+
 import Header from '@/components/Header/Header'
 import InputDefault from '@/components/inputs/InputDefault'
 import React, { ReactElement, useEffect, useState } from 'react'
 import { Controller, SubmitHandler, useForm } from 'react-hook-form'
 
-import { CldUploadButton, CldUploadWidget } from 'next-cloudinary';
-
-import { Triangle } from "react-loader-spinner"
+import dynamic from 'next/dynamic'
+import Editor from "@stfy/react-editor.js";
+import { Header as Heading } from "@editorjs/header";
 
 import GlowButton from '@/components/GlowButton'
 import useSelectImage from '@/hooks/useSelectImage'
@@ -33,11 +34,7 @@ import axios from 'axios'
 import { User } from '@prisma/client'
 import toast from 'react-hot-toast'
 import Footer from '@/components/Footer';
-import { Button } from '@/components/ui/button';
-import { PiCircleNotch } from 'react-icons/pi';
-import { DropdownMenu, DropdownTrigger } from '@nextui-org/dropdown';
-import { Dialog } from '@/components/ui/dialog';
-import { DialogContent, DialogOverlay, DialogTrigger } from '@radix-ui/react-dialog';
+
 import Loading from '@/components/Loading';
 import Tiptap from '@/components/Editor/Tiptap';
 import ReactEditor from '@/components/ReactEditor';
@@ -305,7 +302,7 @@ const Index = (props: Props) => {
                                     <div className='flex gap-2 flex-wrap'>
                                         {selectedTechnologies.map((tech, i) => {
                                             return (
-                                                <p key={i} className={`text-white px-3 py-1 rounded-md bg-mainPurple`}>{tech.name}</p>
+                                                <p key={i} className={`text-white px-3 py-1 rounded-md bg-mainPurple`}>{tech?.name}</p>
                                             )
                                         })}
                                     </div>
@@ -366,10 +363,8 @@ const Index = (props: Props) => {
 
 
                     {/* <Tiptap /> */}
-                    <div id='editorjs-container' className='bg-zinc-900 rounded-lg prose prose-invert'>
-                        <ReactEditor />
-                    </div>
 
+                    <ReactEditor />
 
                     {/* <DialogComponent open={openDialog} setOpen={handleOpenDialog} isCreated={projectCreated} />
                     <Button onClick={handleOpenDialog}>Open Modal</Button> */}
