@@ -1,8 +1,9 @@
 import { useEffect, useRef, useState } from "react";
 import dynamic from 'next/dynamic';
 
-// Import Header component statically
+// Import Header component 
 import Header from "@editorjs/header";
+import Alert from 'editorjs-alert';
 
 const ReactEditor = () => {
   const [editorInstance, setEditorInstance] = useState(null);
@@ -31,26 +32,52 @@ const ReactEditor = () => {
           // Initialize EditorJS instance
           const editor = new EditorJS({
             holder: "editorjs-container",
+            placeholder: "Write your project description",
             tools: {
-              header: Header // Use Header component as a tool
+              header: Header,
+              alert: Alert
             },
-            onChange: async () => {
-              const data = await editor.save();
-              console.log(data);
-            }
+            data: {
+              "time": 1710882330257,
+              "blocks": [
+                {
+                  "id": "9WgBQpF2X4",
+                  "type": "header",
+                  "data": {
+                    "text": "Teste de Descrição",
+                    "level": 2
+                  }
+                },
+                {
+                  "id": "Xr2tcl_9Qx",
+                  "type": "paragraph",
+                  "data": {
+                    "text": "Este projeto consiste na mudança do editor nesse caralho"
+                  }
+                }
+              ],
+              "version": "2.29.0"
+            },
+            // onChange: async () => {
+            //   const data = await editor.save();
+            //   console.log(data);
+            // }
           });
           setEditorInstance(editor);
           editorRef.current = true;
-          
+
         }).catch(error => {
           console.error("Error loading EditorJS:", error);
         });
 
       }
+    } else {
+      editorRef.current = null;
     }
+
   }, []);
 
-  return <div id="editorjs-container" className="bg-zinc-900 p-5 h-full prose prose-invert bg-zinc-90 "></div>;
+  return <div id="editorjs-container" className="prose prose-invert w-full bg-black rounded-md px-3 py-2 border border-mainGray/20  hover:border-mainPurple focus:outline-none focus:border-mainPurple"></div>;
 };
 
 export default ReactEditor;
