@@ -95,31 +95,31 @@ body {
   background: rgb(185, 90, 255);
 }
 
-/* carousel */
-.swiper-button-next,
-.swiper-button-prev {
-  color: white !important;
+.btn--link--color {
+  background: #b95aff;
 }
 
-.swiper {
-  padding: 1rem !important;
+.ce-toolbar {
+  left: -10px;
+  background: transparent;
+  color: black;
 }
 
-.swiper-button {
-  width: 50% !important;
+.ce-toolbar__plus svg {
+  color: #b95aff ;
+  background: transparent ;
 }
 
-.swiper-navigation-size {
-  width: 44px;
+.ce-toolbar__actions svg {
+  color: #b95aff;
+  background: transparent;
+}
+.ce-toolbar__actions:hover {
+  background: transparent;
 }
 
-.swiper-slide {
-  display: flex !important;
-  justify-content: center !important;
-}
-
-.swiper-pagination-bullet {
-  background-color: var(--mainPurple) !important;
+.ce-inline-tool--active {
+  color: #b95aff;
 }
 
 .abstract-backrground {
