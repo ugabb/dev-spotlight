@@ -5,9 +5,6 @@ import InputDefault from '@/components/inputs/InputDefault'
 import React, { ReactElement, useEffect, useState } from 'react'
 import { Controller, SubmitHandler, useForm } from 'react-hook-form'
 
-import dynamic from 'next/dynamic'
-import Editor from "@stfy/react-editor.js";
-import { Header as Heading } from "@editorjs/header";
 
 import GlowButton from '@/components/GlowButton'
 import useSelectImage from '@/hooks/useSelectImage'
@@ -36,8 +33,9 @@ import toast from 'react-hot-toast'
 import Footer from '@/components/Footer';
 
 import Loading from '@/components/Loading';
-import Tiptap from '@/components/Editor/Tiptap';
-import ReactEditor from '@/components/ReactEditor';
+
+// Editor
+import ReactEditor from '@/components/Editor/ReactEditor';
 
 
 type Props = {}

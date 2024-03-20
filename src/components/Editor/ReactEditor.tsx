@@ -1,9 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import dynamic from 'next/dynamic';
-
-// Import Header component 
-import Header from "@editorjs/header";
-import Alert from 'editorjs-alert';
+import { EDITOR_TOOLS } from "./EditorTools";
 
 const ReactEditor = () => {
   const [editorInstance, setEditorInstance] = useState(null);
@@ -33,35 +29,32 @@ const ReactEditor = () => {
           const editor = new EditorJS({
             holder: "editorjs-container",
             placeholder: "Write your project description",
-            tools: {
-              header: Header,
-              alert: Alert
+            tools: EDITOR_TOOLS,
+            onChange: async () => {
+              const data = await editor.save();
+              console.log(data);
             },
             data: {
-              "time": 1710882330257,
-              "blocks": [
+              time: 1710882330257,
+              blocks: [
                 {
-                  "id": "9WgBQpF2X4",
-                  "type": "header",
-                  "data": {
-                    "text": "Teste de Descrição",
-                    "level": 2
-                  }
+                  id: "9WgBQpF2X4",
+                  type: "header",
+                  data: {
+                    text: "Teste de Descrição",
+                    level: 2,
+                  },
                 },
                 {
-                  "id": "Xr2tcl_9Qx",
-                  "type": "paragraph",
-                  "data": {
-                    "text": "Este projeto consiste na mudança do editor nesse caralho"
-                  }
-                }
+                  id: "Xr2tcl_9Qx",
+                  type: "paragraph",
+                  data: {
+                    text: "Este projeto consiste na mudança do editor nesse caralho",
+                  },
+                },
               ],
-              "version": "2.29.0"
+              version: "2.29.0",
             },
-            // onChange: async () => {
-            //   const data = await editor.save();
-            //   console.log(data);
-            // }
           });
           setEditorInstance(editor);
           editorRef.current = true;
