@@ -246,7 +246,7 @@ const Index = (props: Props) => {
         <div className='md:py-24' >
             {loading && <Loading />}
             <Header />
-            <div className='mx-auto space-y-5 w-full p-3  md:px-40'>
+            <div className='mx-auto space-y-5 w-full p-3 md:px-40'>
                 <h1 className='text-2xl font-bold text-mainGray text-center tracking-widest uppercase font-georgeTown break-all'>Create Project</h1>
 
                 {/* PESQUISAR O REPOSITORIO NO GITHUB */}
@@ -361,8 +361,10 @@ const Index = (props: Props) => {
 
 
                     {/* <Tiptap /> */}
+                    <div className="flex justify-center items-center w-full">
+                        <ReactEditor />
+                    </div>
 
-                    <ReactEditor />
 
                     {/* <DialogComponent open={openDialog} setOpen={handleOpenDialog} isCreated={projectCreated} />
                     <Button onClick={handleOpenDialog}>Open Modal</Button> */}

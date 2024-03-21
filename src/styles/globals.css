@@ -96,7 +96,7 @@ body {
 }
 
 .btn--link--color {
-  background: #b95aff;
+  background: var(--mainPurple);
 }
 
 .ce-toolbar {
@@ -106,12 +106,12 @@ body {
 }
 
 .ce-toolbar__plus svg {
-  color: #b95aff ;
-  background: transparent ;
+  color: var(--mainPurple);
+  background: transparent;
 }
 
 .ce-toolbar__actions svg {
-  color: #b95aff;
+  color: var(--mainPurple);
   background: transparent;
 }
 .ce-toolbar__actions:hover {
@@ -119,7 +119,14 @@ body {
 }
 
 .ce-inline-tool--active {
-  color: #b95aff;
+  color: var(--mainPurple);
+}
+
+.ce-code__textarea {
+  background: var(--background) !important;
+  border: 1px solid var(--mainGray) !important;
+  color: white !important;
+  height: 100% !important;
 }
 
 .abstract-backrground {

@@ -11,6 +11,9 @@ import AnyButton from "editorjs-button";
 import InlineCode from "@editorjs/inline-code";
 import ColorPlugin from "editorjs-text-color-plugin";
 import Marker from "@editorjs/marker";
+import CodeTool from "@editorjs/code";
+import CodeBox from "@bomdi/codebox";
+
 
 export const EDITOR_TOOLS = {
   header: Header,
@@ -34,6 +37,14 @@ export const EDITOR_TOOLS = {
   inlineCode: {
     class: InlineCode,
     shortcut: "CMD+SHIFT+C",
+  },
+  code: CodeTool,
+  codeBox: {
+    class: CodeBox,
+    config: {
+      themeURL:
+        "https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@9.18.1/build/styles/dracula.min.css", // Optional
+    },
   },
   // Color: {
   //   class: ColorPlugin,
