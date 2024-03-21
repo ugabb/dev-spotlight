@@ -39,13 +39,13 @@ export const EDITOR_TOOLS = {
     shortcut: "CMD+SHIFT+C",
   },
   code: CodeTool,
-  // codeBox: {
-  //   class: CodeBox,
-  //   config: {
-  //     themeURL:
-  //       "https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@9.18.1/build/styles/dracula.min.css", // Optional
-  //   },
-  // },
+  codeBox: {
+    class: CodeBox,
+    config: {
+      themeURL:
+        "https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@9.18.1/build/styles/dracula.min.css", // Optional
+    },
+  },
   // Color: {
   //   class: ColorPlugin,
   //   config: {
