@@ -36,6 +36,7 @@ import Loading from '@/components/Loading';
 
 // Editor
 import ReactEditor from '@/components/Editor/ReactEditor';
+import Tiptap from '@/components/Editor/Tiptap'
 
 
 type Props = {}
@@ -51,7 +52,7 @@ const Index = (props: Props) => {
     const [filter, setFilter] = useState('');
     const [suggestedIcons, setSuggestedIcons] = useState([]);
 
-    const { register, handleSubmit, formState: { errors }, setError, setValue, getValues } = useForm<IProjectToCreate>();
+    const { register, handleSubmit, control, formState: { errors }, setError, setValue, getValues } = useForm<IProjectToCreate>();
 
     // dialog
     const [openDialog, setOpenDialog] = useState<boolean>(false);
@@ -160,22 +161,22 @@ const Index = (props: Props) => {
 
     const onSubmit: SubmitHandler<IProjectToCreate> = async (data) => {
         const valueSubmit = data;
-        const images = await handleImageUpload().then((prjImages) => {
-            if (prjImages) {
-                console.log(prjImages);
-                valueSubmit.projectImages = prjImages;
-            }
-        })
-            .catch((error) => {
-                console.log(error)
-            });
+        // const images = await handleImageUpload().then((prjImages) => {
+        //     if (prjImages) {
+        //         console.log(prjImages);
+        //         valueSubmit.projectImages = prjImages;
+        //     }
+        // })
+        //     .catch((error) => {
+        //         console.log(error)
+        //     });
 
-        valueSubmit.technologies = selectedTechnologies;
-        // setProject(valueSubmit)
+        // valueSubmit.technologies = selectedTechnologies;
+        // // setProject(valueSubmit)
 
         console.log(valueSubmit)
 
-        await createProject(valueSubmit);
+        // await createProject(valueSubmit);
     }
 
 
@@ -348,9 +349,9 @@ const Index = (props: Props) => {
                     <div className="flex flex-col gap-3 lg:hidden">
                         <label className='flex flex-col text-mainGray italic'>
                             Description:
-                            <Textarea
+                            {/* <Textarea
                                 {...register("description", { required: 'Description is required', minLength: { value: 50, message: 'Minimum of 50 characters', }, })}
-                                className={`w-full bg-black rounded-md px-3 py-2 border  hover:border-mainPurple  focus:outline-none focus:border-mainPurple focus-visible:ring-offset-0 focus-visible:ring-0 ${errors?.description ? 'border-red-500' : 'border-zinc-700'}`} />
+                                className={`w-full bg-black rounded-md px-3 py-2 border  hover:border-mainPurple  focus:outline-none focus:border-mainPurple focus-visible:ring-offset-0 focus-visible:ring-0 ${errors?.description ? 'border-red-500' : 'border-zinc-700'}`} /> */}
                             {errors.description && (
                                 <span className="text-red-500 text-xs">
                                     {errors.description?.message}
@@ -362,7 +363,8 @@ const Index = (props: Props) => {
 
                     {/* <Tiptap /> */}
                     <div className="flex justify-center items-center w-full">
-                        <ReactEditor />
+                        {/* <ReactEditor register={register} control={control} setValue={setValue} /> */}
+                        <Tiptap register={register} />
                     </div>
 
 
