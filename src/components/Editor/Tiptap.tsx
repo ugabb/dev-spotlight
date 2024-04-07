@@ -3,28 +3,30 @@
 import { useEditor, EditorContent, BubbleMenu, FloatingMenu } from '@tiptap/react'
 import StarterKit from '@tiptap/starter-kit'
 import BubbleButton from './BubbleButton'
+import CodeBlockLowlight from '@tiptap/extension-code-block-lowlight'
+import BulletList from '@tiptap/extension-bullet-list'
+
 import { useState } from 'react'
 import { ToggleGroup, ToggleGroupItem } from '../ui/toggle-group'
 import { Bold, Italic, Strikethrough, Underline } from "lucide-react"
 import FloatingButton from './FloatingButton'
 import { LucideHeading1, LucideHeading2, LucideHeading3 } from 'lucide-react'
 import { RxFontBold, RxFontItalic, RxCode, RxStrikethrough, RxHeading } from 'react-icons/rx'
-import { PiCodeBlock } from "react-icons/pi";
+import { PiCodeBlock, PiListBullets } from "react-icons/pi";
 import parse from 'html-react-parser';
-import CodeBlockLowlight from '@tiptap/extension-code-block-lowlight'
 import { createLowlight, common } from 'lowlight'
 import javascript from 'highlight.js/lib/languages/javascript';
 import hljs from 'highlight.js';
 
 interface TiptapEditorProps {
-  register: any
+  register: any;
+  setValue: any;
 }
 
 const lowlight = createLowlight(common)
 hljs.registerLanguage("javascript", javascript)
 
-const Tiptap = ({ register }: TiptapEditorProps) => {
-  const [text, setText] = useState("<p>teste</p><h1>dadaw<br></h1><h2>fafaef</h2><p></p><p><strong>gww<em>g</em></strong></p>")
+const Tiptap = ({ register, setValue }: TiptapEditorProps) => {
   const [showMenu, setShowMenu] = useState<boolean>(false)
   const [openFloatingMenu, setOpenFloatingMenu] = useState<boolean>(false)
   const editor = useEditor({
@@ -38,6 +40,7 @@ const Tiptap = ({ register }: TiptapEditorProps) => {
         languageClassPrefix: 'language-',
         defaultLanguage: 'javascript',
       }),
+      BulletList
     ],
     onFocus({ editor }) {
       setShowMenu(true)
@@ -53,7 +56,7 @@ const Tiptap = ({ register }: TiptapEditorProps) => {
     onUpdate({ editor }) {
       handleSaveText()
     },
-    content: text,
+    content: "",
     editorProps: {
       attributes: {
         class: "outline-none min-h-[400px] min-w-full bg-zinc-900 rounded-lg p-3",
@@ -98,6 +101,10 @@ const Tiptap = ({ register }: TiptapEditorProps) => {
     e.preventDefault()
     editor.chain().focus().toggleStrike().run()
   }
+  const handleBulletList = (e: any) => {
+    e.preventDefault()
+    editor.chain().focus().toggleBulletList().run()
+  }
   const handleCodeBlock = (e: any) => {
     e.preventDefault()
     editor.chain().focus().setCodeBlock().run()
@@ -105,12 +112,12 @@ const Tiptap = ({ register }: TiptapEditorProps) => {
 
   const handleSaveText = () => {
     const html = editor.getHTML()
-    setText(html)
+    setValue("description", html)
   }
 
 
   return (
-    <div className='w-full' {...register("editor")} onChange={handleSaveText}>
+    <div className='w-full' {...register("description")} onChange={handleSaveText}>
       {showMenu &&
         <ToggleGroup className='fixed bottom-10 inset-x-0 z-50 ' type="multiple">
           <div className="bg-zinc-950 p-1 rounded-md shadow-md shadow-mainPurple/20 transition-opacity opacity-100">
@@ -138,11 +145,10 @@ const Tiptap = ({ register }: TiptapEditorProps) => {
                 <Strikethrough className="h-4 w-4" />
               </BubbleButton>
             </ToggleGroupItem>
-            <ToggleGroupItem value="code" aria-label="Toggle code">
-              <BubbleButton data-active={editor.isActive("codeBlock")} onClick={(e) => handleCodeBlock(e)}>
-                <PiCodeBlock className="h-4 w-4" />
-              </BubbleButton>
+            <ToggleGroupItem value="bulletList" aria-label="Toggle underline">
+              <BubbleButton data-active={editor.isActive("bulletList")} onClick={(e) => handleBulletList(e)}><PiListBullets className="h-4 w-4" /></BubbleButton>
             </ToggleGroupItem>
+
             <ToggleGroupItem value="codelowlight" aria-label="Toggle codelowlight">
               <BubbleButton data-active={editor.isActive("codeBlock")} onClick={(e) => handleCodeBlock(e)}>
                 <PiCodeBlock className="h-4 w-4" />
@@ -155,8 +161,8 @@ const Tiptap = ({ register }: TiptapEditorProps) => {
 
       {/* MENU HOVER */}
       {editor && (
-        <BubbleMenu editor={editor} className='flex items-center bg-zinc-950 shadow-md shadow-mainPurple/20 border-zinc-600 rounded-md overflow-hidden divide-x-1 divide-zinc-500 '>
-          <ToggleGroup type='multiple'>
+        <BubbleMenu editor={editor} className='flex flex-col items-center justify-center bg-zinc-950 shadow-md shadow-mainPurple/20 border-zinc-600 rounded-md  divide-x-1 divide-zinc-500 w-[460px]'>
+          <ToggleGroup type='multiple' className='w-full flex items-center justify-center'>
             <ToggleGroupItem value='h1'>
               <BubbleButton data-active={editor.isActive("heading", { level: 1 })} onClick={(e) => handleHeading(1, e)}><LucideHeading1 size={16} /></BubbleButton>
             </ToggleGroupItem>
@@ -178,9 +184,14 @@ const Tiptap = ({ register }: TiptapEditorProps) => {
             <ToggleGroupItem value='strike'>
               <BubbleButton data-active={editor.isActive("strike")} onClick={(e) => handleStrike(e)}><Strikethrough className="h-4 w-4" /></BubbleButton>
             </ToggleGroupItem>
+            <ToggleGroupItem value='bulletList'>
+              <BubbleButton data-active={editor.isActive("bulletList")} onClick={(e) => handleBulletList(e)}><PiListBullets className="h-4 w-4" /></BubbleButton>
+            </ToggleGroupItem>
 
-            <ToggleGroupItem value='code'>
-              <BubbleButton data-active={editor.isActive("code")} onClick={(e) => editor.chain().focus().toggleCodeBlock().run()}><RxCode /></BubbleButton>
+            <ToggleGroupItem value="codelowlight" aria-label="Toggle codelowlight">
+              <BubbleButton data-active={editor.isActive("codeBlock")} onClick={(e) => handleCodeBlock(e)}>
+                <PiCodeBlock className="h-4 w-4" />
+              </BubbleButton>
             </ToggleGroupItem>
           </ToggleGroup>
         </BubbleMenu>
@@ -201,10 +212,6 @@ const Tiptap = ({ register }: TiptapEditorProps) => {
           <FloatingButton handleToggle={() => handleHeading(3)} title='Heading 3' subtitle='Small section heading' icon={RxHeading} />
         </FloatingMenu>
       )} */}
-
-      <div className='prose prose-invert'>
-        {parse(text)}
-      </div>
 
     </div>
   )

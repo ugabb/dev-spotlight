@@ -161,22 +161,22 @@ const Index = (props: Props) => {
 
     const onSubmit: SubmitHandler<IProjectToCreate> = async (data) => {
         const valueSubmit = data;
-        // const images = await handleImageUpload().then((prjImages) => {
-        //     if (prjImages) {
-        //         console.log(prjImages);
-        //         valueSubmit.projectImages = prjImages;
-        //     }
-        // })
-        //     .catch((error) => {
-        //         console.log(error)
-        //     });
+        const images = await handleImageUpload().then((prjImages) => {
+            if (prjImages) {
+                console.log(prjImages);
+                valueSubmit.projectImages = prjImages;
+            }
+        })
+            .catch((error) => {
+                console.log(error)
+            });
 
-        // valueSubmit.technologies = selectedTechnologies;
-        // // setProject(valueSubmit)
+        valueSubmit.technologies = selectedTechnologies;
+        // setProject(valueSubmit)
 
         console.log(valueSubmit)
 
-        // await createProject(valueSubmit);
+        await createProject(valueSubmit);
     }
 
 
@@ -364,7 +364,7 @@ const Index = (props: Props) => {
                     {/* <Tiptap /> */}
                     <div className="flex justify-center items-center w-full">
                         {/* <ReactEditor register={register} control={control} setValue={setValue} /> */}
-                        <Tiptap register={register} />
+                        <Tiptap register={register} setValue={setValue} />
                     </div>
 
 
