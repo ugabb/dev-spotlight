@@ -17,6 +17,8 @@ import userStore from '@/store/userStore';
 import axios from 'axios';
 import toast from 'react-hot-toast';
 
+import parse from 'html-react-parser';
+
 type Props = {
     project: IProject
 }
@@ -132,7 +134,9 @@ const ProjectCard = ({ project }: Props) => {
 
             <div className='p-3 text-mainGray w-full mt-5'>
                 <h3 className='text-xl text-white font-bold'>About</h3>
-                <p className='text-sm leading-4 break-words line-clamp-3'>{project?.description}</p>
+                {/* <p className='text-sm leading-4 break-words line-clamp-3'>{project?.description}</p> */}
+                <p className='text-xs md:text-base lg:text-lg  text-mainGray leading-4  break-words line-clamp-3'>{parse(project?.description)}</p>
+
             </div>
 
             <div className="flex flex-wrap gap-1 text-sm px-3 my-3">
