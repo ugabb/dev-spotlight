@@ -143,6 +143,6 @@ body {
   pointer-events: none;
 }
 
-a {
+.tiptap a {
   color: #b95aff;
 }
