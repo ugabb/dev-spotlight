@@ -2,7 +2,7 @@ import { Project, User } from "@prisma/client";
 import { IUser } from "./IUser";
 
 export interface IProjectToCreate {
-  id?: number;
+  id?: string;
   name: string;
   linkRepo: string;
   description: string;
@@ -10,7 +10,7 @@ export interface IProjectToCreate {
   technologies: ITechnologies[];
   projectImages?: IProjectImages[];
   likes: number;
-  userId: number;
+  userId: string;
 }
 
 export interface IProject {
@@ -26,11 +26,11 @@ export interface IProject {
   user: IUser;
 }
 export interface ITechnologies {
-  id: string;
+  id?: string;
   name: string;
   // color: string;
 }
 export interface IProjectImages {
-  id:string;
+  id?:string;
   url: string;
 }
