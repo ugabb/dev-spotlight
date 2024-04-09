@@ -5,6 +5,7 @@ import StarterKit from '@tiptap/starter-kit'
 import BubbleButton from './BubbleButton'
 import CodeBlockLowlight from '@tiptap/extension-code-block-lowlight'
 import BulletList from '@tiptap/extension-bullet-list'
+// import Placeholder from '@tiptap/extension-placeholder'
 
 import { useState } from 'react'
 import { ToggleGroup, ToggleGroupItem } from '../ui/toggle-group'
@@ -17,6 +18,7 @@ import parse from 'html-react-parser';
 import { createLowlight, common } from 'lowlight'
 import javascript from 'highlight.js/lib/languages/javascript';
 import hljs from 'highlight.js';
+import { empty } from '@prisma/client/runtime/library'
 
 interface TiptapEditorProps {
   register: any;
@@ -28,7 +30,7 @@ hljs.registerLanguage("javascript", javascript)
 
 const Tiptap = ({ register, setValue }: TiptapEditorProps) => {
   const [showMenu, setShowMenu] = useState<boolean>(false)
-  const [openFloatingMenu, setOpenFloatingMenu] = useState<boolean>(false)
+  // const [openFloatingMenu, setOpenFloatingMenu] = useState<boolean>(false)
   const editor = useEditor({
     extensions: [
       StarterKit,
@@ -40,7 +42,11 @@ const Tiptap = ({ register, setValue }: TiptapEditorProps) => {
         languageClassPrefix: 'language-',
         defaultLanguage: 'javascript',
       }),
-      BulletList
+      BulletList,
+      // Placeholder.configure({
+      //   placeholder: 'Write something about your project📝...',
+      //   emptyEditorClass: 'is-editor-empty',
+      // })
     ],
     onFocus({ editor }) {
       setShowMenu(true)
@@ -118,8 +124,45 @@ const Tiptap = ({ register, setValue }: TiptapEditorProps) => {
 
   return (
     <div className='w-full' {...register("description")} onChange={handleSaveText}>
+      <ToggleGroup className='flex py-5 lg:hidden' type="multiple">
+          <div className="bg-zinc-950 p-1 rounded-md shadow-md shadow-mainPurple/20 transition-opacity opacity-100">
+            <ToggleGroupItem value='h1'>
+              <BubbleButton data-active={editor.isActive("heading", { level: 1 })} onClick={(e) => handleHeading(1, e)}><LucideHeading1 size={16} /></BubbleButton>
+            </ToggleGroupItem>
+            <ToggleGroupItem value='h2'>
+              <BubbleButton data-active={editor.isActive("heading", { level: 2 })} onClick={(e) => handleHeading(2, e)}><LucideHeading2 size={16} /></BubbleButton>
+            </ToggleGroupItem>
+            <ToggleGroupItem value='h3'>
+              <BubbleButton data-active={editor.isActive("heading", { level: 3 })} onClick={(e) => handleHeading(3, e)}><LucideHeading3 size={16} /></BubbleButton>
+            </ToggleGroupItem>
+            <ToggleGroupItem value="bold" aria-label="Toggle bold" >
+              <BubbleButton data-active={editor.isActive("bold")} onClick={(e) => handleBold(e)}>
+                <Bold className="h-4 w-4" />
+              </BubbleButton>
+            </ToggleGroupItem>
+            <ToggleGroupItem value="italic" aria-label="Toggle italic">
+              <BubbleButton data-active={editor.isActive("italic")} onClick={(e) => handleItalic(e)}>
+                <Italic className="h-4 w-4" />
+              </BubbleButton>
+            </ToggleGroupItem>
+            <ToggleGroupItem value="underline" aria-label="Toggle underline">
+              <BubbleButton data-active={editor.isActive("strike")} onClick={(e) => handleStrike(e)}>
+                <Strikethrough className="h-4 w-4" />
+              </BubbleButton>
+            </ToggleGroupItem>
+            <ToggleGroupItem value="bulletList" aria-label="Toggle underline">
+              <BubbleButton data-active={editor.isActive("bulletList")} onClick={(e) => handleBulletList(e)}><PiListBullets className="h-4 w-4" /></BubbleButton>
+            </ToggleGroupItem>
+
+            <ToggleGroupItem value="codelowlight" aria-label="Toggle codelowlight">
+              <BubbleButton data-active={editor.isActive("codeBlock")} onClick={(e) => handleCodeBlock(e)}>
+                <PiCodeBlock className="h-4 w-4" />
+              </BubbleButton>
+            </ToggleGroupItem>
+          </div>
+        </ToggleGroup>
       {showMenu &&
-        <ToggleGroup className='fixed bottom-10 inset-x-0 z-50 ' type="multiple">
+        <ToggleGroup className='hidden lg:flex fixed bottom-10 inset-x-0 z-50 ' type="multiple">
           <div className="bg-zinc-950 p-1 rounded-md shadow-md shadow-mainPurple/20 transition-opacity opacity-100">
             <ToggleGroupItem value='h1'>
               <BubbleButton data-active={editor.isActive("heading", { level: 1 })} onClick={(e) => handleHeading(1, e)}><LucideHeading1 size={16} /></BubbleButton>
@@ -157,12 +200,12 @@ const Tiptap = ({ register, setValue }: TiptapEditorProps) => {
           </div>
         </ToggleGroup>
       }
-      <EditorContent editor={editor} className='prose prose-invert w-full' />
+      <EditorContent editor={editor} className='prose prose-invert w-full is-editor-empty' />
 
       {/* MENU HOVER */}
       {editor && (
-        <BubbleMenu editor={editor} className='flex flex-col items-center justify-center bg-zinc-950 shadow-md shadow-mainPurple/20 border-zinc-600 rounded-md  divide-x-1 divide-zinc-500 w-[460px]'>
-          <ToggleGroup type='multiple' className='w-full flex items-center justify-center'>
+        <BubbleMenu editor={editor} className='hidden lg:flex flex-col items-center justify-center bg-zinc-950 shadow-md shadow-mainPurple/20 border-zinc-600 rounded-md  divide-x-1 divide-zinc-500 lg:w-[460px]'>
+          <ToggleGroup type='multiple' className='w-full flex items-center justify-center flex-wrap'>
             <ToggleGroupItem value='h1'>
               <BubbleButton data-active={editor.isActive("heading", { level: 1 })} onClick={(e) => handleHeading(1, e)}><LucideHeading1 size={16} /></BubbleButton>
             </ToggleGroupItem>
