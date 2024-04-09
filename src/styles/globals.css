@@ -69,7 +69,6 @@ body {
   right: 0;
   bottom: 0;
   width: 300px;
-  background: var(--mainPurple);
 }
 
 .icon-placeholder {
@@ -144,5 +143,5 @@ body {
 }
 
 .tiptap a {
-  color: #b95aff;
+  color:var(--mainPurple);
 }

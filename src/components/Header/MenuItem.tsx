@@ -27,7 +27,7 @@ export const MenuItem = ({ route, name }) => {
             whileHover={{ scale: 1.1 }}
             whileTap={{ scale: 0.95 }}
         >
-            <Link href={route} className="text-white">{name}</Link>
+            <Link href={route} className='hover:text-white hover:underline hover:decoration-mainPurple transition-all cursor-pointer hover:scale-105'>{name}</Link>
         </motion.li>
     );
 };
