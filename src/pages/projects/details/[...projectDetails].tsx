@@ -21,6 +21,8 @@ import { IUser } from '@/interfaces/IUser';
 import CarouselShad from '@/components/Carousel/CarouselShad';
 import { useParams, useSearchParams } from 'next/navigation';
 
+import parse from 'html-react-parser';
+
 // share
 import { LinkedinShareButton, TwitterShareButton, WhatsappShareButton } from 'react-share'
 import { Toast } from '@/components/Toast';
@@ -321,7 +323,7 @@ const ProjectsDetails = () => {
                     <Skeleton className='w-full h-5 bg-mainGray/50' />
                   </div>
                   :
-                  <p className='text-xs md:text-base lg:text-lg break-words text-mainGray leading-4'>{currentProject?.description}</p>
+                  <p className='text-xs md:text-base lg:text-lg break-words text-mainGray leading-4 prose prose-invert'>{parse(currentProject?.description)}</p>
                 }
               </section>
 
