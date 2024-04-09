@@ -202,8 +202,24 @@ const ProjectsDetails = () => {
   }, [query])
   useEffect(() => {
     console.log(currentProject?.user);
-    
+
   }, [currentProject])
+
+  const handleDeleteProject = (projectId: string) => {
+    axios.delete(`/api/projects/delete/${projectId}`).then((response) => {
+      setLoading(true)
+      if (response.statusText === "OK") {
+        toast.success(response.data.message, { iconTheme: { primary: "#B95AFF", secondary: "#fff" } })
+        router.push('/projects')
+      }
+    }).catch((error) => {
+      console.error(error)
+      toast.error(error.response.data, { iconTheme: { primary: "#B95AFF", secondary: "#fff" } })
+    }).finally(() => {
+      setLoading(false)
+    })
+  }
+
 
   // icon heart
   const [iconHeart, setIconHeart] = useState(false);
@@ -283,7 +299,7 @@ const ProjectsDetails = () => {
                           ],
                         }}
                       >
-                        <DropdownItem variant='flat' key="settings" >
+                        <DropdownItem variant='flat' key="settings" onClick={() => handleDeleteProject(currentProject.id)}>
                           <div className='flex items-center gap-1'>
                             <PiTrash className='cursor-pointer text-lg' />
                             <p>Delete Project</p>
@@ -295,10 +311,10 @@ const ProjectsDetails = () => {
 
                 <div className="flex fixed md:static right-1 bg-black md:bg-transparent z-[50] rounded-lg shadow-sm shadow-mainPurple md:shadow-none items-center md:items-start p-2  gap-3">
                   <motion.div className='flex flex-col items-center transition-all ease-in-out cursor-pointer'>
-                    {iconBookmark ? <PiBookmarkSimpleFill onClick={() => handleAddToFavorites(currentProject?.id, currentUser?.id)}  className='text-mainPurple text-sm lg:text-2xl' /> : <PiBookmarkSimpleLight className='text-mainGray hover:text-mainPurple transition-colors text-sm lg:text-2xl' onClick={() => handleAddToFavorites(currentProject?.id, currentUser?.id)}  />}
+                    {iconBookmark ? <PiBookmarkSimpleFill onClick={() => handleAddToFavorites(currentProject?.id, currentUser?.id)} className='text-mainPurple text-sm lg:text-2xl' /> : <PiBookmarkSimpleLight className='text-mainGray hover:text-mainPurple transition-colors text-sm lg:text-2xl' onClick={() => handleAddToFavorites(currentProject?.id, currentUser?.id)} />}
                   </motion.div>
                   <motion.div className='flex flex-col items-center transition-all ease-in-out cursor-pointer'>
-                    {iconHeart ? <GoHeartFill onClick={() => handleRemoveLike(currentProject?.id)}  className='text-mainPurple text-sm lg:text-2xl' /> : <GoHeart className='text-mainGray hover:text-mainPurple transition-colors text-sm lg:text-2xl' onClick={() => handleAddLike(currentProject?.id)}  />}
+                    {iconHeart ? <GoHeartFill onClick={() => handleRemoveLike(currentProject?.id)} className='text-mainPurple text-sm lg:text-2xl' /> : <GoHeart className='text-mainGray hover:text-mainPurple transition-colors text-sm lg:text-2xl' onClick={() => handleAddLike(currentProject?.id)} />}
                     <p className='text-mainGray text-xs hidden lg:block'>{currentProject?.likes}</p>
                   </motion.div>
                 </div>
