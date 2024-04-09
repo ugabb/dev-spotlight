@@ -5,15 +5,16 @@ import StarterKit from '@tiptap/starter-kit'
 import BubbleButton from './BubbleButton'
 import CodeBlockLowlight from '@tiptap/extension-code-block-lowlight'
 import BulletList from '@tiptap/extension-bullet-list'
+import Link from '@tiptap/extension-link'
 // import Placeholder from '@tiptap/extension-placeholder'
 
-import { useState } from 'react'
+import { useCallback, useState } from 'react'
 import { ToggleGroup, ToggleGroupItem } from '../ui/toggle-group'
 import { Bold, Italic, Strikethrough, Underline } from "lucide-react"
 import FloatingButton from './FloatingButton'
 import { LucideHeading1, LucideHeading2, LucideHeading3 } from 'lucide-react'
 import { RxFontBold, RxFontItalic, RxCode, RxStrikethrough, RxHeading } from 'react-icons/rx'
-import { PiCodeBlock, PiListBullets } from "react-icons/pi";
+import { PiCodeBlock, PiLink, PiListBullets } from "react-icons/pi";
 import parse from 'html-react-parser';
 import { createLowlight, common } from 'lowlight'
 import javascript from 'highlight.js/lib/languages/javascript';
@@ -43,6 +44,10 @@ const Tiptap = ({ register, setValue }: TiptapEditorProps) => {
         defaultLanguage: 'javascript',
       }),
       BulletList,
+      Link.configure({
+        openOnClick: true,
+        
+      }),
       // Placeholder.configure({
       //   placeholder: 'Write something about your project📝...',
       //   emptyEditorClass: 'is-editor-empty',
@@ -113,11 +118,31 @@ const Tiptap = ({ register, setValue }: TiptapEditorProps) => {
   }
   const handleCodeBlock = (e: any) => {
     e.preventDefault()
-    editor.chain().focus().setCodeBlock().run()
+    editor.chain().focus().toggleCodeBlock().run()
+  }
+  const setLink = (e: any) => {
+    e.preventDefault()
+    const previousUrl = editor.getAttributes('link').href
+    const url = window.prompt('URL', previousUrl)
+
+    // cancelled
+    if (url === null) {
+      return
+    }
+
+    // empty
+    if (url === '') {
+      editor.chain().focus().extendMarkRange('link').unsetLink().run()
+
+      return
+    }
+    // update link
+    editor.chain().focus().extendMarkRange('link').setLink({ href: url }).run()
   }
 
   const handleSaveText = () => {
     const html = editor.getHTML()
+
     setValue("description", html)
   }
 
@@ -159,6 +184,11 @@ const Tiptap = ({ register, setValue }: TiptapEditorProps) => {
                 <PiCodeBlock className="h-4 w-4" />
               </BubbleButton>
             </ToggleGroupItem>
+            <ToggleGroupItem value="link" aria-label="Toggle link">
+              <BubbleButton data-active={editor.isActive("link")} onClick={(e) => setLink(e)}>
+                <PiLink className="h-4 w-4" />
+              </BubbleButton>
+            </ToggleGroupItem>
           </div>
         </ToggleGroup>
       {showMenu &&
@@ -195,6 +225,12 @@ const Tiptap = ({ register, setValue }: TiptapEditorProps) => {
             <ToggleGroupItem value="codelowlight" aria-label="Toggle codelowlight">
               <BubbleButton data-active={editor.isActive("codeBlock")} onClick={(e) => handleCodeBlock(e)}>
                 <PiCodeBlock className="h-4 w-4" />
+              </BubbleButton>
+            </ToggleGroupItem>
+
+            <ToggleGroupItem value="link" aria-label="Toggle link">
+              <BubbleButton data-active={editor.isActive("link")} onClick={(e) => setLink(e)}>
+                <PiLink className="h-4 w-4" />
               </BubbleButton>
             </ToggleGroupItem>
           </div>
@@ -234,6 +270,12 @@ const Tiptap = ({ register, setValue }: TiptapEditorProps) => {
             <ToggleGroupItem value="codelowlight" aria-label="Toggle codelowlight">
               <BubbleButton data-active={editor.isActive("codeBlock")} onClick={(e) => handleCodeBlock(e)}>
                 <PiCodeBlock className="h-4 w-4" />
+              </BubbleButton>
+            </ToggleGroupItem>
+
+            <ToggleGroupItem value="link" aria-label="Toggle link">
+              <BubbleButton data-active={editor.isActive("link")} onClick={(e) => setLink(e)}>
+                <PiLink className="h-4 w-4" />
               </BubbleButton>
             </ToggleGroupItem>
           </ToggleGroup>
