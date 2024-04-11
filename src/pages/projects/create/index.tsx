@@ -3,7 +3,7 @@
 import Header from '@/components/Header/Header'
 import InputDefault from '@/components/inputs/InputDefault'
 import React, { ReactElement, useEffect, useState } from 'react'
-import { Controller, SubmitHandler, useForm } from 'react-hook-form'
+import { Controller, FieldValues, SubmitHandler, useForm } from 'react-hook-form'
 
 
 import GlowButton from '@/components/GlowButton'
@@ -26,6 +26,13 @@ import { useRouter } from 'next/router'
 
 import { IProjectToCreate, ITechnologies } from '@/interfaces/IProject'
 import DialogComponent from '@/components/Dialog'
+import {
+    Tooltip,
+    TooltipContent,
+    TooltipProvider,
+    TooltipTrigger,
+} from "@/components/ui/tooltip"
+
 import { Textarea } from '@/components/ui/textarea'
 import axios from 'axios'
 import { User } from '@prisma/client'
@@ -35,8 +42,8 @@ import Footer from '@/components/Footer';
 import Loading from '@/components/Loading';
 
 // Editor
-import ReactEditor from '@/components/Editor/ReactEditor';
 import Tiptap from '@/components/Editor/Tiptap'
+import { PiX } from 'react-icons/pi'
 
 
 type Props = {}
@@ -49,10 +56,13 @@ const Index = (props: Props) => {
     const [loading, setLoading] = useState<boolean>(false);
     const [icons, setIcons] = useState([]);
     const [selectedTechnologies, setSelectedTechnologies] = useState<ITechnologies[]>([]);
+    useEffect(() => {
+        console.log(selectedTechnologies);
+    }, [selectedTechnologies])
     const [filter, setFilter] = useState('');
     const [suggestedIcons, setSuggestedIcons] = useState([]);
 
-    const { register, handleSubmit, control, formState: { errors }, setError, setValue, getValues } = useForm<IProjectToCreate>();
+    const { register, handleSubmit, control, formState: { errors }, setError, setValue, getValues } = useForm<FieldValues>();
 
     // dialog
     const [openDialog, setOpenDialog] = useState<boolean>(false);
@@ -106,8 +116,13 @@ const Index = (props: Props) => {
         const techInput = getValues('technologies');
         if (techInput) {
             setSelectedTechnologies(prev => [...prev, { name: techInput }])
-            setValue('technologies', '')
+            setValue('technologies', "")
         }
+    }
+
+    const handleRemoveTech = (e: React.FormEvent, tech: ITechnologies) => {
+        e.preventDefault()
+        setSelectedTechnologies(prev => prev.filter((t) => t.name !== tech.name))
     }
 
 
@@ -161,9 +176,10 @@ const Index = (props: Props) => {
 
     const onSubmit: SubmitHandler<IProjectToCreate> = async (data) => {
         const valueSubmit = data;
-        const images = await handleImageUpload().then((prjImages) => {
+        await handleImageUpload().then((prjImages) => {
             if (prjImages) {
                 console.log(prjImages);
+                // @ts-ignore
                 valueSubmit.projectImages = prjImages;
             }
         })
@@ -209,6 +225,7 @@ const Index = (props: Props) => {
                 return axios.post("https://api.cloudinary.com/v1_1/du4wrvo5j/image/upload", formData)
                     .then((response) => {
                         console.log(response.data.secure_url);
+                        console.log(response.data.public_id);
                         setImagesUploaded(prev => [...prev, response.data.secure_url])
                         projectImages.push({ url: response.data.secure_url })
                     })
@@ -301,10 +318,22 @@ const Index = (props: Props) => {
                                     <div className='flex gap-2 flex-wrap'>
                                         {selectedTechnologies.map((tech, i) => {
                                             return (
-                                                <p key={i} className={`text-white px-3 py-1 rounded-md bg-mainPurple`}>{tech?.name}</p>
+                                                <TooltipProvider key={i}>
+                                                    <Tooltip>
+                                                        <TooltipTrigger className='cursor-pointer' onClick={(e: React.FormEvent) => e.preventDefault()}>
+                                                            <p className={`text-white px-3 py-1 rounded-md bg-mainPurple`}>{tech?.name}</p>
+                                                        </TooltipTrigger>
+                                                        <TooltipContent className='cursor-pointer' onClick={(e) => handleRemoveTech(e, tech)}>
+                                                            <PiX className='size-2 text-mainPurple' />
+                                                        </TooltipContent>
+                                                    </Tooltip>
+                                                </TooltipProvider>
                                             )
                                         })}
                                     </div>
+
+
+
                                 )
                             }
                         </div>
