@@ -148,8 +148,8 @@ const Tiptap = ({ register, setValue }: TiptapEditorProps) => {
 
 
   return (
-    <div className='w-full' {...register("description")} onChange={handleSaveText}>
-      <ToggleGroup className='flex py-5 lg:hidden' type="multiple">
+    <div className='flex flex-col justify-center items-center w-full' {...register("description")} onChange={handleSaveText}>
+      <ToggleGroup className='flex py-5' type="multiple">
           <div className="bg-zinc-950 p-1 rounded-md shadow-md shadow-mainPurple/20 transition-opacity opacity-100">
             <ToggleGroupItem value='h1'>
               <BubbleButton data-active={editor.isActive("heading", { level: 1 })} onClick={(e) => handleHeading(1, e)}><LucideHeading1 size={16} /></BubbleButton>
@@ -191,8 +191,8 @@ const Tiptap = ({ register, setValue }: TiptapEditorProps) => {
             </ToggleGroupItem>
           </div>
         </ToggleGroup>
-      {showMenu &&
-        <ToggleGroup className='hidden lg:flex fixed bottom-10 inset-x-0 z-50 ' type="multiple">
+     
+        {/* <ToggleGroup className='hidden lg:flex fixed bottom-10 inset-x-0 z-50 ' type="multiple">
           <div className="bg-zinc-950 p-1 rounded-md shadow-md shadow-mainPurple/20 transition-opacity opacity-100">
             <ToggleGroupItem value='h1'>
               <BubbleButton data-active={editor.isActive("heading", { level: 1 })} onClick={(e) => handleHeading(1, e)}><LucideHeading1 size={16} /></BubbleButton>
@@ -234,14 +234,14 @@ const Tiptap = ({ register, setValue }: TiptapEditorProps) => {
               </BubbleButton>
             </ToggleGroupItem>
           </div>
-        </ToggleGroup>
-      }
-      <EditorContent editor={editor} className='prose prose-invert w-full is-editor-empty' />
+        </ToggleGroup> */}
+      
+     
 
       {/* MENU HOVER */}
       {editor && (
-        <BubbleMenu editor={editor} className='hidden lg:flex flex-col items-center justify-center bg-zinc-950 shadow-md shadow-mainPurple/20 border-zinc-600 rounded-md  divide-x-1 divide-zinc-500 lg:w-[460px]'>
-          <ToggleGroup type='multiple' className='w-full flex items-center justify-center flex-wrap'>
+        <BubbleMenu editor={editor} className='hidden md:flex flex-col items-center justify-center bg-zinc-950 shadow-md shadow-mainPurple/20 border-zinc-600 rounded-md'>
+          <ToggleGroup type='multiple' className='w-full flex items-center justify-center flex-wrap w-full'>
             <ToggleGroupItem value='h1'>
               <BubbleButton data-active={editor.isActive("heading", { level: 1 })} onClick={(e) => handleHeading(1, e)}><LucideHeading1 size={16} /></BubbleButton>
             </ToggleGroupItem>
@@ -281,6 +281,9 @@ const Tiptap = ({ register, setValue }: TiptapEditorProps) => {
           </ToggleGroup>
         </BubbleMenu>
       )}
+
+      
+       <EditorContent editor={editor} className='prose prose-invert w-full is-editor-empty' />
       {/* {editor && (
         <FloatingMenu className='flex flex-col py-2 px-1 items-center gap-1 bg-zinc-700 shadow-lg shadow-mainPurple/20 border-zinc-600 rounded-lg overflow-hidden'
           editor={editor}
