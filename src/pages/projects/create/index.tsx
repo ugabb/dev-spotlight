@@ -293,12 +293,11 @@ const Index = (props: Props) => {
                                     message: 'Minimum of 3 characters',
                                 },
 
-                            }} errors={errors} value={selectedRepository && selectedRepository?.name} />
+                            }} errors={errors} />
 
+                            <InputDefault register={register} label='Repository Link' registerName='linkRepo' validationRules={{ required: 'Repository Link is required' }} errors={errors} />
 
-
-                            <InputDefault register={register} label='Repository Link' registerName='linkRepo' validationRules={{ required: 'Repository Link is required' }} errors={errors} value={selectedRepository && selectedRepository?.html_url} />
-                            <InputDefault register={register} label='Deploy Link' registerName='deployedLink' value={selectedRepository && selectedRepository?.deploy} />
+                            <InputDefault register={register} label='Deploy Link' registerName='deployedLink' />
                         </div>
 
                         <div className='flex flex-col gap-5 lg:w-1/2 '>
@@ -308,7 +307,6 @@ const Index = (props: Props) => {
                                 registerName='technologies'
                                 validationRules={{ required: selectedTechnologies.length <= 0 && 'Technologies is required' }}
                                 errors={errors}
-                                placeholder="Press Space to add"
                             />
 
                             <ButtonIcon onClick={handleAddTech} icon={<GoPlusCircle size={15} className='text-mainPurple' />} text='Add' textColor='mainGray' textSize='sm' />
@@ -383,7 +381,9 @@ const Index = (props: Props) => {
                                 className={`w-full bg-black rounded-md px-3 py-2 border  hover:border-mainPurple  focus:outline-none focus:border-mainPurple focus-visible:ring-offset-0 focus-visible:ring-0 ${errors?.description ? 'border-red-500' : 'border-zinc-700'}`} /> */}
                             {errors.description && (
                                 <span className="text-red-500 text-xs">
-                                    {errors.description?.message}
+                                    <>
+                                        {errors.description?.message}
+                                    </>
                                 </span>
                             )}
                         </label>

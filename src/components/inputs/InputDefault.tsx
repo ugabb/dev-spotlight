@@ -7,7 +7,7 @@ type Props = {
     registerName: string,
     register: UseFormRegister<FieldValues>,
     validationRules?: Object,
-    errors?: FieldErrors<IProjectToCreate>;
+    errors?: FieldErrors<FieldValues>;
 }
 
 
@@ -24,7 +24,7 @@ const InputDefault = ({ label, registerName, register, validationRules = {}, err
             />
             {errors && (
                 <span className="text-red-500 text-xs">
-                    {errors[registerName]?.message}
+                    {errors[registerName]?.message.toString()}
                 </span>
             )}
         </label>
