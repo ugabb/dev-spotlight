@@ -11,7 +11,6 @@ export interface FloatingButtonProps extends ComponentProps<'button'> {
 }
 
 const FloatingButton = ({ title, subtitle, icon: Icon, handleToggle }: FloatingButtonProps) => {
-    console.log(Icon)
     return (
         <button type={"button"} onClick={handleToggle} className='flex items-center gap-2 p-1 rounded min-w-[280px] group hover:bg-mainPurple/80'>
             {Icon && <Icon className="text-3xl" />}
