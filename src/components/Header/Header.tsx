@@ -3,7 +3,7 @@ import React, { useCallback, useEffect, useRef, useState } from 'react'
 import { motion, useCycle } from "framer-motion";
 
 import { AiOutlineMenu } from 'react-icons/ai'
-import { PiCaretDown } from 'react-icons/pi'
+import { PiBookmarkSimpleFill, PiCaretDown } from 'react-icons/pi'
 import { useDimensions } from './useDimensions';
 import { MenuToggle } from './MenuToggle';
 import { Navigation } from './Navigation';
@@ -97,7 +97,7 @@ const Header = () => {
             className='flex justify-between items-center md:w-full md:h-20 md:backdrop-blur-sm md:bg-black/20 md:fixed md:top-0 md:left-0 md:mx-auto px-3 md:px-40 z-40 shadow-sm shadow-mainPurple/40'>
 
             <motion.div variants={sidebar} className={`background bg-gradient-to-b from-purple-600 via-mainPurple to-purple-400 relative ${isOpen ? "block" : "hidden"} z-[60]  rounded-sm`}>
-                <Navigation sessionStatus={status} isOpen={isOpen} userImage={session?.user.image}/>
+                <Navigation sessionStatus={status} isOpen={isOpen} userImage={session?.user.image} />
             </motion.div>
 
             <motion.div whileHover={{ scale: 1.1 }} className='cursor-pointer '>
@@ -143,7 +143,13 @@ const Header = () => {
                                 ],
                             }}
                         >
-                            <DropdownItem variant='flat' key="settings"><Link href={"/profile-settings"}>Profile Settings</Link></DropdownItem>
+                            {/* <DropdownItem variant='flat' key="settings"><Link href={"/profile-settings"}>Profile Settings</Link></DropdownItem> */}
+                            <DropdownItem variant='flat' key="settings">
+                                <Link href={`/${session.user.username}/favorite-projects`} className='flex items-center gap-1'>
+                                    <PiBookmarkSimpleFill className='text-xl text-mainPurple'/>
+                                    Favorite Projects
+                                </Link>
+                            </DropdownItem>
                             <DropdownItem variant='flat' key="sign-out" onClick={() => signOut()} >Sign Out</DropdownItem>
                         </DropdownMenu>
                     </Dropdown>
