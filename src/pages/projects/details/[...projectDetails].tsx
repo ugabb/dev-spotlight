@@ -99,6 +99,10 @@ const ProjectsDetails = () => {
   }
 
   const handleAddToFavorites = async (projectId: string, userId: string) => {
+    if (!session.user) {
+      toast.error("You need to sign in to save as favorite!")
+      return
+    }
 
     try {
       const response = await axios.post("/api/projects/favorite-project", {
@@ -148,8 +152,7 @@ const ProjectsDetails = () => {
       if (statusText === "OK") {
         setLoading(false)
         setCurrentProject(data);
-        if (data.ProjectsLiked.userId === session.user.id) {
-          console.log(session.user.id)
+        if ((session?.user) && (data.ProjectsLiked.userId === session?.user?.id)) {
           setIconHeart(true)
         }
       }
