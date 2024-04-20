@@ -1,5 +1,5 @@
+import prisma from "@/lib/prismadb";
 import { NextApiRequest, NextApiResponse } from "next";
-import { NextRequest, NextResponse } from "next/server";
 
 export default async function GET(req: NextApiRequest, res: NextApiResponse) {
   try {
