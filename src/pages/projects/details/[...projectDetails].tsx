@@ -45,13 +45,10 @@ const ProjectsDetails = () => {
   const { setCurrentUser, currentUser } = userStore((state) => state)
 
   useEffect(() => {
-    if(username){
+    if (username) {
       setCurrentUser(username)
     }
   }, [username])
-  // useEffect(() => {
-  //   console.log(currentUser);
-  // }, [currentUser])
 
   const [iconBookmark, setIconBookmark] = useState(false);
 
@@ -224,7 +221,10 @@ const ProjectsDetails = () => {
     return setIconHeart(false)
   }
   useEffect(() => {
-    isCurrentUserAlreadyLikedTheProject(currentProject?.id)
+    if (currentUser) {
+      isCurrentUserAlreadyLikedTheProject(currentProject?.id)
+    }
+
   }, [currentProject, currentUser])
 
 
@@ -239,7 +239,7 @@ const ProjectsDetails = () => {
     return setIconBookmark(false);
   }
   useEffect(() => {
-    isCurrentUserAlreadySavedAsFavoriteProject(currentProject?.id)
+    if(currentUser) isCurrentUserAlreadySavedAsFavoriteProject(currentProject?.id)
   }, [currentProject, currentUser])
 
   return (
