@@ -74,7 +74,7 @@ const Index = (props: Props) => {
 
     // fetch repositories
     const [repositories, setRepositories] = useState([]); // [
-    const [selectedRepository, setSelectedRepository] = useState(); // [
+    const [selectedRepository, setSelectedRepository] = useState(); // 
     const { data: session, status } = useSession()
 
     const username = session?.user?.username
@@ -153,6 +153,10 @@ const Index = (props: Props) => {
 
     const createProject = async (project: IProjectToCreate) => {
         setLoading(true)
+        if (!username) {
+            setLoading(false)
+            return toast.error("User not found")
+        }
         const userId = await getUserByUsername(username);
         project.userId = userId;
         project.likes = 0;
