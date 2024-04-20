@@ -97,8 +97,20 @@ const Projects = () => {
       </div>
 
 
-
       <motion.div
+        className="flex flex-col justify-center items-center md:grid md:grid-cols-2 xl:grid-cols-3 gap-3 my-10 p-2 lg:px-40 mx-auto">
+        {projects.map((project) => (
+          <motion.div key={project.id}
+            initial={{ opacity: 0, y: 50 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ ease: "easeInOut", duration: 1 }}
+            exit={{ opacity: 0 }}
+          >
+            <ProjectCard project={project} />
+          </motion.div>
+        ))}
+      </motion.div>
+      {/* <motion.div
         className="flex flex-col justify-center items-center md:grid md:grid-cols-2 xl:grid-cols-3 gap-3 my-10 p-2 lg:px-40 mx-auto">
         {projectFiltered.length > 0 &&
           projectFiltered?.slice().reverse().map(project => {
@@ -126,7 +138,7 @@ const Projects = () => {
 
           )
         })}
-      </motion.div>
+      </motion.div> */}
 
       {projectFilteredToast &&
         <motion.div
