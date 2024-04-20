@@ -19,7 +19,6 @@ import ProjectCard from '@/components/ProjectCard';
 import { useSession } from 'next-auth/react';
 import { IUser } from '@/interfaces/IUser';
 import CarouselShad from '@/components/Carousel/CarouselShad';
-import { useParams, useSearchParams } from 'next/navigation';
 
 import parse from 'html-react-parser';
 
@@ -30,7 +29,7 @@ import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, Di
 import axios from 'axios';
 import toast from 'react-hot-toast';
 import userStore from '@/store/userStore';
-import { Project, ProjectsLiked } from '@prisma/client';
+import { ProjectsLiked } from '@prisma/client';
 import Loading from '@/components/Loading';
 import { Skeleton } from '@/components/ui/skeleton';
 import { Dropdown, DropdownItem, DropdownMenu, DropdownTrigger } from '@nextui-org/dropdown';
@@ -46,7 +45,9 @@ const ProjectsDetails = () => {
   const { setCurrentUser, currentUser } = userStore((state) => state)
 
   useEffect(() => {
-    setCurrentUser(username)
+    if(username){
+      setCurrentUser(username)
+    }
   }, [username])
   // useEffect(() => {
   //   console.log(currentUser);
@@ -123,13 +124,6 @@ const ProjectsDetails = () => {
     setMounted(true)
   }, [])
 
-
-  const [projectToFetch, setProjectToFetch] = useState({
-    projectName: '',
-    userId: 0
-  });
-
-
   const [projects, setProjects] = useState<IProject[]>([]);
   const [currentProject, setCurrentProject] = useState<IProject>();
   const [openShare, setOpenShare] = useState<boolean>(false);
@@ -153,10 +147,7 @@ const ProjectsDetails = () => {
   const handleFetchProjectByName = async (username: string, projectName: string) => {
     setLoading(true)
     try {
-      console.log('Fetching project by name:', username, projectName);
-      const { data, statusText, status } = await axios(`/api/projects/${username}/${projectName}`);
-      console.log('Data:', data);
-
+      const { data, statusText } = await axios(`/api/projects/${username}/${projectName}`);
       if (statusText === "OK") {
         setLoading(false)
         setCurrentProject(data);
@@ -194,16 +185,11 @@ const ProjectsDetails = () => {
       const username = query?.projectDetails[2]
       const projectName = query?.projectDetails[0]
       if (username && projectName) {
-        console.log(username, projectName)
         handleFetchProjectByName(username, projectName)
       }
     }
 
   }, [query])
-  useEffect(() => {
-    console.log(currentProject?.user);
-
-  }, [currentProject])
 
   const handleDeleteProject = (projectId: string) => {
     axios.delete(`/api/projects/delete/${projectId}`).then((response) => {
@@ -255,13 +241,6 @@ const ProjectsDetails = () => {
   useEffect(() => {
     isCurrentUserAlreadySavedAsFavoriteProject(currentProject?.id)
   }, [currentProject, currentUser])
-
-  // useEffect(() => {
-  //   console.log(projects)
-  // }, [projects])
-  useEffect(() => {
-    console.log(currentProject)
-  }, [currentProject])
 
   return (
     <>
